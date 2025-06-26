@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import sesac.bookmanager.hjdummy.DummyUser;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -18,8 +19,8 @@ public class Notice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long noticeId;
 
-    private int type;
-    private Date createdAt;
+    private NoticeType type;
+    private LocalDateTime createdAt;
     private String title;
     private String content;
     private Long views;
