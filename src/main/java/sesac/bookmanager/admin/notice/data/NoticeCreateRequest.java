@@ -11,5 +11,5 @@ public class NoticeCreateRequest {
     private String title;
     private String content;
     private NoticeType type;
-    private Long adminId;
+    private Integer adminId;
 }

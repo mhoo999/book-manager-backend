@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import sesac.bookmanager.hjdummy.DummyUser;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -19,17 +20,18 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionId;
+    private Integer questionId;
 
     // true면 문의게시판, false면 오류신고게시판
     private Boolean questionType;
 
     private String title;
     private String content;
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private DummyUser user;
     // TODO: 이후 User 클래스 구성되면 교체할 것
 

@@ -4,19 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class NoticeResponse {
-    private Long noticeId;
+    private Integer noticeId;
 
     private NoticeType type;
-    private Date createdAt;
+    private LocalDateTime createdAt;
     private String title;
     private String content;
-    private Long views;
-    public static NoticeResponse from(Notice saved) {
+    private Integer views;
+    public static NoticeResponse from(Notice notice) {
+        return new NoticeResponse(
+                notice.getNoticeId(),
+                notice.getType(),
+                notice.getCreatedAt(),
+                notice.getTitle(),
+                notice.getContent(),
+                notice.getViews()
+        );
     }
 }
