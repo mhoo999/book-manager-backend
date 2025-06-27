@@ -52,4 +52,26 @@ public class NoticeAdminService {
 
         return NoticePageResponse.from(searchResult.getContent(), searchRequest, searchResult.getTotalElements());
     }
+
+    @Transactional(readOnly = true)
+    public NoticeResponse getNoticeById(Integer noticeId) {
+        return noticeAdminRepository.findById(noticeId)
+                .map(NoticeResponse::from)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
+    }
+
+    public NoticeResponse updateNotice(Integer noticeId, NoticeUpdateRequest updateRequest) {
+        Notice notice = noticeAdminRepository.findById(noticeId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
+
+        notice.setTitle(updateRequest.getTitle());
+        notice.setContent(updateRequest.getContent());
+        notice.setType(updateRequest.getType());
+
+        return NoticeResponse.from(notice);
+    }
+
+    public void deleteNotice(Integer noticeId) {
+        noticeAdminRepository.deleteById(noticeId);
+    }
 }

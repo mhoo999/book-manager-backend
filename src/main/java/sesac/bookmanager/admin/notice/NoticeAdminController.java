@@ -3,10 +3,7 @@ package sesac.bookmanager.admin.notice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sesac.bookmanager.admin.notice.data.NoticeCreateRequest;
-import sesac.bookmanager.admin.notice.data.NoticePageResponse;
-import sesac.bookmanager.admin.notice.data.NoticeResponse;
-import sesac.bookmanager.admin.notice.data.NoticeSearchRequest;
+import sesac.bookmanager.admin.notice.data.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +20,24 @@ public class NoticeAdminController {
     @GetMapping
     public ResponseEntity<NoticePageResponse> getNotices(@ModelAttribute NoticeSearchRequest searchRequest) {
         return ResponseEntity.ok(noticeAdminService.searchNotice(searchRequest));
+    }
+
+    @GetMapping("/{noticeId}")
+    public ResponseEntity<NoticeResponse> getNoticeById(@PathVariable Integer noticeId) {
+        return ResponseEntity.ok(noticeAdminService.getNoticeById(noticeId));
+    }
+
+    @PutMapping("/{noticeId}")
+    public ResponseEntity<NoticeResponse> updateNotice(
+            @PathVariable Integer noticeId, @ModelAttribute NoticeUpdateRequest updateRequest) {
+
+        return ResponseEntity.ok(noticeAdminService.updateNotice(noticeId, updateRequest));
+    }
+
+    @DeleteMapping("/{noticeId}")
+    public ResponseEntity<Void> deleteNotice(@PathVariable Integer noticeId) {
+        noticeAdminService.deleteNotice(noticeId);
+
+        return ResponseEntity.noContent().build();
     }
 }
