@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.admin.notice.data.*;
 import sesac.bookmanager.hjdummy.DummyAdmin;
 import sesac.bookmanager.hjdummy.DummyAdminRepository;
-import sesac.bookmanager.hjdummy.DummyUser;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 @Transactional
 public class NoticeAdminService {
 
-    private final NoticeAdminRepository noticeAdminRepository;
+    private final NoticeRepository noticeRepository;
 
     private final DummyAdminRepository adminRepository;
 
@@ -37,7 +36,7 @@ public class NoticeAdminService {
                 .admin(admin)
                 .build();
 
-        Notice savedNotice = noticeAdminRepository.save(newNotice);
+        Notice savedNotice = noticeRepository.save(newNotice);
 
         return NoticeResponse.from(savedNotice);
     }
@@ -46,7 +45,7 @@ public class NoticeAdminService {
     public NoticePageResponse searchNotice(NoticeSearchRequest searchRequest) {
         Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
 
-        Page<NoticeResponse> searchResult = noticeAdminRepository
+        Page<NoticeResponse> searchResult = noticeRepository
                 .findByTitleContaining(searchRequest.getTitle(), pageable)
                 .map(NoticeResponse::from);
 
@@ -55,13 +54,13 @@ public class NoticeAdminService {
 
     @Transactional(readOnly = true)
     public NoticeResponse getNoticeById(Integer noticeId) {
-        return noticeAdminRepository.findById(noticeId)
+        return noticeRepository.findById(noticeId)
                 .map(NoticeResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
     }
 
     public NoticeResponse updateNotice(Integer noticeId, NoticeUpdateRequest updateRequest) {
-        Notice notice = noticeAdminRepository.findById(noticeId)
+        Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
 
         notice.setTitle(updateRequest.getTitle());
@@ -72,6 +71,6 @@ public class NoticeAdminService {
     }
 
     public void deleteNotice(Integer noticeId) {
-        noticeAdminRepository.deleteById(noticeId);
+        noticeRepository.deleteById(noticeId);
     }
 }

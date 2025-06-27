@@ -1,4 +1,4 @@
-package sesac.bookmanager.user.notice;
+package sesac.bookmanager.admin.notice;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import sesac.bookmanager.admin.notice.data.Notice;
 
 @Repository
-public interface NoticeUserRepository extends JpaRepository<Notice, Integer> {
+public interface NoticeRepository extends JpaRepository<Notice, Integer> {
 
     Page<Notice> findByTitleContaining(String title, Pageable pageable);
 }
