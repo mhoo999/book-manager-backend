@@ -1,7 +1,7 @@
 package sesac.bookmanager.book.enums;
 
 public enum BookStatus {
-    RENTALBLE("대여가능"),
+    RENTABLE("대여가능"),
     RENTED("대여중"),
     UNRENTABLE("대여불가");
 

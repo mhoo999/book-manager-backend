@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookCodeResponseDto {
-    private String bookItem_code;
+    private Long bookId;
 
 }
