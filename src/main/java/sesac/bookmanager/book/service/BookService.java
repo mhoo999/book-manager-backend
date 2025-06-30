@@ -74,6 +74,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public PageBookResponseDto getAllBooks() {
+        Page<BookResponseDto> page = bookRepository.
     }
 
     @Transactional(readOnly = true)
