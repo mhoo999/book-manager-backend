@@ -17,6 +17,7 @@ CREATE TABLE `user` (
 	`name`	VARCHAR(255)	NOT NULL,
 	`phone`	VARCHAR(255)	NULL,
 	`pwd`	VARCHAR(255)	NULL,
+    `is_deleted` BOOLEAN default false,
 	`created_at`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at`	datetime	NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 	`deleted_at`	datetime	NULL
