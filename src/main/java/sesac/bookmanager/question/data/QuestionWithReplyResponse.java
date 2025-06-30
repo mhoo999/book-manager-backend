@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,22 +13,13 @@ import java.util.List;
 @Builder
 public class QuestionWithReplyResponse {
 
-    private Integer questionId;
-    private Boolean type;
-    private String title;
-    private String content;
-    private LocalDateTime createdAt;
-    private Integer userId;
-    private List<ReplyResponse> replies = new ArrayList<>();
+    private QuestionAndReportResponse question;
+    private ReplyResponse reply;
 
-    public static QuestionWithReplyResponse from(QuestionAndReport question) {
+    public static QuestionWithReplyResponse from(QuestionAndReport question, Reply reply) {
         return QuestionWithReplyResponse.builder()
-                .questionId(question.getQuestionId())
-                .type(question.getType())
-                .title(question.getTitle())
-                .content(question.getContent())
-                .createdAt(question.getCreatedAt())
-                .userId(question.getUser().getUserId())
+                .question(QuestionAndReportResponse.from(question))
+                .reply(ReplyResponse.from(reply))
                 .build();
     }
 }

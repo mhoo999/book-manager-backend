@@ -30,5 +30,5 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
-    private QuestionAndReport questionAndReport;
+    private QuestionAndReport question;
 }
