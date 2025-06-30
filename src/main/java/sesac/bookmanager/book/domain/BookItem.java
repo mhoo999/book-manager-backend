@@ -1,4 +1,4 @@
-﻿package sesac.bookmanager.book.domain;
+package sesac.bookmanager.book.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

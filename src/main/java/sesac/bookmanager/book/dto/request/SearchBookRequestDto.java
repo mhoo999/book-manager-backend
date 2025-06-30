@@ -13,7 +13,7 @@ public class SearchBookRequestDto {
     private String publisher;
     private String isbn;
 
-    private String sort;
+    private String sort = "title,ASC";
     private int page = 0;
     private int size = 10;
 }

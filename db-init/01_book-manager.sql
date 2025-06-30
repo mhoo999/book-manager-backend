@@ -31,7 +31,8 @@ CREATE TABLE `book` (
 	`ISBN`	VARCHAR(255)	NOT NULL,
 	`description`	longtext	NULL,
 	`category_code`	VARCHAR(6)	NOT NULL,
-	`stock`	smallint	NOT NULL,
+    `location`	VARCHAR(255)	NOT NULL,
+    `stock`	smallint	NOT NULL,
     `cover` VARCHAR(255) NOT NULL
 );
 
@@ -39,9 +40,7 @@ CREATE TABLE `book_item` (
 	`bookItem_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `bookItem_code` VARCHAR(255) NOT NULL ,
 	`book_id`	int	NOT NULL,
-	`location`	VARCHAR(255)	NOT NULL,
-	`status`	TINYINT	NOT NULL,
-    `category` VARCHAR(6) NOT NULL,
+	`status`	VARCHAR(20) NOT NULL,
 	`created_at`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at`	datetime	NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 );

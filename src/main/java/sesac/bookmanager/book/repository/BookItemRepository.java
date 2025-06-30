@@ -1,4 +1,4 @@
-﻿package sesac.bookmanager.book.repository;
+package sesac.bookmanager.book.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;

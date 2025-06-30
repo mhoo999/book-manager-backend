@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sesac.bookmanager.book.domain.Book;
 
 @Repository
-public interface BookRepository extends CrudRepository<Book, Integer> {
+public interface BookRepository extends CrudRepository<Book, Integer>, BookQueryRepository {
 }

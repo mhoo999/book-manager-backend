@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
 import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
 import sesac.bookmanager.book.dto.request.UpdateBookRequestDto;
-import sesac.bookmanager.book.dto.response.BookCodeResponseDto;
+import sesac.bookmanager.book.dto.response.BookIdResponseDto;
 import sesac.bookmanager.book.dto.response.BookResponseDto;
 import sesac.bookmanager.book.dto.response.PageBookResponseDto;
 import sesac.bookmanager.book.service.BookService;
@@ -20,13 +20,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/register")
-    public ResponseEntity<BookCodeResponseDto> createBook(@RequestBody CreateBookRequestDto request) {
+    public ResponseEntity<BookIdResponseDto> createBook(@RequestBody CreateBookRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(request));
-    }
-
-    @GetMapping
-    public ResponseEntity<PageBookResponseDto> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/search")
@@ -40,7 +35,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<BookCodeResponseDto> updateBook(@PathVariable Long bookId, @RequestBody UpdateBookRequestDto request) {
+    public ResponseEntity<BookIdResponseDto> updateBook(@PathVariable Long bookId, @RequestBody UpdateBookRequestDto request) {
         return ResponseEntity.ok(bookService.updateBook(bookId, request));
     }
 

@@ -1,6 +1,7 @@
 package sesac.bookmanager.book.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import sesac.bookmanager.book.domain.BookItem;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
 import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
 import sesac.bookmanager.book.dto.request.UpdateBookRequestDto;
-import sesac.bookmanager.book.dto.response.BookCodeResponseDto;
+import sesac.bookmanager.book.dto.response.BookIdResponseDto;
 import sesac.bookmanager.book.dto.response.BookResponseDto;
 import sesac.bookmanager.book.dto.response.PageBookResponseDto;
 import sesac.bookmanager.book.enums.BookStatus;
@@ -27,7 +28,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookItemRepository bookItemRepository;
 
-    public BookCodeResponseDto createBook(CreateBookRequestDto request) {
+    public BookIdResponseDto createBook(CreateBookRequestDto request) {
         Book book = new Book();
         book.setTitle(request.getTitle());
         book.setAuthor(request.getAuthor());
@@ -51,7 +52,7 @@ public class BookService {
 
         Book savedBook = bookRepository.save(book);
 
-        return new BookCodeResponseDto(savedBook.getId());
+        return new BookIdResponseDto(savedBook.getId());
     }
 
     private String generateBookCode(String category) {
@@ -73,18 +74,17 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public PageBookResponseDto getAllBooks() {
-        Page<BookResponseDto> page = bookRepository.
-    }
-
-    @Transactional(readOnly = true)
     public PageBookResponseDto searchBooks(SearchBookRequestDto request) {
+        Page<BookResponseDto> page = bookRepository.searchBooks(request);
+        return PageBookResponseDto.from(page.getContent(), request, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
     public BookResponseDto getBook(long bookId) {
+        return null;
     }
 
-    public BookCodeResponseDto updateBook(Long bookId, UpdateBookRequestDto request) {
+    public BookIdResponseDto updateBook(Long bookId, UpdateBookRequestDto request) {
+        return null;
     }
 }
