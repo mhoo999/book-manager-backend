@@ -25,6 +25,7 @@ public class AuthController {
         return ResponseEntity.ok("로그아웃 완료");
     }
 
+
     @PostMapping("/find-id")
     public ResponseEntity<String> findId(@RequestBody FindIdRequest request) {
         return ResponseEntity.ok(authService.findId(request));
