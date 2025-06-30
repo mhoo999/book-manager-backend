@@ -1,5 +1,6 @@
 package sesac.bookmanager.book.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -9,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import sesac.bookmanager.book.domain.Book;
 import sesac.bookmanager.book.domain.BookItem;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
@@ -16,6 +19,7 @@ import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
 import sesac.bookmanager.book.dto.request.UpdateBookRequestDto;
 import sesac.bookmanager.book.dto.response.BookIdResponseDto;
 import sesac.bookmanager.book.dto.response.BookResponseDto;
+import sesac.bookmanager.book.dto.response.PageBookResponseDto;
 import sesac.bookmanager.book.enums.BookStatus;
 import sesac.bookmanager.book.repository.BookItemRepository;
 import sesac.bookmanager.book.repository.BookRepository;
@@ -28,9 +32,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookServiceTest {
@@ -50,9 +54,6 @@ class BookServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(bookItemRepository.findBookCodesByCategoryOrdered(any(), any()))
-                .thenReturn(Collections.emptyList());
-
         mockBook = createMockBook();
         searchBookRequestDto = createSearchRequest();
         updateBookRequestDto = createUpdateRequest();
@@ -71,6 +72,9 @@ class BookServiceTest {
 
             Book savedBook = new Book();
             savedBook.setId(1L);
+
+            when(bookItemRepository.findBookCodesByCategoryOrdered(any(), any()))
+                    .thenReturn(Collections.emptyList());
 
             when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
 
@@ -96,6 +100,9 @@ class BookServiceTest {
             Book savedBook = new Book();
             savedBook.setId(2L);
 
+            when(bookItemRepository.findBookCodesByCategoryOrdered(any(), any()))
+                    .thenReturn(Collections.emptyList());
+
             when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
 
             // when
@@ -115,6 +122,9 @@ class BookServiceTest {
             CreateBookRequestDto request = createCreateBookRequest();
             request.setCategory("010101");
             request.setStock(2);
+
+            when(bookItemRepository.findBookCodesByCategoryOrdered(any(), any()))
+                    .thenReturn(Collections.emptyList());
 
             when(bookItemRepository.findBookCodesByCategoryOrdered(eq("010101"), any()))
                     .thenReturn(Arrays.asList("BK0101010005"));
@@ -143,13 +153,63 @@ class BookServiceTest {
         @Test
         @DisplayName("첫 번째 도서 생성 시 순번이 0001부터 시작된다")
         void createBook_FirstBook_StartsFromSequence0001() {
+            // given
+            CreateBookRequestDto request = createCreateBookRequest();
+            request.setCategory("020101");
+            request.setStock(2);
 
+            when(bookItemRepository.findBookCodesByCategoryOrdered(any(), any()))
+                    .thenReturn(Collections.emptyList());
+
+            when(bookItemRepository.findBookCodesByCategoryOrdered(eq("020101"), any()))
+                    .thenReturn(Collections.emptyList());
+
+            Book savedBook = new Book();
+            savedBook.setId(1L);
+            when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
+
+            ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
+
+            // when
+            BookIdResponseDto result = bookService.createBook(request);
+
+            // then
+            assertThat(result.getBookId()).isEqualTo(1L);
+            verify(bookRepository).save(bookCaptor.capture());
+            Book capturedBook = bookCaptor.getValue();
+
+            List<String> codes = capturedBook.getBookItems().stream()
+                    .map(BookItem::getBookCode)
+                    .collect(Collectors.toList());
+
+            assertThat(codes).containsExactlyInAnyOrder("BK0201010001", "BK0201010002");
         }
 
         @Test
         @DisplayName("재고가 0인 경우 BookItem이 생성되지 않는다")
         void createBook_ZeroStock_CreatesNoBookItems() {
+            // given
+            CreateBookRequestDto request = createCreateBookRequest();
+            request.setStock(0);
 
+            Book savedBook = new Book();
+            savedBook.setId(1L);
+            when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
+
+            ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
+
+            // when
+            BookIdResponseDto result = bookService.createBook(request);
+
+            // then
+            assertThat(result.getBookId()).isEqualTo(1L);
+
+            verify(bookRepository).save(bookCaptor.capture());
+            Book capturedBook = bookCaptor.getValue();
+
+            assertThat(capturedBook.getBookItems()).isEmpty();
+
+            verify(bookItemRepository, never()).findBookCodesByCategoryOrdered(any(), any());
         }
     }
 
@@ -159,13 +219,40 @@ class BookServiceTest {
         @Test
         @DisplayName("검색 조건에 맞는 도서 목록을 페이지로 반환한다")
         void searchBooks_WithValidRequest_ReturnsPageBookResponseDto() {
+            // given
+            List<BookResponseDto> mockBooks = Arrays.asList(
+                    BookResponseDto.from(mockBook),
+                    BookResponseDto.from(createMockBook(2L, "Test Book2"))
+            );
+            Page<BookResponseDto> mockPage = new PageImpl<>(mockBooks);
 
+            when(bookRepository.searchBooks(any(SearchBookRequestDto.class))).thenReturn(mockPage);
+
+            // when
+            PageBookResponseDto result = bookService.searchBooks(searchBookRequestDto);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getBooks()).hasSize(2);
+            assertThat(result.getTotalCount()).isEqualTo(2);
+            verify(bookRepository).searchBooks(searchBookRequestDto);
         }
 
         @Test
         @DisplayName("검색 결과가 없을 때 빈 페이지를 반환한다")
         void searchBooks_NoResults_ReturnsEmptyPage() {
+            // given
+            Page<BookResponseDto> emptyPage = new PageImpl<>(List.of());
+            when(bookRepository.searchBooks(any(SearchBookRequestDto.class)))
+                    .thenReturn(emptyPage);
 
+            // when
+            PageBookResponseDto result = bookService.searchBooks(searchBookRequestDto);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getBooks()).isEmpty();
+            assertThat(result.getTotalCount()).isEqualTo(0);
         }
     }
 
@@ -175,13 +262,34 @@ class BookServiceTest {
         @Test
         @DisplayName("존재하는 도서 ID로 조회 시 도서 정보를 반환한다")
         void getBook_WithValidId_ReturnsBookResponseDto() {
+            // given
+            Long bookId = 1L;
+            when(bookRepository.findById(bookId)).thenReturn(Optional.of(mockBook));
 
+            // when
+            BookResponseDto result = bookService.getBook(bookId);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getBookId()).isEqualTo(bookId);
+            assertThat(result.getTitle()).isEqualTo(mockBook.getTitle());
+            assertThat(result.getAuthor()).isEqualTo(mockBook.getAuthor());
+            verify(bookRepository).findById(bookId);
         }
 
         @Test
         @DisplayName("존재하지 않는 도서 ID로 조회 시 EntityNotFoundException을 발생시킨다")
         void getBook_WithInvalidId_ThrowsEntityNotFoundException() {
+            // given
+            Long bookId = 999L;
+            when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
+            // when & then
+            assertThatThrownBy(() -> bookService.getBook(bookId))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("해당 아이디를 가진 도서가 존재하지 않습니다: " + bookId);
+
+            verify(bookRepository).findById(bookId);
         }
     }
 
@@ -191,13 +299,40 @@ class BookServiceTest {
         @Test
         @DisplayName("존재하는 도서를 정상적으로 수정하고 도서 ID를 반환한다")
         void updateBook_WithValidData_ReturnsBookIdResponseDto() {
+            // given
+            Long bookId = 1L;
+            when(bookRepository.findById(bookId)).thenReturn(Optional.of(mockBook));
 
+            // when
+            BookIdResponseDto result = bookService.updateBook(bookId, updateBookRequestDto);
+
+            // then
+            assertThat(result).isNotNull();
+            assertThat(result.getBookId()).isEqualTo(bookId);
+
+            // 도서 정보가 수정되었는지 확인
+            assertThat(mockBook.getTitle()).isEqualTo(updateBookRequestDto.getTitle());
+            assertThat(mockBook.getAuthor()).isEqualTo(updateBookRequestDto.getAuthor());
+            assertThat(mockBook.getPublisher()).isEqualTo(updateBookRequestDto.getPublisher());
+            assertThat(mockBook.getLocation()).isEqualTo(updateBookRequestDto.getLocation());
+            assertThat(mockBook.getCover()).isEqualTo(updateBookRequestDto.getCover());
+
+            verify(bookRepository).findById(bookId);
         }
 
         @Test
         @DisplayName("존재하지 않는 도서 수정 시 EntityNotFoundException을 발생시킨다")
         void updateBook_WithInvalidId_ThrowsEntityNotFoundException() {
+            // given
+            Long bookId = 999L;
+            when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
+            // when & then
+            assertThatThrownBy(() -> bookService.updateBook(bookId, updateBookRequestDto))
+                    .isInstanceOf(EntityNotFoundException.class)
+                    .hasMessage("해당 아이디를 가진 도서가 존재하지 않습니다: " + bookId);
+
+            verify(bookRepository).findById(bookId);
         }
     }
 

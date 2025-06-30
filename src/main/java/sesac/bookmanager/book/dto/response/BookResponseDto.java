@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class BookResponseDto {
+    private long bookId;
 	private String isbn;
     private String title;
     private String author;
@@ -31,6 +32,7 @@ public class BookResponseDto {
                 .toList();
 
         return new BookResponseDto(
+                book.getId(),
                 book.getIsbn(),
                 book.getTitle(),
                 book.getAuthor(),

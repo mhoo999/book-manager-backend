@@ -46,13 +46,15 @@ public class BookService {
         BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
                 ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
 
-        int startSequence = getNextSequence(request.getCategory());
+        if (request.getStock() > 0) {
+            int startSequence = getNextSequence(request.getCategory());
 
-        for (int i = 0; i < request.getStock(); i++) {
-            BookItem bookItem = new BookItem();
-            bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
-            bookItem.setStatus(status);
-            book.addBookItem(bookItem);
+            for (int i = 0; i < request.getStock(); i++) {
+                BookItem bookItem = new BookItem();
+                bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
+                bookItem.setStatus(status);
+                book.addBookItem(bookItem);
+            }
         }
 
         Book savedBook = bookRepository.save(book);
