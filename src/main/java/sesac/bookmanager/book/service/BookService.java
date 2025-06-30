@@ -1,6 +1,8 @@
 package sesac.bookmanager.book.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,12 +31,13 @@ public class BookService {
     private final BookItemRepository bookItemRepository;
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
+
         Book book = new Book();
         book.setTitle(request.getTitle());
         book.setAuthor(request.getAuthor());
         book.setPublisher(request.getPublisher());
         book.setPublishedAt(request.getPublishedAt());
-        book.setIsbn(request.getISBN());
+        book.setIsbn(request.getIsbn());
         book.setDescription(null);
         book.setCategoryCode(request.getCategory());
         book.setStock(request.getStock());
@@ -43,33 +46,35 @@ public class BookService {
         BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
                 ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
 
+        int startSequence = getNextSequence(request.getCategory());
+
         for (int i = 0; i < request.getStock(); i++) {
             BookItem bookItem = new BookItem();
-            bookItem.setBookCode(generateBookCode(request.getCategory()));
+            bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
             bookItem.setStatus(status);
             book.addBookItem(bookItem);
         }
 
         Book savedBook = bookRepository.save(book);
-
         return new BookIdResponseDto(savedBook.getId());
     }
 
-    private String generateBookCode(String category) {
-        // ex. BK0101010001 ⇒ BK + 01(대분류) + 01(중분류) + 01(소분류) + 0001
-        String prefix = "BK" + category;
-
+    private int getNextSequence(String category) {
         List<String> latestCodes = bookItemRepository.findBookCodesByCategoryOrdered(category, PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "BookCode")));
 
-        int nextSequence = 1;
-
-        if (!latestCodes.isEmpty()) {
-            String latestCode = latestCodes.get(0);
-            String sequenceStr = latestCode.substring(latestCode.length() - 4);
-            nextSequence = Integer.parseInt(sequenceStr) + 1;
+        if (latestCodes.isEmpty()) {
+            return 1;
         }
 
-        String sequenceFormatted = String.format("%04d", nextSequence);
+        String latestCode = latestCodes.get(0);
+        String sequenceStr = latestCode.substring(latestCode.length() - 4);
+        return Integer.parseInt(sequenceStr) + 1;
+    }
+
+    private String generateBookCode(String category, int sequence) {
+        // ex. BK0101010001 ⇒ BK + 01(대분류) + 01(중분류) + 01(소분류) + 0001
+        String prefix = "BK" + category;
+        String sequenceFormatted = String.format("%04d", sequence);
         return prefix + sequenceFormatted;
     }
 
@@ -81,10 +86,21 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public BookResponseDto getBook(long bookId) {
-        return null;
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + bookId));
+        return BookResponseDto.from(book);
     }
 
     public BookIdResponseDto updateBook(Long bookId, UpdateBookRequestDto request) {
-        return null;
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + bookId));
+
+        book.setTitle(request.getTitle());
+        book.setAuthor(request.getAuthor());
+        book.setPublisher(request.getPublisher());
+        book.setLocation(request.getLocation());
+        book.setCover(request.getCover());
+
+        return new BookIdResponseDto(book.getId());
     }
 }
