@@ -18,7 +18,7 @@ public class CreateBookRequestDto {
     private int stock;
     private Boolean isAvailable;
     private String cover;
-    private String ISBN;
+    private String isbn;
     private String category;
 
 }

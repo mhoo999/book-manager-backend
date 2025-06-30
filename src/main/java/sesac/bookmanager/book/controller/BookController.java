@@ -1,5 +1,6 @@
 package sesac.bookmanager.book.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/register")
-    public ResponseEntity<BookIdResponseDto> createBook(@RequestBody CreateBookRequestDto request) {
+    public ResponseEntity<BookIdResponseDto> createBook(@Valid @RequestBody CreateBookRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(request));
     }
 
