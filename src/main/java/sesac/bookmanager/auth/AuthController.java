@@ -9,7 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.Security.CustomUserDetails;
-import sesac.bookmanager.Security.jwt.RefreshTokenService;
 import sesac.bookmanager.auth.data.LoginRequestDto;
 
 @RestController
@@ -18,7 +17,6 @@ import sesac.bookmanager.auth.data.LoginRequestDto;
 public class AuthController {
 
     private final AuthService authService;
-    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequestDto request) {
@@ -41,15 +39,15 @@ public class AuthController {
 
 
 
-    @PostMapping("/find-id")
-    public  ResponseEntity<ApiResponse<Object>> findId(@RequestBody FindIdRequest request) {
-        return ResponseEntity.ok(authService.findId(request));
-    }
-
-    @PostMapping("/find-password")
-    public  ResponseEntity<ApiResponse<Object>> findPassword(@RequestBody FindPasswordRequest request) {
-        return ResponseEntity.ok(authService.findPassword(request));
-    }
+//    @PostMapping("/find-id")
+//    public  ResponseEntity<ApiResponse<Object>> findId(@RequestBody FindIdRequest request) {
+//        return ResponseEntity.ok(authService.findId(request));
+//    }
+//
+//    @PostMapping("/find-password")
+//    public  ResponseEntity<ApiResponse<Object>> findPassword(@RequestBody FindPasswordRequest request) {
+//        return ResponseEntity.ok(authService.findPassword(request));
+//    }
 
 //
 //    @GetMapping("/check-id")
