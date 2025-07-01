@@ -17,6 +17,8 @@ public class NoticeResponse {
     private String title;
     private String content;
     private Integer views;
+    private Integer adminId;
+
     public static NoticeResponse from(Notice notice) {
         return new NoticeResponse(
                 notice.getNoticeId(),
@@ -24,7 +26,8 @@ public class NoticeResponse {
                 notice.getCreatedAt(),
                 notice.getTitle(),
                 notice.getContent(),
-                notice.getViews()
+                notice.getViews(),
+                notice.getAdmin().getAdminId()
         );
     }
 }

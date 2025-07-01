@@ -54,9 +54,12 @@ public class NoticeService {
 
     @Transactional(readOnly = true)
     public NoticeResponse getNoticeById(Integer noticeId) {
-        return noticeRepository.findById(noticeId)
-                .map(NoticeResponse::from)
+        Notice viewNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
+
+        viewNotice.setViews(viewNotice.getViews() + 1);
+
+        return NoticeResponse.from(viewNotice);
     }
 
     public NoticeResponse updateNotice(Integer noticeId, NoticeUpdateRequest updateRequest) {
