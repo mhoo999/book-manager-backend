@@ -11,7 +11,7 @@ public class LoginResponseDto {
     private String refreshToken;
 
 
-    public JwtResponseDto(String name, String accessToken, String refreshToken) {
+    public LoginResponseDto(String name, String accessToken, String refreshToken) {
         this.name = name;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

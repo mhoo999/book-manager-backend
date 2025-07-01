@@ -14,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -41,4 +41,13 @@ public class User {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    public User(int userId, String email, String name) {
+        this.id = userId;
+        this.email = email;
+        this.name = name;
+    }
+
+    public User() {
+
+    }
 }

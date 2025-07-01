@@ -1,10 +1,11 @@
-package sesac.bookmanager.Security;
+package sesac.bookmanager.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import sesac.bookmanager.Security.CustomUserDetails;
 import sesac.bookmanager.user.User;
 import sesac.bookmanager.user.UserRepository;
 

@@ -18,17 +18,17 @@ public class RefreshTokenRepository {
 
     private static final String PREFIX = "RT:";
 
-    public void save(String userId, String token) {
+    public void save(int userId, String token) {
         String key = PREFIX + userId;
         redisTemplate.opsForValue().set(key, token, refreshExpirationTime, TimeUnit.SECONDS);
     }
 
-    public String findByUserId(String userId) {
+    public String findByUserId(int userId) {
         String key = PREFIX + userId;
         return redisTemplate.opsForValue().get(key);
     }
 
-    public void delete(String userId) {
+    public void deleteByUserId(int userId) {
         String key = PREFIX + userId;
         redisTemplate.delete(key);
     }
