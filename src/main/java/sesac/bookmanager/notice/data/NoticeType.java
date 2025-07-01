@@ -23,9 +23,9 @@ public enum NoticeType {
     }
 
     @JsonCreator
-    public static NoticeType fromCode(byte code) {
+    public static NoticeType fromCode(int code) {
         for (NoticeType noticeType : NoticeType.values()) {
-            if (noticeType.code == code) {
+            if (noticeType.code == (byte) code) {
                 return noticeType;
             }
         }

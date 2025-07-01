@@ -24,9 +24,9 @@ public enum WishStatus {
     }
 
     @JsonCreator
-    public static WishStatus fromCode(byte code) {
+    public static WishStatus fromCode(int code) {
         for (WishStatus wishStatus : WishStatus.values()) {
-            if (wishStatus.code == code) {
+            if (wishStatus.code == (byte) code) {
                 return wishStatus;
             }
         }
