@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
-import sesac.bookmanager.Security.CustomUserDetails;
+import sesac.bookmanager.security.CustomUserDetails;
+import sesac.bookmanager.auth.data.FindPasswordRequestDto;
 import sesac.bookmanager.auth.data.LoginRequestDto;
+import sesac.bookmanager.auth.data.RegisterRequestDto;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,27 +39,20 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    @PostMapping("/find-password")
+    public  ResponseEntity<ApiResponse<Object>> findPassword(@RequestBody FindPasswordRequestDto request) {
+        return ResponseEntity.ok(ApiResponse.success(authService.findPassword(request)));
+    }
 
 
-//    @PostMapping("/find-id")
-//    public  ResponseEntity<ApiResponse<Object>> findId(@RequestBody FindIdRequest request) {
-//        return ResponseEntity.ok(authService.findId(request));
-//    }
-//
-//    @PostMapping("/find-password")
-//    public  ResponseEntity<ApiResponse<Object>> findPassword(@RequestBody FindPasswordRequest request) {
-//        return ResponseEntity.ok(authService.findPassword(request));
-//    }
+    @GetMapping("/check-id")
+    public ResponseEntity<ApiResponse<Object>> checkId(@RequestParam String userEmail) {
+        return ResponseEntity.ok(ApiResponse.success(authService.isIdDuplicate(userEmail)));
+    }
 
-//
-//    @GetMapping("/check-id")
-//    public ResponseEntity<Boolean> checkId(@RequestParam String username) {
-//        return ResponseEntity.ok(authService.isIdDuplicate(username));
-//    }
-//
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-//        authService.register(request);
-//        return ResponseEntity.ok("회원가입 완료");
-//    }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDto request) {
+        authService.register(request);
+        return ResponseEntity.ok("회원가입 완료");
+    }
 }

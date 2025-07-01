@@ -1,4 +1,4 @@
-package sesac.bookmanager.Security.jwt;
+package sesac.bookmanager.security;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -11,8 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sesac.bookmanager.Security.CustomUserDetails;
-import sesac.bookmanager.user.User;
+import sesac.bookmanager.user.data.User;
 
 import java.io.IOException;
 import java.util.Collections;

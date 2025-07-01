@@ -1,10 +1,10 @@
-package sesac.bookmanager.Security;
+package sesac.bookmanager.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import sesac.bookmanager.user.User;
+import sesac.bookmanager.user.data.User;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,6 +1,7 @@
-package sesac.bookmanager.user;
+package sesac.bookmanager.user.data;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "user")
 public class User {
     @Id

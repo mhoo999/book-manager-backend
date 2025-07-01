@@ -1,4 +1,4 @@
-package sesac.bookmanager.Security.jwt;
+package sesac.bookmanager.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package sesac.bookmanager.Security.jwt;
+package sesac.bookmanager.security;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,8 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import sesac.bookmanager.Security.CustomUserDetails;
-import sesac.bookmanager.user.User;
+import sesac.bookmanager.user.data.User;
 
 import java.security.Key;
 import java.util.Collections;

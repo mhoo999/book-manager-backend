@@ -1,4 +1,4 @@
-package sesac.bookmanager.Security.jwt;
+package sesac.bookmanager.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

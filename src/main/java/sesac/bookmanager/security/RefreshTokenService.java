@@ -1,10 +1,8 @@
-package sesac.bookmanager.Security.jwt;
+package sesac.bookmanager.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sesac.bookmanager.Security.CustomUserDetails;
-import sesac.bookmanager.user.User;
+import sesac.bookmanager.user.data.User;
 import sesac.bookmanager.user.UserRepository;
 
 @Service
