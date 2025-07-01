@@ -1,10 +1,14 @@
 package sesac.bookmanager.wish.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum WishStatus {
     EXAMINING((byte) 1),
     APPROVED((byte) 2),
@@ -14,6 +18,12 @@ public enum WishStatus {
 
     private final byte code;
 
+    @JsonValue
+    public byte getCode() {
+        return code;
+    }
+
+    @JsonCreator
     public static WishStatus fromCode(byte code) {
         for (WishStatus wishStatus : WishStatus.values()) {
             if (wishStatus.code == code) {
