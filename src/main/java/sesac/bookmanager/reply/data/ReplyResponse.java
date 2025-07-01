@@ -1,4 +1,4 @@
-package sesac.bookmanager.question.data;
+package sesac.bookmanager.reply.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class ReplyResponse {
                 reply.getContent(),
                 reply.getCreatedAt(),
                 reply.getAdmin().getAdminId(),
-                reply.getQuestionAndReport().getQuestionId()
+                reply.getQuestion().getQuestionId()
         );
     }
 }

@@ -8,14 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.question.data.*;
-import sesac.bookmanager.hjdummy.DummyAdmin;
 import sesac.bookmanager.hjdummy.DummyAdminRepository;
 import sesac.bookmanager.hjdummy.DummyUserRepository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import sesac.bookmanager.reply.ReplyRepository;
+import sesac.bookmanager.reply.data.Reply;
 
 @Service
 @RequiredArgsConstructor
@@ -27,37 +23,58 @@ public class QuestionService {
     private final DummyAdminRepository adminRepository;
     private final ReplyRepository replyRepository;
 
-    public QuestionWithReplyResponse replyToQuestion(ReplyCreateRequest request) {
-        DummyAdmin admin = adminRepository.findById(request.getAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Admin : " + request.getAdminId()));
-        QuestionAndReport question = questionRepository.findById(request.getQuestionId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Question : " + request.getQuestionId()));
 
-        Reply newReplyToQuestion = Reply.builder()
-                .content(request.getContent())
-                .admin(admin)
-                .question(question)
-                .build();
+    public QuestionResponse createQuestion(QuestionCreateRequest request) {
+        Question newQuestion = request.toDomain();
+        /// 유저정보 삽입 필요
+        newQuestion.setStatus((byte) 0);
 
-        Reply savedReply = replyRepository.save(newReplyToQuestion);
+        Question savedQuestion = questionRepository.save(newQuestion);
 
-        return QuestionWithReplyResponse.from(question, savedReply);
+        return QuestionResponse.from(savedQuestion);
     }
 
-    public QuestionWithReplyPageResponse getAllQuestions(QuestionSearchRequest search) {
+    @Transactional(readOnly = true)
+    public QuestionPageResponse getAllQuestions(QuestionSearchRequest search) {
         Pageable pageable = PageRequest.of(search.getPage(), search.getSize());
 
-        Page<QuestionAndReport> pagedQuestion = questionRepository.findAll(pageable);
+        Page<Question> pagedQuestion = questionRepository.findAll(pageable);
 
-
-
-        // 작업 메모
-        // 굳이 문의사항에 대한 답변을 함께 보내지 않는 방향으로 변경
-        // 코드 수정 필요!!
-
-
-
-
-        return null;
+        return QuestionPageResponse.from(pagedQuestion.getContent(), search, pagedQuestion.getTotalElements());
     }
+
+
+    @Transactional(readOnly = true)
+    public QuestionWithReplyResponse getQuestionById(Integer questionId) {
+        Question targetQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
+
+        Reply targetReply = replyRepository.findByQuestion_QuestionId(questionId).orElse(null);
+
+        return QuestionWithReplyResponse.from(targetQuestion, targetReply);
+    }
+
+    public QuestionResponse updateQuestion(Integer questionId, QuestionUpdateRequest request) {
+        Question targetQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
+
+        targetQuestion.setTitle(request.getTitle());
+        targetQuestion.setContent(request.getContent());
+
+        return QuestionResponse.from(targetQuestion);
+    }
+
+    public QuestionResponse updateStatus(Integer questionId, QuestionStatusUpdateRequest request) {
+        Question targetQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
+
+        targetQuestion.setStatus(request.getStatus());
+
+        return QuestionResponse.from(targetQuestion);
+    }
+
+    public void deleteQuestion(Integer questionId) {
+        questionRepository.deleteById(questionId);
+    }
+
 }

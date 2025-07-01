@@ -1,4 +1,4 @@
-package sesac.bookmanager.question.data;
+package sesac.bookmanager.reply.data;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import sesac.bookmanager.hjdummy.DummyAdmin;
+import sesac.bookmanager.question.data.Question;
 
 import java.time.LocalDateTime;
 
@@ -30,5 +31,5 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
-    private QuestionAndReport question;
+    private Question question;
 }

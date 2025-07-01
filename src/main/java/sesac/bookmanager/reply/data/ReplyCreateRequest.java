@@ -1,4 +1,4 @@
-package sesac.bookmanager.question.data;
+package sesac.bookmanager.reply.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ReplyCreateRequest {
     private String content;
-    private LocalDateTime createdAt;
     private Integer adminId;
-    private Integer questionId;
+
+    public Reply toDomain() {
+        Reply reply = new Reply();
+        reply.setContent(this.content);
+
+        return reply;
+    }
 }

@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import sesac.bookmanager.reply.data.Reply;
+import sesac.bookmanager.reply.data.ReplyResponse;
 
 @Data
 @AllArgsConstructor
@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @Builder
 public class QuestionWithReplyResponse {
 
-    private QuestionAndReportResponse question;
+    private QuestionResponse question;
     private ReplyResponse reply;
 
-    public static QuestionWithReplyResponse from(QuestionAndReport question, Reply reply) {
+    public static QuestionWithReplyResponse from(Question question, Reply reply) {
         return QuestionWithReplyResponse.builder()
-                .question(QuestionAndReportResponse.from(question))
+                .question(QuestionResponse.from(question))
                 .reply(ReplyResponse.from(reply))
                 .build();
     }

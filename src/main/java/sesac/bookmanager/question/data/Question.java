@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import sesac.bookmanager.hjdummy.DummyUser;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "question")
@@ -16,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QuestionAndReport {
+public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +23,9 @@ public class QuestionAndReport {
 
     // true면 문의게시판, false면 오류신고게시판
     private Boolean type;
+
+    // 0이면 미처리, 1이면 처리중, 2면 처리완료
+    private Byte status;
 
     private String title;
     private String content;
