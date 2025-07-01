@@ -1,10 +1,14 @@
 package sesac.bookmanager.notice.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum NoticeType {
     DEFAULT((byte) 0),
     DAYOFF((byte) 1),
@@ -13,6 +17,12 @@ public enum NoticeType {
 
     private final byte code;
 
+    @JsonValue
+    public byte getCode() {
+        return code;
+    }
+
+    @JsonCreator
     public static NoticeType fromCode(byte code) {
         for (NoticeType noticeType : NoticeType.values()) {
             if (noticeType.code == code) {

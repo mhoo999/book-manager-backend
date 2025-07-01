@@ -12,7 +12,7 @@ public class NoticeUpdateRequest {
     private String content;
     private NoticeType type;
 
-    public Notice toNotice() {
+    public Notice toDomain() {
         Notice notice = new Notice();
         notice.setTitle(title);
         notice.setContent(content);
