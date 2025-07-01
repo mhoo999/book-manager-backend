@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import sesac.bookmanager.rent.domain.Rent;
 
 @Repository
-public interface RentRepository extends CrudRepository<Rent, Long> {
+public interface RentRepository extends CrudRepository<Rent, Long>, RentQueryRepository {
 }

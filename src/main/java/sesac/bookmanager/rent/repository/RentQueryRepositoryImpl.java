@@ -1,0 +1,89 @@
+﻿package sesac.bookmanager.rent.repository;
+
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
+import sesac.bookmanager.rent.domain.Rent;
+import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
+import sesac.bookmanager.rent.dto.response.RentResponseDto;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+public class RentQueryRepositoryImpl implements RentQueryRepository {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Page<RentResponseDto> searchRents(SearchRentRequestDto request) {
+
+        QRent rent = QRent.rent;
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        // todo: bookCode 처럼 rentCode로 할지, rentId로 쓸지...
+        if (StringUtils.hasText(request.getRentCode())) {
+            builder.and(rent.id.containsIgnoreCase(request.getRentCode()));
+        }
+
+        if (StringUtils.hasText(request.getUsername())) {
+            builder.and(rent.user.getName().containsIgnoreCase(request.getUsername()));
+        }
+
+        if (StringUtils.hasText(request.getBookCode())) {
+            builder.and(rent.book.getBookCode().containIgnoreCase(request.getBookCode()));
+        }
+
+        if (StringUtils.hasText(request.getBookName())) {
+            builder.and(rent.book.getBookName().containIgnoreCase(request.getBookName()));
+        }
+
+        if (StringUtils.hasText(request.getUserPhone())) {
+            builder.and(rent.user.getPhone.containIgnoreCase(request.getUserPhone()));
+        }
+
+        if (StringUtils.hasText(request.getRentStatus())) {
+            builder.and(rent.status.likeIgnoreCase(request.getRentStatus()));
+        }
+
+        String[] parts = request.getSort().split(",");
+        String sortBy = parts[0];
+        boolean isAsc = !"desc".equalsIgnoreCase(parts[1]);
+        Order direction = isAsc ? Order.ASC : Order.DESC;
+        OrderSpecifier<?> order = switch (sortBy) {
+            case "username" -> new OrderSpecifier<>(direction, rent.username);
+            case "bookCode" -> new OrderSpecifier<>(direction, rent.bookCode);
+            case "bookName" -> new OrderSpecifier<>(direction, rent.bookName);
+            default -> new OrderSpecifier<>(direction, rent.rentCode);
+        };
+
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+
+        List<Rent> rents = queryFactory
+                .selectFrom(rent)
+                .where(builder)
+                .orderBy(order)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory
+                .select(rent.count())
+                .from(rent)
+                .where(builder)
+                .fetchOne();
+
+        List<RentResponseDto> content = rents.stream()
+                .map(RentResponseDto::from)
+                .toList();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+}

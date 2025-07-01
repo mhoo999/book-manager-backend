@@ -2,6 +2,7 @@
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.rent.domain.Rent;
@@ -44,7 +45,8 @@ public class RentService {
 
     @Transactional(readOnly = true)
     public PageRentResponseDto searchRents(SearchRentRequestDto request) {
-        return null;
+        Page<RentResponseDto> page = rentRepository.searchRents(request);
+        return PageRentResponseDto.from(page.getContent(), request, page.getTotalElements());
     }
 
     @Transactional(readOnly = true)
