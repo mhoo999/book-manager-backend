@@ -11,20 +11,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class QuestionResponse {
     private Integer questionId;
-    private Boolean type;
+    private Boolean questionType;
     private Byte status;
     private String title;
     private String content;
     private LocalDateTime createdAt;
+    private String userName;
 
     public static QuestionResponse from(Question question) {
         return new QuestionResponse(
                 question.getQuestionId(),
-                question.getType(),
+                question.getQuestionType(),
                 question.getStatus(),
                 question.getTitle(),
                 question.getContent(),
-                question.getCreatedAt()
+                question.getCreatedAt(),
+                question.getUser().getUserName()
         );
     }
 }

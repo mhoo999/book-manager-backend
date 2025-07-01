@@ -22,7 +22,7 @@ public class Question {
     private Integer questionId;
 
     // true면 문의게시판, false면 오류신고게시판
-    private Boolean type;
+    private Boolean questionType;
 
     // 0이면 미처리, 1이면 처리중, 2면 처리완료
     private Byte status;

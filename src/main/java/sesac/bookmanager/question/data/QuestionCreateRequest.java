@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionCreateRequest {
-    private boolean type;
+    private boolean questionType;
     private String title;
     private String content;
 
     public Question toDomain() {
         Question question = new Question();
-        question.setType(this.type);
+        question.setQuestionType(this.type);
         question.setTitle(this.title);
         question.setContent(this.content);
 
