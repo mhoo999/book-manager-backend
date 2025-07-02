@@ -57,7 +57,7 @@ public class NoticeService {
         Notice viewNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
 
-        viewNotice.setViews(viewNotice.getViews() + 1);
+        viewNotice.setViews(viewNotice.getViews() == null ? 1 : viewNotice.getViews() + 1);
 
         return NoticeResponse.from(viewNotice);
     }

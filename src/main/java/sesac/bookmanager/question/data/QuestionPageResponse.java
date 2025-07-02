@@ -12,9 +12,9 @@ public class QuestionPageResponse {
     private int size;
     private long totalCount;
     private int totalPages;
-    private List<Question> questions;
+    private List<QuestionResponse> questions;
 
-    public static QuestionPageResponse from(List<Question> questions, QuestionSearchRequest search, Long count) {
+    public static QuestionPageResponse from(List<QuestionResponse> questions, QuestionSearchRequest search, Long count) {
         int totalPages = (int) Math.ceil((double) count / search.getSize());
         return new QuestionPageResponse(
                 search.getPage(),

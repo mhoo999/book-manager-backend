@@ -14,6 +14,8 @@ import sesac.bookmanager.reply.data.Reply;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.user.UserRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -30,6 +32,7 @@ public class QuestionService {
 
         newQuestion.setStatus((byte) 0);
         newQuestion.setUser(customUserDetails.getUser());
+        newQuestion.setCreatedAt(LocalDateTime.now());
 
         Question savedQuestion = questionRepository.save(newQuestion);
 
@@ -40,7 +43,8 @@ public class QuestionService {
     public QuestionPageResponse getAllQuestions(QuestionSearchRequest search) {
         Pageable pageable = PageRequest.of(search.getPage(), search.getSize());
 
-        Page<Question> pagedQuestion = questionRepository.findAll(pageable);
+        Page<QuestionResponse> pagedQuestion = questionRepository.findAll(pageable)
+                .map(QuestionResponse::from);
 
         return QuestionPageResponse.from(pagedQuestion.getContent(), search, pagedQuestion.getTotalElements());
     }

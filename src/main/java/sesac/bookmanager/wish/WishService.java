@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -19,8 +21,10 @@ public class WishService {
 
     public WishResponse createWish(WishCreateRequest request, CustomUserDetails customUserDetails) {
         Wish newWish = request.toDomain();
+
         newWish.setStatus(WishStatus.EXAMINING);
         newWish.setUser(customUserDetails.getUser());
+        newWish.setDueDate(LocalDateTime.now());
 
         Wish saved = wishRepository.save(newWish);
 
