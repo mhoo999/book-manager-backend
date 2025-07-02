@@ -1,4 +1,4 @@
-﻿package sesac.bookmanager.rent.enums;
+package sesac.bookmanager.rent.enums;
 
 public enum RentStatus {
     REQUESTED("대여요청"),

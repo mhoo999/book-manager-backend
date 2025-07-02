@@ -1,8 +1,10 @@
-﻿package sesac.bookmanager.rent.controller;
+package sesac.bookmanager.rent.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
@@ -36,7 +38,8 @@ public class RentController {
 
     @PutMapping("{rentId}")
     public ResponseEntity<RentIdResponseDto> updateRent(@PathVariable Long rentId, @RequestBody UpdateRentRequestDto request) {
-        return ResponseEntity.ok(rentService.updateRent(rentId, request));
+        Authentication adminInfo = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok(rentService.updateRent(rentId, request, adminInfo));
     }
 
 }

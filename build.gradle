@@ -73,3 +73,17 @@ compileJava {
 clean {
 	delete file(querydslDir)
 }
+
+tasks.register("generateQuerydsl", JavaCompile) {
+	group = "build"
+	description = "Generate Q-classes (QueryDSL metamodels)"
+
+	source = sourceSets.main.java
+	classpath = configurations.querydsl
+	destinationDirectory.set(file(querydslDir))
+	options.annotationProcessorPath = configurations.annotationProcessor
+	options.compilerArgs += [
+			"-proc:only",
+			"-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+	]
+}

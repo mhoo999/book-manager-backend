@@ -1,4 +1,4 @@
-﻿package sesac.bookmanager.rent.repository;
+package sesac.bookmanager.rent.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
+import sesac.bookmanager.rent.domain.QRent;
 import sesac.bookmanager.rent.domain.Rent;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
@@ -28,29 +29,28 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        // todo: bookCode 처럼 rentCode로 할지, rentId로 쓸지...
-        if (StringUtils.hasText(request.getRentCode())) {
-            builder.and(rent.id.containsIgnoreCase(request.getRentCode()));
+        if (request.getRentCode() > 0) {
+            builder.and(rent.id.eq(request.getRentCode()));
         }
 
         if (StringUtils.hasText(request.getUsername())) {
-            builder.and(rent.user.getName().containsIgnoreCase(request.getUsername()));
+            builder.and(rent.user.name.containsIgnoreCase(request.getUsername()));
         }
 
         if (StringUtils.hasText(request.getBookCode())) {
-            builder.and(rent.book.getBookCode().containIgnoreCase(request.getBookCode()));
+            builder.and(rent.bookItem.bookCode.containsIgnoreCase(request.getBookCode()));
         }
 
         if (StringUtils.hasText(request.getBookName())) {
-            builder.and(rent.book.getBookName().containIgnoreCase(request.getBookName()));
+            builder.and(rent.bookItem.book.title.containsIgnoreCase(request.getBookName()));
         }
 
         if (StringUtils.hasText(request.getUserPhone())) {
-            builder.and(rent.user.getPhone.containIgnoreCase(request.getUserPhone()));
+            builder.and(rent.user.phone.containsIgnoreCase(request.getUserPhone()));
         }
 
         if (StringUtils.hasText(request.getRentStatus())) {
-            builder.and(rent.status.likeIgnoreCase(request.getRentStatus()));
+            builder.and(rent.status.stringValue().eq(request.getRentStatus()));
         }
 
         String[] parts = request.getSort().split(",");
@@ -58,10 +58,10 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
         boolean isAsc = !"desc".equalsIgnoreCase(parts[1]);
         Order direction = isAsc ? Order.ASC : Order.DESC;
         OrderSpecifier<?> order = switch (sortBy) {
-            case "username" -> new OrderSpecifier<>(direction, rent.username);
-            case "bookCode" -> new OrderSpecifier<>(direction, rent.bookCode);
-            case "bookName" -> new OrderSpecifier<>(direction, rent.bookName);
-            default -> new OrderSpecifier<>(direction, rent.rentCode);
+            case "username" -> new OrderSpecifier<>(direction, rent.user.name);
+            case "bookCode" -> new OrderSpecifier<>(direction, rent.bookItem.bookCode);
+            case "bookName" -> new OrderSpecifier<>(direction, rent.bookItem.book.title);
+            default -> new OrderSpecifier<>(direction, rent.id);
         };
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());

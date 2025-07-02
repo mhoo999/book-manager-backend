@@ -1,10 +1,15 @@
-﻿package sesac.bookmanager.rent.service;
+package sesac.bookmanager.rent.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.AdminRepository;
+import sesac.bookmanager.book.domain.BookItem;
+import sesac.bookmanager.book.repository.BookItemRepository;
 import sesac.bookmanager.rent.domain.Rent;
 import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
@@ -14,7 +19,10 @@ import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.enums.RentStatus;
 import sesac.bookmanager.rent.repository.RentRepository;
+import sesac.bookmanager.user.UserRepository;
+import sesac.bookmanager.user.data.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -24,13 +32,13 @@ public class RentService {
 
     private final RentRepository rentRepository;
     private final UserRepository userRepository;
-    private final BookItemRepository bookRepository;
+    private final BookItemRepository bookItemRepository;
+    private final AdminRepository adminRepository;
 
     public RentIdResponseDto register(CreateRentRequestDto request) {
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById((int) request.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다: " + request.getUserId()));
 
-        // todo: 개별 책의 id 또는 book-code 사용하여 조회해야 함
         BookItem bookItem = bookItemRepository.findById(request.getBookId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + request.getBookId()));
 
@@ -56,11 +64,11 @@ public class RentService {
         return RentResponseDto.from(rent);
     }
 
-    public RentIdResponseDto updateRent(Long rentId, UpdateRentRequestDto request) {
+    public RentIdResponseDto updateRent(Long rentId, UpdateRentRequestDto request, Authentication adminInfo) {
         Rent rent = rentRepository.findById(rentId)
                 .orElseThrow(() -> new IllegalArgumentException("대여 기록을 찾을 수 없습니다: " + rentId));
 
-        RentStatus newStatus = rent.getStatus();
+        RentStatus newStatus = request.getStatus();
 
         switch (newStatus) {
             case RENTED:
@@ -69,8 +77,12 @@ public class RentService {
                 }
                 rent.setStatus(RentStatus.RENTED);
                 rent.setRentalDate(LocalDateTime.now());
-                rent.setExpectedReturnDate(LocalDateTime.now().plusWeeks(2));
+                rent.setExpectedReturnDate(LocalDate.now().plusWeeks(2));
                 // todo: 승인 관리자 정보 포함해야함
+                int adminId = adminInfo.getId();
+                Admin admin = adminRepository.findById(adminId)
+                        .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 관리자가 존재하지 않습니다: " + adminId));
+                rent.setAdmin(admin);
                 break;
             case RETURNED:
                 if (rent.getStatus() != RentStatus.RENTED && rent.getStatus() != RentStatus.OVERDUE) {
