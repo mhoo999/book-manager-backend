@@ -37,3 +37,4 @@ out/
 .vscode/
 
 .yml
+src/main/java/sesac/bookmanager/hjdummy/**
