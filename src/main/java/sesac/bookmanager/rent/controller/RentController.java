@@ -42,7 +42,7 @@ public class RentController {
     @PutMapping("{rentId}")
     public ResponseEntity<RentIdResponseDto> updateRent(
             @PathVariable Long rentId,
-            @RequestBody UpdateRentRequestDto request,
+            @ModelAttribute UpdateRentRequestDto request,
             @AuthenticationPrincipal CustomAdminDetails customAdminDetails) {
         return ResponseEntity.ok(rentService.updateRent(rentId, request, customAdminDetails));
     }
