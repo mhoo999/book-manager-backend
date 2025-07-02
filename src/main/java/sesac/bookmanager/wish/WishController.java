@@ -3,18 +3,23 @@ package sesac.bookmanager.wish;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/wish")
 public class WishController {
 
     private final WishService wishService;
 
+    /*
+     * 희망도서 작성(유저용) : `POST("/create")`
+     * 희망도서 목록 : `GET`
+     * 희망도서 열람 : `GET("/{wishId}")`
+     * 희망도서 처리상태 전환(관리자용) : `PUT("/{wishId}/progress")`
+    `*/
 
     @PostMapping("/create")
     public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request,
@@ -22,21 +27,18 @@ public class WishController {
         return ResponseEntity.ok(wishService.createWish(request, customUserDetails));
     }
 
-    @ResponseBody
     @GetMapping
     public ResponseEntity<WishPageResponse> getWishlist(@RequestBody WishSearchRequest search) {
         return ResponseEntity.ok(wishService.getWishlist(search));
     }
 
-    @ResponseBody
     @GetMapping("/{wishId}")
     public ResponseEntity<WishResponse> getWishById(@PathVariable Integer wishId) {
         return ResponseEntity.ok(wishService.getWishById(wishId));
     }
 
     @PutMapping("/{wishId}/progress")
-    public String updateProgress(@PathVariable Integer wishId, @ModelAttribute WishStatusUpdateRequest request) {
-        wishService.updateProgress(wishId, request);
-        return "redirect:/api/wish/" + wishId;
+    public ResponseEntity<WishResponse> updateProgress(@PathVariable Integer wishId, @ModelAttribute WishStatusUpdateRequest request) {
+        return ResponseEntity.ok(wishService.updateProgress(wishId, request));
     }
 }
