@@ -71,7 +71,7 @@ CREATE TABLE `rent_history` (
     `admin_id` int NOT NULL,
 	`rental_date`	datetime	NULL,
 	`expected_return_date`	DATE	NULL,
-	`status`	bit(1)	NULL,
+	`status` varchar(20)	NULL,
     `description` VARCHAR(255)
 );
 
