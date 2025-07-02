@@ -3,6 +3,7 @@ package sesac.bookmanager.wish.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import sesac.bookmanager.user.data.User;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +20,7 @@ public class WishResponse {
     private String author;
     private String publisher;
     private LocalDateTime publishDate;
-    private DummyUser user;
+    private User user;
 
     public static WishResponse from(Wish wish) {
         return new WishResponse(

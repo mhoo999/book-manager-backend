@@ -26,7 +26,7 @@ public class QuestionResponse {
                 question.getTitle(),
                 question.getContent(),
                 question.getCreatedAt(),
-                question.getUser().getUserName()
+                question.getUser().getName()
         );
     }
 }

@@ -21,7 +21,7 @@ public class ReplyResponse {
                 reply.getReplyId(),
                 reply.getContent(),
                 reply.getCreatedAt(),
-                reply.getAdmin().getAdminId(),
+                reply.getAdmin().getId(),
                 reply.getQuestion().getQuestionId()
         );
     }

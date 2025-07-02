@@ -27,7 +27,7 @@ public class NoticeResponse {
                 notice.getTitle(),
                 notice.getContent(),
                 notice.getViews(),
-                notice.getAdmin().getAdminId()
+                notice.getAdmin().getId()
         );
     }
 }
