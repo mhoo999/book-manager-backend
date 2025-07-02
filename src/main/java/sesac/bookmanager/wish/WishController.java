@@ -3,11 +3,12 @@ package sesac.bookmanager.wish;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/wish")
 public class WishController {
