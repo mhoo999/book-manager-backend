@@ -31,17 +31,17 @@ public class BookService {
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
 
-
         Book book = new Book();
         book.setTitle(request.getTitle());
         book.setAuthor(request.getAuthor());
         book.setPublisher(request.getPublisher());
         book.setPublishedAt(request.getPublishedAt());
-        book.setIsbn(request.getIsbn());
-        book.setDescription(null);
-        book.setCategoryCode(request.getCategory());
+        book.setLocation(request.getLocation());
         book.setStock(request.getStock());
         book.setCover(request.getCover());
+        book.setIsbn(request.getIsbn());
+        book.setCategoryCode(request.getCategory());
+        book.setDescription(null);
 
         BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
                 ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
@@ -62,7 +62,7 @@ public class BookService {
     }
 
     private int getNextSequence(String category) {
-        List<String> latestCodes = bookItemRepository.findBookCodesByCategoryOrdered(category, PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "BookCode")));
+        List<String> latestCodes = bookItemRepository.findBookCodesByCategoryOrdered(category, PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "bookCode")));
 
         if (latestCodes.isEmpty()) {
             return 1;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import sesac.bookmanager.book.domain.BookItem;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookItemRepository extends JpaRepository<BookItem, Long> {
@@ -20,4 +21,5 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
     """)
     List<String> findBookCodesByCategoryOrdered(@Param("category") String category, Pageable pageable);
 
+    Optional<BookItem> findByBookCode(String bookCode);
 }
