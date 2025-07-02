@@ -12,3 +12,15 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+server:
+  servlet:
+    session:
+      timeout: 30m
+
+jwt:
+  secret: VzS3N6v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+KbPe
+  access-expiration: 3600
+  refresh-expiration: 604800
+
