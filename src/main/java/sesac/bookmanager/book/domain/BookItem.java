@@ -22,10 +22,11 @@ import java.time.LocalDateTime;
 public class BookItem {
 
     @Id
+    @Column(name = "book_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "bookItem_code")
+    @Column(name = "book_item_code")
     private String bookCode;
 
     @Enumerated(EnumType.STRING)
