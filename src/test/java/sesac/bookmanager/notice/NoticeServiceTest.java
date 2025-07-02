@@ -6,7 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.*;
 
-import sesac.bookmanager.hjdummy.*;
+import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.notice.data.*;
 
 import java.time.LocalDateTime;
@@ -25,15 +26,15 @@ class NoticeServiceTest {
     private NoticeRepository noticeRepository;
 
     @Mock
-    private DummyAdminRepository adminRepository;
+    private AdminRepository adminRepository;
 
-    private DummyAdmin admin;
+    private Admin admin;
     private Notice notice;
 
     @BeforeEach
     void setUp() {
-        admin = DummyAdmin.builder()
-                .adminId(1)
+        admin = Admin.builder()
+                .id(1)
                 .build();
 
         notice = Notice.builder()
