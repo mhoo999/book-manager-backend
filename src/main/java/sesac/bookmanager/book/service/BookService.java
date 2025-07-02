@@ -2,7 +2,6 @@ package sesac.bookmanager.book.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,6 +30,7 @@ public class BookService {
     private final BookItemRepository bookItemRepository;
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
+
 
         Book book = new Book();
         book.setTitle(request.getTitle());
