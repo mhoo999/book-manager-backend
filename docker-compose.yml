@@ -10,6 +10,13 @@ services:
       MYSQL_USER: myuser
       MYSQL_PASSWORD: mypass
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - ./db-init:/docker-entrypoint-initdb.d
+
+  redis:
+    image: redis:7.2
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
