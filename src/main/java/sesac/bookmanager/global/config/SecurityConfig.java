@@ -1,11 +1,13 @@
-package sesac.bookmanager.config;
+package sesac.bookmanager.global.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import sesac.bookmanager.security.AuthAdminDetailService;
+import sesac.bookmanager.security.AuthUserDetailService;
 import sesac.bookmanager.security.JwtAuthenticationFilter;
 
 @Configuration
@@ -23,7 +27,8 @@ import sesac.bookmanager.security.JwtAuthenticationFilter;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
+    private final AuthUserDetailService authUserDetailService;
+    private final AuthAdminDetailService authAdminDetailService;
     /**
      * ✅ 1) 관리자용 (세션 기반)
      * 경로: /api/admin/**
@@ -51,9 +56,17 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/admin/logout")
                         .logoutSuccessUrl("/api/admin/login")
-                );
+                )
+                .authenticationManager(adminAuthenticationManager());
 
         return http.build();
+    }
+    @Bean
+    public AuthenticationManager adminAuthenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(authAdminDetailService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(provider);
     }
 
     /**
@@ -73,9 +86,19 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // 회원가입, 로그인 등 공개 API
                         .anyRequest().authenticated() // 그 외는 인증 필요
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가
+                .authenticationManager(userAuthenticationManager());
         return http.build();
     }
+    @Bean
+    @Primary
+    public AuthenticationManager userAuthenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(authUserDetailService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(provider);
+    }
+
 
     /**
      * 공통 비밀번호 인코더
@@ -85,9 +108,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+
 
 }
