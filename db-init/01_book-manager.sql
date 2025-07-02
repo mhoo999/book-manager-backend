@@ -24,7 +24,7 @@ CREATE TABLE `user` (
 );
 
 CREATE TABLE `book` (
-	`book_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`book_id`	BIGINT	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`title`	VARCHAR(255)	NOT NULL,
 	`author`	VARCHAR(255)	NOT NULL,
 	`publisher`	VARCHAR(255)	NOT NULL,
@@ -33,14 +33,14 @@ CREATE TABLE `book` (
 	`description`	longtext	NULL,
 	`category_code`	VARCHAR(6)	NOT NULL,
     `location`	VARCHAR(255)	NOT NULL,
-    `stock`	smallint	NOT NULL,
+    `stock`	int	NOT NULL,
     `cover` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE `book_item` (
-	`bookItem_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `bookItem_code` VARCHAR(255) NOT NULL ,
-	`book_id`	int	NOT NULL,
+	`book_item_id`	BIGINT	NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `book_item_code` VARCHAR(255) NOT NULL ,
+	`book_id`	BIGINT	NOT NULL,
 	`status`	VARCHAR(20) NOT NULL,
 	`created_at`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`updated_at`	datetime	NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
@@ -67,7 +67,7 @@ CREATE TABLE `reply` (
 CREATE TABLE `rent_history` (
 	`rental_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`user_id`	int	NOT NULL,
-	`bookItem_id`	int	NOT NULL,
+	`book_item_id`	BIGINT	NOT NULL,
     `admin_id` int NOT NULL,
 	`rental_date`	datetime	NULL,
 	`expected_return_date`	DATE	NULL,
@@ -142,10 +142,10 @@ REFERENCES `user` (
 );
 
 ALTER TABLE `rent_history` ADD CONSTRAINT `FK_book_item_to_rent_history` FOREIGN KEY (
-	`bookItem_id`
+	`book_item_id`
 )
 REFERENCES `book_item` (
-	`bookItem_id`
+	`book_item_id`
 );
 
 ALTER TABLE `question` ADD CONSTRAINT `FK_user_to_question` FOREIGN KEY (
