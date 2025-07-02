@@ -38,10 +38,10 @@ public class RentService {
 
     public RentIdResponseDto register(CreateRentRequestDto request, CustomUserDetails customUserDetails) {
         User user = userRepository.findById(customUserDetails.getUser().getId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다: " + request.getUserId()));
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다: " + customUserDetails.getUser().getId()));
 
-        BookItem bookItem = bookItemRepository.findById(request.getBookId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + request.getBookId()));
+        BookItem bookItem = bookItemRepository.findByBookCode(request.getBookCode())
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + request.getBookCode()));
 
         Rent rent = new Rent();
         rent.setUser(user);

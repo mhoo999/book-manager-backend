@@ -34,7 +34,7 @@ public class Rent {
     private BookItem bookItem;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id", nullable = false)
+    @JoinColumn(name = "admin_id")
     private Admin admin;
 
     @Column(name = "rental_date")
