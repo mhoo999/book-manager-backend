@@ -3,12 +3,13 @@ package sesac.bookmanager.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.user.data.ChangePasswordRequestDto;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
@@ -16,6 +17,7 @@ public class UserController {
     /**
      * 내 정보 가져오기
      */
+    @ResponseBody
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<Object>> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(ApiResponse.success(userService.getUserInfo(customUserDetails.getUser().getId())));
@@ -24,6 +26,7 @@ public class UserController {
     /**
      * 비밀번호 변경
      */
+    @ResponseBody
     @PutMapping("/change-password")
     public ResponseEntity<ApiResponse<Object>> changePassword(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                               @RequestBody ChangePasswordRequestDto requestBody) {
@@ -34,6 +37,7 @@ public class UserController {
     /**
      * 회원 탈퇴
      */
+    @ResponseBody
     @DeleteMapping("/withdraw")
     public ResponseEntity<ApiResponse<Object>> deleteUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         userService.softDeleteUser(customUserDetails.getUser().getId());

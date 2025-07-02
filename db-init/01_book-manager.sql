@@ -3,7 +3,7 @@ USE book_manager;
 
 CREATE TABLE `admin` (
 	`admin_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`account_id`	VARCHAR(255)	NOT NULL,
+	`account_id`	VARCHAR(255)	NOT NULL UNIQUE,
 	`pwd`	VARCHAR(255)	NOT NULL,
 	`phone`	VARCHAR(255)	NULL,
 	`name`	VARCHAR(255)	NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `rent_history` (
 	`rental_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`user_id`	int	NOT NULL,
 	`book_item_id`	BIGINT	NOT NULL,
-    `admin_id` int NOT NULL,
+    `admin_id` int  NULL,
 	`rental_date`	datetime	NULL,
 	`expected_return_date`	DATE	NULL,
 	`status` varchar(20)	NULL,
@@ -162,10 +162,10 @@ REFERENCES `user` (
 	`user_id`
 );
 ALTER TABLE `rent_history` ADD CONSTRAINT `FK_admin_to_rent_history` FOREIGN KEY (
-     `user_id`
+    `admin_id`
 )
 REFERENCES `admin` (
-                   `admin_id`
+    `admin_id`
 );
 
 ALTER TABLE `book` ADD CONSTRAINT `UK_category_to_book` FOREIGN KEY (
