@@ -32,11 +32,11 @@ public class User {
     @Column(name = "pwd")
     private String pwd;
 
-    @Column(name="is_deleted")
-    private Boolean isDeleted;
+    @Column(name="is_deleted",nullable = false)
+    private Boolean isDeleted = Boolean.FALSE;
 
     @ColumnDefault("current_timestamp()")
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false,insertable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

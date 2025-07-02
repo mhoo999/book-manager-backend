@@ -75,6 +75,7 @@ public class AuthService {
                 .pwd(encodedPassword)
                 .name(request.getUserName())
                 .phone(request.getPhoneNo())
+                .isDeleted(false)
                 .build();
         userRepository.save(user);
     }
