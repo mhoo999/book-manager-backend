@@ -22,13 +22,13 @@ public class WishController {
     `*/
 
     @PostMapping("/create")
-    public ResponseEntity<WishResponse> createWish(@ModelAttribute WishCreateRequest request,
+    public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request,
                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(wishService.createWish(request, customUserDetails));
     }
 
     @GetMapping
-    public ResponseEntity<WishPageResponse> getWishlist(@ModelAttribute WishSearchRequest search) {
+    public ResponseEntity<WishPageResponse> getWishlist(@RequestBody WishSearchRequest search) {
         return ResponseEntity.ok(wishService.getWishlist(search));
     }
 

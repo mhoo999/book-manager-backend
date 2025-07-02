@@ -18,7 +18,7 @@ public class NoticeController {
     }
 
     @GetMapping
-    public ResponseEntity<NoticePageResponse> getNotices(@ModelAttribute NoticeSearchRequest searchRequest) {
+    public ResponseEntity<NoticePageResponse> getNotices(@RequestBody NoticeSearchRequest searchRequest) {
         return ResponseEntity.ok(noticeService.searchNotice(searchRequest));
     }
 

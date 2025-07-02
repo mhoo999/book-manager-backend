@@ -15,10 +15,9 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/create")
-    public ResponseEntity<QuestionResponse> createQuestion(@ModelAttribute QuestionCreateRequest request,
+    public ResponseEntity<QuestionResponse> createQuestion(@RequestBody QuestionCreateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(questionService.createQuestion(request, customUserDetails));
-        /// 유저정보 추가 필요
     }
 
 
@@ -35,7 +34,7 @@ public class QuestionController {
 
 
     @PutMapping("/{questionId}/edit")
-    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @ModelAttribute QuestionUpdateRequest request,
+    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(questionService.updateQuestion(questionId, request, customUserDetails));
     }
