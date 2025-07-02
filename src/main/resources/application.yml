@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3307/book_manager
+    url: jdbc:mariadb://localhost:3306/book_manager
     username: myuser
     password: mypass
     driver-class-name: org.mariadb.jdbc.Driver
