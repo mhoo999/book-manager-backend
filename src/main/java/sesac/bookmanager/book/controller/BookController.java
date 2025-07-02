@@ -21,7 +21,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/register")
-    public ResponseEntity<BookIdResponseDto> createBook(@Valid @RequestBody CreateBookRequestDto request) {
+    public ResponseEntity<BookIdResponseDto> createBook(@Valid @ModelAttribute CreateBookRequestDto request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(request));
     }
 
@@ -36,7 +36,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
-    public ResponseEntity<BookIdResponseDto> updateBook(@PathVariable Long bookId, @RequestBody UpdateBookRequestDto request) {
+    public ResponseEntity<BookIdResponseDto> updateBook(@PathVariable Long bookId, @ModelAttribute UpdateBookRequestDto request) {
         return ResponseEntity.ok(bookService.updateBook(bookId, request));
     }
 
