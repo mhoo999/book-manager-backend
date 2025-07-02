@@ -48,8 +48,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/login").permitAll()
                         .anyRequest().hasRole("ADMIN")
                 )
+                // 필터 내용 포함
                 .formLogin(form -> form
                         .loginPage("/api/admin/login")
+                        .usernameParameter("accountId")   // 🔑 여기! 기본 "username" → "email"
+                        .passwordParameter("password") // 기본은 "password", 그대로 쓰면 됨
                         .defaultSuccessUrl("/api/admin/dashboard", true)
                         .permitAll()
                 )

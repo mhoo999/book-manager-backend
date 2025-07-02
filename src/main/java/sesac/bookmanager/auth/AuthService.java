@@ -36,7 +36,6 @@ public class AuthService {
         Authentication authentication =  authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        System.out.println(request.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
