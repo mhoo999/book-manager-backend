@@ -19,4 +19,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("UPDATE User u SET u.isDeleted = true, u.deletedAt = :deletedAt WHERE u.id = :id")
     void softDeleteById(@Param("id") Integer id, @Param("deletedAt") LocalDateTime deletedAt);
 
+    int countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    int countByIsDeletedFalse();
+    int countByIsDeletedTrue();
+
 }
