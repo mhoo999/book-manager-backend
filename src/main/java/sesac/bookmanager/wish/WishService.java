@@ -31,7 +31,8 @@ public class WishService {
     public WishPageResponse getWishlist(WishSearchRequest search) {
         Pageable pageable = PageRequest.of(search.getPage(), search.getSize());
 
-        Page<Wish> pagedWish = wishRepository.findAll(pageable);
+        Page<WishResponse> pagedWish = wishRepository.findAll(pageable)
+                .map(WishResponse::from);
 
         return WishPageResponse.from(pagedWish.getContent(), search, pagedWish.getTotalElements());
     }

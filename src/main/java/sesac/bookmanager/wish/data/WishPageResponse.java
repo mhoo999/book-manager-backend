@@ -12,9 +12,9 @@ public class WishPageResponse {
     private int size;
     private long totalCount;
     private int totalPages;
-    private List<Wish> wishes;
+    private List<WishResponse> wishes;
 
-    public static WishPageResponse from(List<Wish> wishes, WishSearchRequest search, Long count) {
+    public static WishPageResponse from(List<WishResponse> wishes, WishSearchRequest search, Long count) {
         int totalPages = (int) Math.ceil((double) count / search.getSize());
 
         return new WishPageResponse(

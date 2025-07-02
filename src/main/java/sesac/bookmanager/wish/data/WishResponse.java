@@ -20,7 +20,10 @@ public class WishResponse {
     private String author;
     private String publisher;
     private LocalDateTime publishDate;
-    private User user;
+
+    private String userEmail;
+    private String userName;
+    private String userPhone;
 
     public static WishResponse from(Wish wish) {
         return new WishResponse(
@@ -31,7 +34,9 @@ public class WishResponse {
                 wish.getAuthor(),
                 wish.getPublisher(),
                 wish.getPublishDate(),
-                wish.getUser()
+                wish.getUser().getEmail(),
+                wish.getUser().getName(),
+                wish.getUser().getPhone()
         );
     }
 }
