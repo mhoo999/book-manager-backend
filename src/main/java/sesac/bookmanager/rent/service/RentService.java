@@ -3,7 +3,6 @@ package sesac.bookmanager.rent.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.admin.Admin;
@@ -19,6 +18,8 @@ import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.enums.RentStatus;
 import sesac.bookmanager.rent.repository.RentRepository;
+import sesac.bookmanager.security.CustomAdminDetails;
+import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.user.UserRepository;
 import sesac.bookmanager.user.data.User;
 
@@ -35,8 +36,8 @@ public class RentService {
     private final BookItemRepository bookItemRepository;
     private final AdminRepository adminRepository;
 
-    public RentIdResponseDto register(CreateRentRequestDto request) {
-        User user = userRepository.findById((int) request.getUserId())
+    public RentIdResponseDto register(CreateRentRequestDto request, CustomUserDetails customUserDetails) {
+        User user = userRepository.findById(customUserDetails.getUser().getId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다: " + request.getUserId()));
 
         BookItem bookItem = bookItemRepository.findById(request.getBookId())
@@ -64,7 +65,7 @@ public class RentService {
         return RentResponseDto.from(rent);
     }
 
-    public RentIdResponseDto updateRent(Long rentId, UpdateRentRequestDto request, Authentication adminInfo) {
+    public RentIdResponseDto updateRent(Long rentId, UpdateRentRequestDto request, CustomAdminDetails customAdminDetails) {
         Rent rent = rentRepository.findById(rentId)
                 .orElseThrow(() -> new IllegalArgumentException("대여 기록을 찾을 수 없습니다: " + rentId));
 
@@ -78,8 +79,7 @@ public class RentService {
                 rent.setStatus(RentStatus.RENTED);
                 rent.setRentalDate(LocalDateTime.now());
                 rent.setExpectedReturnDate(LocalDate.now().plusWeeks(2));
-                // todo: 승인 관리자 정보 포함해야함
-                int adminId = adminInfo.getId();
+                int adminId = customAdminDetails.getAdmin().getId();
                 Admin admin = adminRepository.findById(adminId)
                         .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 관리자가 존재하지 않습니다: " + adminId));
                 rent.setAdmin(admin);

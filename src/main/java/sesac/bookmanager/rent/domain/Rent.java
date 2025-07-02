@@ -30,7 +30,7 @@ public class Rent {
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book-item_id", nullable = false)
+    @JoinColumn(name = "book_item_id", nullable = false)
     private BookItem bookItem;
 
     @OneToOne(fetch = FetchType.LAZY)
