@@ -7,8 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sesac.bookmanager.hjdummy.DummyAdmin;
-import sesac.bookmanager.hjdummy.DummyAdminRepository;
+import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.notice.data.*;
 
 import java.time.LocalDateTime;
@@ -20,12 +20,12 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
 
-    private final DummyAdminRepository adminRepository;
+    private final AdminRepository adminRepository;
 
 
     public NoticeResponse createNotice(NoticeCreateRequest request) {
         // TODO: Admin 레포지토리 생성 후 메서드명 변경
-        DummyAdmin admin = adminRepository.findById(request.getAdminId())
+        Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Admin : " + request.getAdminId()));
 
         Notice newNotice = Notice.builder()

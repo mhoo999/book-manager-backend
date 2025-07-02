@@ -2,7 +2,7 @@ package sesac.bookmanager.wish.data;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sesac.bookmanager.hjdummy.DummyUser;
+import sesac.bookmanager.user.data.User;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +32,6 @@ public class Wish {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private DummyUser user;
+    private User user;
     // TODO: 이후 User 클래스 구성되면 교체할 것
 }

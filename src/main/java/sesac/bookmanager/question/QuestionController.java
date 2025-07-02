@@ -2,8 +2,10 @@ package sesac.bookmanager.question;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.question.data.*;
+import sesac.bookmanager.security.CustomUserDetails;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,8 +15,9 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/create")
-    public ResponseEntity<QuestionResponse> createQuestion(@ModelAttribute QuestionCreateRequest request) {
-        return ResponseEntity.ok(questionService.createQuestion(request));
+    public ResponseEntity<QuestionResponse> createQuestion(@ModelAttribute QuestionCreateRequest request,
+                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(questionService.createQuestion(request, customUserDetails));
         /// 유저정보 추가 필요
     }
 
@@ -32,9 +35,9 @@ public class QuestionController {
 
 
     @PutMapping("/{questionId}/edit")
-    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @ModelAttribute QuestionUpdateRequest request) {
-        return ResponseEntity.ok(questionService.updateQuestion(questionId, request));
-        /// 유저정보 추가 필요
+    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @ModelAttribute QuestionUpdateRequest request,
+                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(questionService.updateQuestion(questionId, request, customUserDetails));
     }
 
     @PutMapping("/{questionId}/progress")
@@ -44,8 +47,9 @@ public class QuestionController {
 
 
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable Integer questionId) {
-        questionService.deleteQuestion(questionId);
+    public ResponseEntity<Void> deleteQuestion(@PathVariable Integer questionId,
+                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        questionService.deleteQuestion(questionId, customUserDetails);
 
         return ResponseEntity.noContent().build();
     }

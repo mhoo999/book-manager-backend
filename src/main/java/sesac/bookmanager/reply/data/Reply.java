@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sesac.bookmanager.hjdummy.DummyAdmin;
+import sesac.bookmanager.admin.Admin;
 import sesac.bookmanager.question.data.Question;
 
 import java.time.LocalDateTime;
@@ -26,7 +26,7 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
-    private DummyAdmin admin;
+    private Admin admin;
     // TODO: 이후 Admin 클래스 구성되면 교체할 것
 
     @ManyToOne(fetch = FetchType.LAZY)

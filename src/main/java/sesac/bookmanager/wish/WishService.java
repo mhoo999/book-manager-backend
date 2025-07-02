@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
 
 @Service
@@ -16,9 +17,10 @@ public class WishService {
 
     private final WishRepository wishRepository;
 
-    public WishResponse createWish(WishCreateRequest request) {
+    public WishResponse createWish(WishCreateRequest request, CustomUserDetails customUserDetails) {
         Wish newWish = request.toDomain();
         newWish.setStatus(WishStatus.EXAMINING);
+        newWish.setUser(customUserDetails.getUser());
 
         Wish saved = wishRepository.save(newWish);
 

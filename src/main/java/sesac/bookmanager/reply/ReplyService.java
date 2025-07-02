@@ -4,9 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sesac.bookmanager.hjdummy.DummyAdmin;
-import sesac.bookmanager.hjdummy.DummyAdminRepository;
-import sesac.bookmanager.hjdummy.DummyUserRepository;
+import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.question.QuestionRepository;
 import sesac.bookmanager.question.data.Question;
 import sesac.bookmanager.question.data.QuestionWithReplyResponse;
@@ -14,6 +13,7 @@ import sesac.bookmanager.reply.data.Reply;
 import sesac.bookmanager.reply.data.ReplyCreateRequest;
 import sesac.bookmanager.reply.data.ReplyResponse;
 import sesac.bookmanager.reply.data.ReplyUpdateRequest;
+import sesac.bookmanager.user.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -21,13 +21,13 @@ import sesac.bookmanager.reply.data.ReplyUpdateRequest;
 public class ReplyService {
 
     private final QuestionRepository questionRepository;
-    private final DummyUserRepository userRepository;
-    private final DummyAdminRepository adminRepository;
+    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final ReplyRepository replyRepository;
 
 
     public QuestionWithReplyResponse replyToQuestion(Integer questionId, /*관리자정보, */ ReplyCreateRequest request) {
-        DummyAdmin admin = adminRepository.findById(request.getAdminId())
+        Admin admin = adminRepository.findById(request.getAdminId())
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 관리자가 없습니다 : " + request.getAdminId()));
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));

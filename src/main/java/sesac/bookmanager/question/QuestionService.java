@@ -7,11 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.question.data.*;
-import sesac.bookmanager.hjdummy.DummyAdminRepository;
-import sesac.bookmanager.hjdummy.DummyUserRepository;
 import sesac.bookmanager.reply.ReplyRepository;
 import sesac.bookmanager.reply.data.Reply;
+import sesac.bookmanager.security.CustomUserDetails;
+import sesac.bookmanager.user.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -19,15 +20,16 @@ import sesac.bookmanager.reply.data.Reply;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final DummyUserRepository userRepository;
-    private final DummyAdminRepository adminRepository;
+    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final ReplyRepository replyRepository;
 
 
-    public QuestionResponse createQuestion(QuestionCreateRequest request) {
+    public QuestionResponse createQuestion(QuestionCreateRequest request, CustomUserDetails customUserDetails) {
         Question newQuestion = request.toDomain();
-        /// 유저정보 삽입 필요
+
         newQuestion.setStatus((byte) 0);
+        newQuestion.setUser(customUserDetails.getUser());
 
         Question savedQuestion = questionRepository.save(newQuestion);
 
@@ -54,9 +56,13 @@ public class QuestionService {
         return QuestionWithReplyResponse.from(targetQuestion, targetReply);
     }
 
-    public QuestionResponse updateQuestion(Integer questionId, QuestionUpdateRequest request) {
+    public QuestionResponse updateQuestion(Integer questionId, QuestionUpdateRequest request, CustomUserDetails customUserDetails) {
         Question targetQuestion = questionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
+
+        if(!targetQuestion.getUser().getEmail().equals(customUserDetails.getUser().getEmail())) {
+            throw new RuntimeException("잘못된 유저의 접근입니다");
+        }
 
         targetQuestion.setTitle(request.getTitle());
         targetQuestion.setContent(request.getContent());
@@ -73,8 +79,15 @@ public class QuestionService {
         return QuestionResponse.from(targetQuestion);
     }
 
-    public void deleteQuestion(Integer questionId) {
-        questionRepository.deleteById(questionId);
+    public void deleteQuestion(Integer questionId, CustomUserDetails customUserDetails) {
+        Question targetQuestion = questionRepository.findById(questionId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
+
+        if(targetQuestion.getUser().getEmail().equals(customUserDetails.getUser().getEmail())) {
+            questionRepository.deleteById(questionId);
+        } else {
+            throw new RuntimeException("잘못된 유저의 접근입니다");
+        }
     }
 
 }

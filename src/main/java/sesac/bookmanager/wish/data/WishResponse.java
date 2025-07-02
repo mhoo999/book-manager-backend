@@ -3,7 +3,6 @@ package sesac.bookmanager.wish.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sesac.bookmanager.hjdummy.DummyUser;
 
 import java.time.LocalDateTime;
 

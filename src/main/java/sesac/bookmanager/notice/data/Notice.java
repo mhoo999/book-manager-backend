@@ -2,7 +2,7 @@ package sesac.bookmanager.notice.data;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sesac.bookmanager.hjdummy.DummyAdmin;
+import sesac.bookmanager.admin.Admin;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +31,6 @@ public class Notice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
-    private DummyAdmin admin;
+    private Admin admin;
     // TODO: 이후 Admin 클래스 구성되면 교체할 것
 }

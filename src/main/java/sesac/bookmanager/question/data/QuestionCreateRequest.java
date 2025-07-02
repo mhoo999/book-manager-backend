@@ -14,7 +14,7 @@ public class QuestionCreateRequest {
 
     public Question toDomain() {
         Question question = new Question();
-        question.setQuestionType(this.type);
+        question.setQuestionType(this.questionType);
         question.setTitle(this.title);
         question.setContent(this.content);
 

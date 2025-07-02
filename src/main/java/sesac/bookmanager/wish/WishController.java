@@ -2,7 +2,9 @@ package sesac.bookmanager.wish;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
 
 @RestController
@@ -20,8 +22,9 @@ public class WishController {
     `*/
 
     @PostMapping("/create")
-    public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request) {
-        return ResponseEntity.ok(wishService.createWish(request));
+    public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request,
+                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(wishService.createWish(request, customUserDetails));
     }
 
     @GetMapping

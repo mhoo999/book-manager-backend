@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sesac.bookmanager.hjdummy.DummyUser;
+import sesac.bookmanager.user.data.User;
 
 import java.time.LocalDateTime;
 
@@ -34,7 +34,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private DummyUser user;
+    private User user;
     // TODO: 이후 User 클래스 구성되면 교체할 것
 
 }
