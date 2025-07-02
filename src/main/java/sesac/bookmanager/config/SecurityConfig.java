@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import sesac.bookmanager.security.JwtAuthenticationFilter;
 
 @Configuration
@@ -27,33 +28,33 @@ public class SecurityConfig {
      * ✅ 1) 관리자용 (세션 기반)
      * 경로: /api/admin/**
      */
-//    @Bean
-//    @Order(1)
-//    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .securityMatcher("/api/admin/**")
-//                .csrf(csrf -> csrf
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 세션 기반은 CSRF 활성화
-//                )
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
-//                )
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/admin/login").permitAll()
-//                        .anyRequest().hasRole("ADMIN")
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/api/admin/login")
-//                        .defaultSuccessUrl("/api/admin/dashboard", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/api/admin/logout")
-//                        .logoutSuccessUrl("/api/admin/login")
-//                );
-//
-//        return http.build();
-//    }
+    @Bean
+    @Order(1)
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/api/admin/**")
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 세션 기반은 CSRF 활성화
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/admin/login").permitAll()
+                        .anyRequest().hasRole("ADMIN")
+                )
+                .formLogin(form -> form
+                        .loginPage("/api/admin/login")
+                        .defaultSuccessUrl("/api/admin/dashboard", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/admin/logout")
+                        .logoutSuccessUrl("/api/admin/login")
+                );
+
+        return http.build();
+    }
 
     /**
      * ✅ 2) 유저용 (JWT)
@@ -73,7 +74,6 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // 그 외는 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
-
         return http.build();
     }
 
