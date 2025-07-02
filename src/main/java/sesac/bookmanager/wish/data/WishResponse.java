@@ -1,10 +1,11 @@
 package sesac.bookmanager.wish.data;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sesac.bookmanager.user.data.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,7 +20,9 @@ public class WishResponse {
     private String bookName;
     private String author;
     private String publisher;
-    private LocalDateTime publishDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate publishDate;
 
     private String userEmail;
     private String userName;
@@ -33,7 +36,7 @@ public class WishResponse {
                 wish.getBookName(),
                 wish.getAuthor(),
                 wish.getPublisher(),
-                wish.getPublishDate(),
+                wish.getPublishDate().toLocalDate(),
                 wish.getUser().getEmail(),
                 wish.getUser().getName(),
                 wish.getUser().getPhone()

@@ -22,7 +22,7 @@ public class WishController {
     `*/
 
     @PostMapping("/create")
-    public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request,
+    public ResponseEntity<WishResponse> createWish(@ModelAttribute WishCreateRequest request,
                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(wishService.createWish(request, customUserDetails));
     }
