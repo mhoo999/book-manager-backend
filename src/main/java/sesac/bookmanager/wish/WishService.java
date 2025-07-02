@@ -18,6 +18,7 @@ public class WishService {
 
     public WishResponse createWish(WishCreateRequest request) {
         Wish newWish = request.toDomain();
+        newWish.setStatus(WishStatus.EXAMINING);
 
         Wish saved = wishRepository.save(newWish);
 

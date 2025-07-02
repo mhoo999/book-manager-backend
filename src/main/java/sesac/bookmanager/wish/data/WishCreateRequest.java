@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WishCreateRequest {
-    private WishStatus status;
     private String bookName;
     private String author;
     private String publisher;
@@ -18,7 +17,6 @@ public class WishCreateRequest {
 
     public Wish toDomain() {
         Wish wish = new Wish();
-        wish.setStatus(status);
         wish.setBookName(bookName);
         wish.setAuthor(author);
         wish.setPublisher(publisher);
