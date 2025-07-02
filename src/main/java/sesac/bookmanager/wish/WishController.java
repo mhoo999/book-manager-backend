@@ -24,7 +24,7 @@ public class WishController {
 
     @ResponseBody
     @GetMapping
-    public ResponseEntity<WishPageResponse> getWishlist(@RequestBody WishSearchRequest search) {
+    public ResponseEntity<WishPageResponse> getWishlist(WishSearchRequest search) {
         return ResponseEntity.ok(wishService.getWishlist(search));
     }
 
