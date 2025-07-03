@@ -36,14 +36,6 @@ public class QuestionAdminController {
         return "/admin/question/" + questionId;
     }
 
-    @PutMapping("/{questionId}/edit")
-    public String updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
-                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        QuestionResponse response = questionService.updateQuestion(questionId, request, customUserDetails);
-        return "redirect:/admin/question/" + questionId;
-    }
-
     @PutMapping("/{questionId}/progress")
     public String progressEdit(@PathVariable Integer questionId, @ModelAttribute QuestionStatusUpdateRequest request) {
 
