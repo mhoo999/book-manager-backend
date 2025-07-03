@@ -4,17 +4,24 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.auth.data.AdminLoginFormDto;
 import sesac.bookmanager.auth.data.AdminRegisterRequest;
 
 @Controller
-@RequestMapping("/api/admin/auth")
+@RequestMapping("/admin/auth")
 @RequiredArgsConstructor
 public class AuthAdminController {
 
     private final AuthAdminService  authAdminService;
+
+    @GetMapping("/login")
+    public String loginForm(Model model) {
+        model.addAttribute("adminLoginFormDto", new AdminLoginFormDto());
+        return "admin/auth/login";
+    }
 
     @PostMapping("/login")
     public String login(@ModelAttribute AdminLoginFormDto adminLoginFormDto) {
@@ -31,8 +38,8 @@ public class AuthAdminController {
 
     @ResponseBody
     @GetMapping("/check-id")
-    public ResponseEntity<ApiResponse<Boolean>> checkId(@RequestParam String adminEmail) {
-        return ResponseEntity.ok(ApiResponse.success(authAdminService.checkId(adminEmail)));
+    public ResponseEntity<ApiResponse<Boolean>> checkId(@RequestParam String adminAccountId) {
+        return ResponseEntity.ok(ApiResponse.success(authAdminService.checkId(adminAccountId)));
     }
 
     @PostMapping("/register")

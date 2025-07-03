@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+			display: none;
+			position: absolute;
+			left: 0;
+			top: 72px;
+			width: 100%;
+			height: 120px;
+      background-color: rgba(59, 130, 246, 0.06); 
+      border-top: 3px solid #3b82f6; 
+      border-bottom: 1px solid #bfdbfe;
+			animation: fade 0.3s;
+    }
+
+    .container{
+			position: relative;
+    }
+    .container>nav{
+				position: absolute;
+				right: 0;
+				top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;    
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 헤더 -->
+  <header class="bg-white shadow">
+		<div class="bg_lnb"></div>
+    <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center space-x-3">
+        <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
+        <span class="text-xl font-bold">북매니저 관리자</span>
+      </div>
+      <nav>
+        <ul class="gnb flex space-x-6 text-gray-700 font-medium">
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">대여현황</a>
+            <ol class="lnb">
+              <li><a href="#">대여목록</a></li>
+              <li><a href="#">반납지연</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
+            <ol class="lnb">
+              <li><a href="#">신청목록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">도서관리</a>
+            <ol class="lnb">
+              <li><a href="#">도서목록</a></li>
+              <li><a href="#">도서등록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
+            <ol class="lnb">
+              <li><a href="#">추천도서</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
+            <ol class="lnb">
+              <li><a href="#">회원목록</a></li>
+              <li><a href="#">탈퇴회원</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">관리자정보</a>
+            <ol class="lnb">
+              <li><a href="#">관리자목록</a></li>
+              <li><a href="#">관리자등록</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
+            <ol class="lnb">
+              <li><a href="#">문의하기</a></li>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">공지사항</a></li>
+            </ol>
+          </li>
+          <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- 본문 -->
+  <main class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">📊 관리자 대시보드</h2>
+    <div class="grid grid-cols-3 gap-6">
+      <!-- 대여현황 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">📚 대여현황</h3>
+        <ul class="text-sm space-y-1">
+          <li>오늘의 대여현황: 12건</li>
+          <li>총 대여중인 도서 권수: 128권</li>
+          <li>미납 도서 권수: 7권</li>
+        </ul>
+      </div>
+
+      <!-- 희망도서 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">📖 희망도서</h3>
+        <ul class="text-sm space-y-1">
+          <li>신청된 도서 권수: 23권</li>
+          <li>처리대기 건수: 5건</li>
+        </ul>
+      </div>
+
+      <!-- 도서관리 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">📗 도서관리</h3>
+        <ul class="text-sm space-y-1">
+          <li>총 도서 수: 540권</li>
+          <li>신규 등록 요청: 3건</li>
+        </ul>
+      </div>
+
+      <!-- 회원관리 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">👤 회원관리</h3>
+        <ul class="text-sm space-y-1">
+          <li>오늘 가입 회원 수: 4명</li>
+          <li>전체 회원 수: 1,240명</li>
+          <li>탈퇴 회원 수: 37명</li>
+        </ul>
+      </div>
+
+      <!-- 관리자 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">🔐 관리자</h3>
+        <ul class="text-sm space-y-1">
+          <li>승인 대기 인원 수: 2명</li>
+          <li>등록된 관리자 수: 10명</li>
+        </ul>
+      </div>
+
+      <!-- 게시판 -->
+      <div class="bg-white rounded shadow p-4">
+        <h3 class="font-semibold text-lg mb-2">📬 게시판</h3>
+        <ul class="text-sm space-y-1">
+          <li>도서문의: 14건</li>
+          <li>오류신고: 3건</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+  </footer>
+
+
+  <script>
+
+    if (true) {
+      const $gnb = document.querySelector('header .gnb');
+      const $lnbs = document.querySelectorAll('header .lnb');
+      const $bg_lnb = document.querySelector('.bg_lnb');
+
+      const navFadeIn = function () {
+        $bg_lnb.style.display = 'block';
+
+        $lnbs.forEach(function ($lnb) {
+          $lnb.style.display = 'block';
+        });
+      };
+
+      const navFadeOut = function () {
+        $bg_lnb.style.display = 'none';
+
+        $lnbs.forEach(function ($lnb) {
+          $lnb.style.display = 'none';
+        });
+      };
+
+      $gnb.addEventListener('mouseenter', function () {
+        navFadeIn();
+      });
+
+      $gnb.addEventListener('mouseleave', function () {
+        navFadeOut();
+      });
+
+      $bg_lnb.addEventListener('mouseover', function () {
+        navFadeIn();
+      });
+
+      $bg_lnb.addEventListener('mouseout', function () {
+        navFadeOut();
+      });
+    }
+
+  </script>  
+</body>
+</html>

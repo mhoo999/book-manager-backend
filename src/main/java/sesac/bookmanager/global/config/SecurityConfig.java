@@ -45,20 +45,20 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/login").permitAll()
+                        .requestMatchers("/api/admin/auth/login").permitAll()
                         .anyRequest().hasRole("ADMIN")
                 )
                 // 필터 내용 포함
                 .formLogin(form -> form
-                        .loginPage("/api/admin/login")
+                        .loginPage("/api/admin/auth/login")
                         .usernameParameter("accountId")   // 🔑 여기! 기본 "username" → "email"
                         .passwordParameter("password") // 기본은 "password", 그대로 쓰면 됨
                         .defaultSuccessUrl("/api/admin/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/api/admin/logout")
-                        .logoutSuccessUrl("/api/admin/login")
+                        .logoutUrl("/api/admin/auth/logout")
+                        .logoutSuccessUrl("/api/admin/auth/login")
                 )
                 .authenticationManager(adminAuthenticationManager());
 
