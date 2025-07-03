@@ -83,15 +83,11 @@ public class QuestionService {
         return QuestionResponse.from(targetQuestion);
     }
 
-    public void deleteQuestion(Integer questionId, CustomUserDetails customUserDetails) {
+    public void deleteQuestion(Integer questionId) {
         Question targetQuestion = questionRepository.findById(questionId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 문의가 없습니다 : " + questionId));
 
-        if(targetQuestion.getUser().getEmail().equals(customUserDetails.getUser().getEmail())) {
-            questionRepository.deleteById(questionId);
-        } else {
-            throw new RuntimeException("잘못된 유저의 접근입니다");
-        }
+        questionRepository.deleteById(questionId);
     }
 
 }
