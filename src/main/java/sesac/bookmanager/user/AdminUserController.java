@@ -2,14 +2,16 @@ package sesac.bookmanager.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.user.data.UserInfoDto;
 import sesac.bookmanager.user.data.UserStatusDto;
 
 @Controller
-@RequestMapping("/api/admin/user")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
 public class AdminUserController {
     private final AdminUserService adminUserService;
@@ -43,7 +45,7 @@ public class AdminUserController {
 
     @ResponseBody
     @GetMapping("/status")
-    public UserStatusDto getUserStatus(){
-        return adminUserService.getUserStatus();
+    public ResponseEntity<ApiResponse<UserStatusDto>> getUserStatus(){
+        return ResponseEntity.ok(ApiResponse.success(adminUserService.getUserStatus()));
     }
 }

@@ -1,9 +1,43 @@
 package sesac.bookmanager.admin;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import sesac.bookmanager.ApiResponse;
+
+import java.util.Map;
 
 @Controller
-@RequestMapping("/api/admin/admins")
+@RequestMapping("/admin/admins")
+@RequiredArgsConstructor
 public class AdminController {
+
+    private final AdminService adminService;
+
+
+    @GetMapping
+        public String getAdminList(Model model , @RequestParam(defaultValue = "0") int page){
+        int size =10;
+        Page<AdminInfoDto> admins = adminService.getAdminsList(page,size);
+        model.addAttribute("admins", admins);
+        return "admin/adminList";
+    }
+
+    @GetMapping("/{adminId}")
+    public String getAdmin(Model model, @PathVariable("adminId") int adminId){
+        AdminInfoDto adminInfo = adminService.getAdminInfo(adminId);
+        model.addAttribute("adminInfo", adminInfo);
+        return "admin/adminInfo";
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public ResponseEntity<ApiResponse<Long>> getAllAdminsCount(){
+        return ResponseEntity.ok(ApiResponse.success(adminService.getCount()));
+    }
+
+
 }
