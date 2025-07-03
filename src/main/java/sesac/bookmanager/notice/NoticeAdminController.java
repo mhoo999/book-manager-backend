@@ -30,7 +30,7 @@ public class NoticeAdminController {
     }
 
     @GetMapping
-    public String getNotices(Model model, @RequestParam Integer page) {
+    public String getNotices(Model model, @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
 
         NoticePageResponse pageResponse = null;
 
