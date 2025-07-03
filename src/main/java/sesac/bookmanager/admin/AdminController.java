@@ -23,7 +23,7 @@ public class AdminController {
         int size =10;
         Page<AdminInfoDto> admins = adminService.getAdminsList(page,size);
         model.addAttribute("admins", admins);
-        return "admin/adminList";
+        return "admin/admin/adminList";
     }
 
     @GetMapping("/{adminId}")
