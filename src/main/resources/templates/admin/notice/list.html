@@ -81,6 +81,7 @@
             <thead class="bg-gray-100">
             <tr>
                 <th class="px-4 py-2 border">번호</th>
+                <th class="px-4 py-2 border">카테고리</th>
                 <th class="px-4 py-2 border">제목</th>
                 <th class="px-4 py-2 border">작성자</th>
                 <th class="px-4 py-2 border">등록일</th>
@@ -90,6 +91,7 @@
             <tbody>
             <tr th:each="notice : ${notices}">
                 <td th:text="${notice.noticeId}" class="px-4 py-2 border"></td>
+                <td th:text="${notice.type.label}" class="px-4 py-2 border"></td>
                 <td class="px-4 py-2 border text-left pl-6">
                     <a th:href="@{/admin/notice/{noticeId}(noticeId=${notice.noticeId})}"
                        th:text="${notice.title}"

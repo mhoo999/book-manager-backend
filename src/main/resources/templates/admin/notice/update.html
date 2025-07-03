@@ -69,10 +69,10 @@
     <div>
       <label class="block font-medium text-gray-700">카테고리 선택</label>
       <select th:field="*{type}" class="mt-1 w-full border px-3 py-2 rounded">
-        <option th:value="0">일반</option>
-        <option th:value="1">휴무</option>
-        <option th:value="2">일정</option>
-        <option th:value="3">구인</option>
+        <option th:value="DEFAULT" th:text="일반"></option>
+        <option th:value="DAYOFF" th:text="휴무"></option>
+        <option th:value="SCHEDULE" th:text="일정"></option>
+        <option th:value="RECRUIT" th:text="구인"></option>
       </select>
     </div>
     <!-- 제목 -->

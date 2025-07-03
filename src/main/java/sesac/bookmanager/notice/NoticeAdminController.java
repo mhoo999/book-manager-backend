@@ -45,6 +45,9 @@ public class NoticeAdminController {
         model.addAttribute("totalPages", pageResponse.getTotalPages());
         model.addAttribute("totalCount", pageResponse.getTotalCount());
         model.addAttribute("notices", pageResponse.getNotices());
+
+        model.addAttribute("noticeTypes", NoticeType.values());
+
         return "/admin/notice/list";
     }
 
@@ -52,6 +55,7 @@ public class NoticeAdminController {
     public String getNoticeById(@PathVariable Integer noticeId, Model model) {
         NoticeResponse response = noticeService.getNoticeByIdWithViewCounting(noticeId);
         model.addAttribute("notice", response);
+        model.addAttribute("noticeTypes", NoticeType.values());
         return "/admin/notice/one";
     }
 
@@ -66,6 +70,7 @@ public class NoticeAdminController {
 
         model.addAttribute("noticeId", noticeId);
         model.addAttribute("NoticeUpdateRequest", updateRequest);
+        model.addAttribute("noticeTypes", NoticeType.values());
         return "/admin/notice/update";
     }
 

@@ -10,12 +10,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum NoticeType {
-    DEFAULT((byte) 0),
-    DAYOFF((byte) 1),
-    SCHEDULE((byte) 2),
-    RECRUIT((byte) 3);
+    DEFAULT((byte) 0, "일반"),
+    DAYOFF((byte) 1, "휴무"),
+    SCHEDULE((byte) 2, "일정"),
+    RECRUIT((byte) 3, "구인");
 
     private final byte code;
+    private final String label;
 
     @JsonValue
     public byte getCode() {
