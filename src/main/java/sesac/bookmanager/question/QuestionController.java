@@ -10,35 +10,39 @@ import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/question")
+@RequestMapping("/api/admin/question")
 public class QuestionController {
 
     private final QuestionService questionService;
 
-    @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<QuestionResponse> createQuestion(@RequestBody QuestionCreateRequest request,
+    public String createQuestion(@RequestBody QuestionCreateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return ResponseEntity.ok(questionService.createQuestion(request, customUserDetails));
+
+        QuestionResponse newQuestion = questionService.createQuestion(request, customUserDetails);
+        return "redirect:/api/question/" + newQuestion.getQuestionId();
     }
 
-    @ResponseBody
     @GetMapping
-    public ResponseEntity<QuestionPageResponse> getAllQuestions(QuestionSearchRequest search) {
-        return ResponseEntity.ok(questionService.getAllQuestions(search));
+    public String getAllQuestions(QuestionSearchRequest search) {
+
+        QuestionPageResponse pageResponse = questionService.getAllQuestions(search);
+        return "redirect:/api/question";
     }
 
-    @ResponseBody
     @GetMapping("/{questionId}")
-    public ResponseEntity<QuestionWithReplyResponse> getQuestionById(@PathVariable Integer questionId) {
-        return ResponseEntity.ok(questionService.getQuestionById(questionId));
+    public String getQuestionById(@PathVariable Integer questionId) {
+
+        QuestionWithReplyResponse response = questionService.getQuestionById(questionId);
+        return "redirect:/api/question/" + questionId;
     }
 
-    @ResponseBody
     @PutMapping("/{questionId}/edit")
-    public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
+    public String updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return ResponseEntity.ok(questionService.updateQuestion(questionId, request, customUserDetails));
+
+        QuestionResponse response = questionService.updateQuestion(questionId, request, customUserDetails);
+        return "redirect:/api/question/" + questionId;
     }
 
     @PutMapping("/{questionId}/progress")
@@ -49,9 +53,8 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{questionId}")
-    public String deleteQuestion(@PathVariable Integer questionId,
-                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        questionService.deleteQuestion(questionId, customUserDetails);
+    public String deleteQuestion(@PathVariable Integer questionId) {
+        questionService.deleteQuestion(questionId);
 
         return "redirect:/api/question";
     }

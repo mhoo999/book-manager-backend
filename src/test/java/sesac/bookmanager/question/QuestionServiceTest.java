@@ -155,12 +155,8 @@ public class QuestionServiceTest {
         user.setEmail("me@email.com");
         question.setUser(user);
 
-        CustomUserDetails userDetails = mock(CustomUserDetails.class);
-        when(userDetails.getUser()).thenReturn(user);
-        when(questionRepository.findById(1)).thenReturn(Optional.of(question));
-
         // when
-        questionService.deleteQuestion(1, userDetails);
+        questionService.deleteQuestion(1);
 
         // then
         verify(questionRepository).deleteById(1);
