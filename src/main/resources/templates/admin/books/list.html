@@ -59,68 +59,7 @@
 </head>
 <body class="bg-gray-50">
 <!-- 헤더 -->
-<header class="bg-white shadow">
-  <div class="bg_lnb"></div>
-  <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
-    <div class="flex items-center space-x-3">
-      <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
-      <span class="text-xl font-bold">북매니저 관리자</span>
-    </div>
-    <nav>
-      <ul class="gnb flex space-x-6 text-gray-700 font-medium">
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">대여현황</a>
-          <ol class="lnb">
-            <li><a href="#">대여목록</a></li>
-            <li><a href="#">반납지연</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
-          <ol class="lnb">
-            <li><a href="#">신청목록</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="text-blue-600 transition-colors">도서관리</a>
-          <ol class="lnb">
-            <li><a href="#">도서목록</a></li>
-            <li><a href="#">도서등록</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
-          <ol class="lnb">
-            <li><a href="#">추천도서</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
-          <ol class="lnb">
-            <li><a href="#">회원목록</a></li>
-            <li><a href="#">탈퇴회원</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">관리자정보</a>
-          <ol class="lnb">
-            <li><a href="#">관리자목록</a></li>
-            <li><a href="#">관리자등록</a></li>
-          </ol>
-        </li>
-        <li>
-          <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
-          <ol class="lnb">
-            <li><a href="#">문의하기</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">공지사항</a></li>
-          </ol>
-        </li>
-        <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+<header th:replace="fragments/header :: siteHeader"></header>
 
 <!-- 본문 -->
 <main class="max-w-screen-xl mx-auto px-4 py-8">
@@ -166,8 +105,8 @@
       </tr>
       </thead>
       <tbody>
-      <!-- 실제 데이터가 있을 때 -->
-      <tr th:each="book : ${books?.content}" th:if="${books != null and books.content != null and !books.content.isEmpty()}">
+      <!-- 실제 데이터가 있을 때만 -->
+      <tr th:each="book : ${books?.books}" th:if="${books != null and books.books != null and !books.books.isEmpty()}">
         <td class="px-4 py-2 border" th:text="${book.bookCode}">BK20240004</td>
         <td class="px-4 py-2 border text-left" th:text="${book.title}">모던 자바스크립트</td>
         <td class="px-4 py-2 border" th:text="${book.location}">A-1</td>
@@ -185,60 +124,10 @@
         </td>
       </tr>
 
-      <!-- 데이터가 없을 때 기본 예시 데이터 표시 -->
-      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
-        <td class="px-4 py-2 border">BK20240004</td>
-        <td class="px-4 py-2 border text-left">모던 자바스크립트</td>
-        <td class="px-4 py-2 border">A-1</td>
-        <td class="px-4 py-2 border">10</td>
-        <td class="px-4 py-2 border">4<br><span class="text-sm text-gray-500">(6)</span></td>
-        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
-        <td class="px-4 py-2 border">
-          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
-        </td>
-      </tr>
-      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
-        <td class="px-4 py-2 border">BK20240005</td>
-        <td class="px-4 py-2 border text-left">리액트 완벽 가이드</td>
-        <td class="px-4 py-2 border">B-2</td>
-        <td class="px-4 py-2 border">8</td>
-        <td class="px-4 py-2 border">8<br><span class="text-sm text-gray-500">(0)</span></td>
-        <td class="px-4 py-2 border text-red-600 font-bold">X</td>
-        <td class="px-4 py-2 border">
-          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
-        </td>
-      </tr>
-      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
-        <td class="px-4 py-2 border">BK20240006</td>
-        <td class="px-4 py-2 border text-left">스프링 부트 실전</td>
-        <td class="px-4 py-2 border">C-3</td>
-        <td class="px-4 py-2 border">6</td>
-        <td class="px-4 py-2 border">3<br><span class="text-sm text-gray-500">(3)</span></td>
-        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
-        <td class="px-4 py-2 border">
-          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
-        </td>
-      </tr>
-      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
-        <td class="px-4 py-2 border">BK20240007</td>
-        <td class="px-4 py-2 border text-left">AWS 인프라 입문</td>
-        <td class="px-4 py-2 border">D-4</td>
-        <td class="px-4 py-2 border">5</td>
-        <td class="px-4 py-2 border">5<br><span class="text-sm text-gray-500">(0)</span></td>
-        <td class="px-4 py-2 border text-red-600 font-bold">X</td>
-        <td class="px-4 py-2 border">
-          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
-        </td>
-      </tr>
-      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
-        <td class="px-4 py-2 border">BK20240008</td>
-        <td class="px-4 py-2 border text-left">파이썬 자료분석</td>
-        <td class="px-4 py-2 border">E-5</td>
-        <td class="px-4 py-2 border">7</td>
-        <td class="px-4 py-2 border">1<br><span class="text-sm text-gray-500">(6)</span></td>
-        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
-        <td class="px-4 py-2 border">
-          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+      <!-- 데이터가 없을 때 빈 결과 메시지 -->
+      <tr th:if="${books == null or books.books == null or books.books.isEmpty()}">
+        <td colspan="7" class="px-4 py-8 border text-center text-gray-500">
+          등록된 도서가 없습니다.
         </td>
       </tr>
       </tbody>
