@@ -1,34 +1,34 @@
 package sesac.bookmanager.notice;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.notice.data.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/notice")
-public class NoticeController {
+@RequestMapping("/admin/notice")
+public class NoticeAdminController {
 
     private final NoticeService noticeService;
 
     @PostMapping("/create")
     public String create(@ModelAttribute NoticeCreateRequest request) {
         NoticeResponse newNotice = noticeService.createNotice(request);
-        return "redirect:/api/notice" + newNotice.getNoticeId();
+        return "redirect:/admin/notice/" + newNotice.getNoticeId();
     }
 
-    @ResponseBody
     @GetMapping
-    public ResponseEntity<NoticePageResponse> getNotices(@RequestBody NoticeSearchRequest searchRequest) {
-        return ResponseEntity.ok(noticeService.searchNotice(searchRequest));
+    public String getNotices(NoticeSearchRequest searchRequest) {
+
+        NoticePageResponse pageResponse = noticeService.searchNotice(searchRequest);
+        return "/admin/notice";
     }
 
-    @ResponseBody
     @GetMapping("/{noticeId}")
-    public ResponseEntity<NoticeResponse> getNoticeById(@PathVariable Integer noticeId) {
-        return ResponseEntity.ok(noticeService.getNoticeById(noticeId));
+    public String getNoticeById(@PathVariable Integer noticeId) {
+        NoticeResponse response = noticeService.getNoticeById(noticeId);
+        return "/admin/notice/" + response.getNoticeId();
     }
 
     @PutMapping("/{noticeId}")
@@ -36,13 +36,13 @@ public class NoticeController {
             @PathVariable Integer noticeId, @ModelAttribute NoticeUpdateRequest updateRequest) {
 
         noticeService.updateNotice(noticeId, updateRequest);
-        return "redirect:/api/notice/" + noticeId;
+        return "redirect:/admin/notice/" + noticeId;
     }
 
     @DeleteMapping("/{noticeId}")
     public String deleteNotice(@PathVariable Integer noticeId) {
         noticeService.deleteNotice(noticeId);
 
-        return "redirect:/api/notice";
+        return "redirect:/admin/notice";
     }
 }
