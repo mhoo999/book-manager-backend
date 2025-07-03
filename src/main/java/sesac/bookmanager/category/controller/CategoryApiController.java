@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/admin/categories")
+@RequestMapping("/admin/api/categories")
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryApiController {
