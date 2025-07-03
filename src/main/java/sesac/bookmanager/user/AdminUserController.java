@@ -21,14 +21,14 @@ public class AdminUserController {
         int size = 10;
         Page<UserInfoDto> users = adminUserService.getUsersList(page,size);
         model.addAttribute("users", users);
-        return "admin/userList";
+        return "admin/user/userList";
     }
 
     @GetMapping("/{user_id}")
     public String getUser(Model model, @PathVariable int user_id){
         UserInfoDto userInfo = adminUserService.getUserInfo(user_id);
         model.addAttribute("userInfo", userInfo);
-        return "admin/userInfo";
+        return "admin/user/userInfo";
     }
 
     /** 폐기 - 정보 수정할 필드가 크게 없음**/
@@ -40,7 +40,7 @@ public class AdminUserController {
     public String withdrawUserByAdmin(Model model, @PathVariable int user_id){
         UserInfoDto userInfo = adminUserService.withDrawUserByAdmin(user_id);
         model.addAttribute("userInfo", userInfo);
-        return "admin/userInfo";
+        return "admin/user/userInfo";
     }
 
     @ResponseBody
