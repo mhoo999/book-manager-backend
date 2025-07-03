@@ -25,7 +25,7 @@ public class NoticeAdminController {
         return "/admin/notice";
     }
 
-    @GetMapping("/api/notice/{noticeId}")
+    @GetMapping("/{noticeId}")
     public String getNoticeById(@PathVariable Integer noticeId) {
         NoticeResponse response = noticeService.getNoticeById(noticeId);
         return "/admin/notice/" + response.getNoticeId();
