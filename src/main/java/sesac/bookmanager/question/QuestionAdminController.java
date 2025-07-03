@@ -9,7 +9,7 @@ import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/question")
+@RequestMapping("/admin/question")
 public class QuestionAdminController {
 
     private final QuestionService questionService;
@@ -19,21 +19,21 @@ public class QuestionAdminController {
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         QuestionResponse newQuestion = questionService.createQuestion(request, customUserDetails);
-        return "redirect:/api/question/" + newQuestion.getQuestionId();
+        return "redirect:/admin/question/" + newQuestion.getQuestionId();
     }
 
     @GetMapping
     public String getAllQuestions(QuestionSearchRequest search) {
 
         QuestionPageResponse pageResponse = questionService.getAllQuestions(search);
-        return "redirect:/api/question";
+        return "/admin/question";
     }
 
     @GetMapping("/{questionId}")
     public String getQuestionById(@PathVariable Integer questionId) {
 
         QuestionWithReplyResponse response = questionService.getQuestionById(questionId);
-        return "redirect:/api/question/" + questionId;
+        return "/admin/question/" + questionId;
     }
 
     @PutMapping("/{questionId}/edit")
@@ -41,14 +41,14 @@ public class QuestionAdminController {
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         QuestionResponse response = questionService.updateQuestion(questionId, request, customUserDetails);
-        return "redirect:/api/question/" + questionId;
+        return "redirect:/admin/question/" + questionId;
     }
 
     @PutMapping("/{questionId}/progress")
     public String progressEdit(@PathVariable Integer questionId, @ModelAttribute QuestionStatusUpdateRequest request) {
 
         questionService.updateStatus(questionId, request);
-        return "redirect:/api/question/" + questionId;
+        return "redirect:/admin/question/" + questionId;
     }
 
     @DeleteMapping("/{questionId}")

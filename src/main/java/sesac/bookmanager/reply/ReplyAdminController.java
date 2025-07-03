@@ -4,15 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import sesac.bookmanager.question.data.QuestionWithReplyResponse;
 import sesac.bookmanager.reply.data.ReplyCreateRequest;
 import sesac.bookmanager.reply.data.ReplyResponse;
 import sesac.bookmanager.reply.data.ReplyUpdateRequest;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/reply")
-public class ReplyController {
+@RequestMapping("/admin/reply")
+public class ReplyAdminController {
 
     private final ReplyService replyService;
 
@@ -21,18 +20,21 @@ public class ReplyController {
 
         replyService.replyToQuestion(questionId, replyRequest);
 
-        return "redirect:/api/question/" + questionId;
+        return "redirect:/admin/question/" + questionId;
     }
 
-    @ResponseBody
+    /*
     @GetMapping("/{questionId}")
-    public ResponseEntity<ReplyResponse> getReplyByQuestionId(@PathVariable Integer questionId) {
-        return ResponseEntity.ok(replyService.getReplyByQuestionId(questionId));
+    public String getReplyByQuestionId(@PathVariable Integer questionId) {
+        ReplyResponse response = replyService.getReplyByQuestionId(questionId);
+        return "/admin/reply/" + questionId;
     }
+
+     */
 
     @PutMapping("/{questionId}")
     public String updateReply(@PathVariable Integer questionId, @ModelAttribute ReplyUpdateRequest request) {
         replyService.updateReply(questionId, request);
-        return "redirect:/api/question/" + questionId;
+        return "redirect:/admin/question/" + questionId;
     }
 }
