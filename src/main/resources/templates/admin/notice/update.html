@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 72px;
+      width: 100%;
+      height: 120px;
+      background-color: rgba(59, 130, 246, 0.06);
+      border-top: 3px solid #3b82f6;
+      border-bottom: 1px solid #bfdbfe;
+      animation: fade 0.3s;
+    }
+
+    .container{
+      position: relative;
+    }
+    .container>nav{
+      position: absolute;
+      right: 0;
+      top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+<!-- 헤더 -->
+<header th:replace="fragments/header :: siteHeader"></header>
+
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-10">
+  <h2 class="text-2xl font-bold mb-6">📝 공지수정</h2>
+
+  <form th:action="@{/admin/notice/{noticeid}/update(noticeid=${noticeId})}" th:object="${NoticeUpdateRequest}" method="post" class="bg-white p-6 rounded shadow space-y-6">
+    <div>
+      <label class="block font-medium text-gray-700">카테고리 선택</label>
+      <select th:field="*{type}" class="mt-1 w-full border px-3 py-2 rounded">
+        <option th:value="0">일반</option>
+        <option th:value="1">휴무</option>
+        <option th:value="2">일정</option>
+        <option th:value="3">구인</option>
+      </select>
+    </div>
+    <!-- 제목 -->
+    <div>
+      <label class="block text-gray-700 font-medium mb-1">제목</label>
+      <input type="text" th:field="*{title}" class="w-full border px-4 py-2 rounded" />
+    </div>
+
+    <!-- 내용 -->
+    <div>
+      <label class="block text-gray-700 font-medium mb-1">내용</label>
+      <textarea rows="10" th:field="*{content}" class="w-full border px-4 py-2 rounded resize-none"></textarea>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="text-right space-x-2">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">저장</button>
+      <button type="button" onclick="window.history.back()" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">취소</button>
+    </div>
+  </form>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+  </div>
+</footer>
+</body>
+</html>
