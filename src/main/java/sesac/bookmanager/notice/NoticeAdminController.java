@@ -7,7 +7,7 @@ import sesac.bookmanager.notice.data.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/notice")
+@RequestMapping("/admin/notice")
 public class NoticeAdminController {
 
     private final NoticeService noticeService;
@@ -15,20 +15,20 @@ public class NoticeAdminController {
     @PostMapping("/create")
     public String create(@ModelAttribute NoticeCreateRequest request) {
         NoticeResponse newNotice = noticeService.createNotice(request);
-        return "redirect:/api/admin/notice/" + newNotice.getNoticeId();
+        return "redirect:/admin/notice/" + newNotice.getNoticeId();
     }
 
     @GetMapping
     public String getNotices(NoticeSearchRequest searchRequest) {
 
         NoticePageResponse pageResponse = noticeService.searchNotice(searchRequest);
-        return "redirect:/api/admin/notice";
+        return "/admin/notice";
     }
 
     @GetMapping("/api/notice/{noticeId}")
     public String getNoticeById(@PathVariable Integer noticeId) {
         NoticeResponse response = noticeService.getNoticeById(noticeId);
-        return "redirect:/api/admin/notice/" + response.getNoticeId();
+        return "/admin/notice/" + response.getNoticeId();
     }
 
     @PutMapping("/{noticeId}")
@@ -36,13 +36,13 @@ public class NoticeAdminController {
             @PathVariable Integer noticeId, @ModelAttribute NoticeUpdateRequest updateRequest) {
 
         noticeService.updateNotice(noticeId, updateRequest);
-        return "redirect:/api/admin/notice/" + noticeId;
+        return "redirect:/admin/notice/" + noticeId;
     }
 
     @DeleteMapping("/{noticeId}")
     public String deleteNotice(@PathVariable Integer noticeId) {
         noticeService.deleteNotice(noticeId);
 
-        return "redirect:/api/admin/notice";
+        return "redirect:/admin/notice";
     }
 }
