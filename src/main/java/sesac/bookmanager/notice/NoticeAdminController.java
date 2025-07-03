@@ -30,10 +30,21 @@ public class NoticeAdminController {
     }
 
     @GetMapping
-    public String getNotices(Model model) {
+    public String getNotices(Model model, @RequestParam Integer page) {
 
-        NoticePageResponse pageResponse = noticeService.searchNotice(new NoticeSearchRequest());
-        model.addAttribute("pageResponse", pageResponse);
+        NoticePageResponse pageResponse = null;
+
+        if(page == null || page < 1) {
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest());
+        } else {
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", page - 1, 5));
+        }
+
+
+        model.addAttribute("page", pageResponse.getPage() + 1);
+        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalCount", pageResponse.getTotalCount());
+        model.addAttribute("notices", pageResponse.getNotices());
         return "/admin/notice/list";
     }
 

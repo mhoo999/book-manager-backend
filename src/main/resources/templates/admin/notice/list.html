@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>북매니저</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        @keyframes fade {
+            0% {
+                opacity: 0.4;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        header{position: relative;}
+        header>.bg_lnb{
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 72px;
+            width: 100%;
+            height: 120px;
+            background-color: rgba(59, 130, 246, 0.06);
+            border-top: 3px solid #3b82f6;
+            border-bottom: 1px solid #bfdbfe;
+            animation: fade 0.3s;
+        }
+
+        .container{
+            position: relative;
+        }
+        .container>nav{
+            position: absolute;
+            right: 0;
+            top: 32px;
+        }
+
+        .container>nav .lnb{
+            display: none;
+            margin-top: 32px;
+            animation: fade 0.3s;
+        }
+        .container>nav .lnb>li>a{
+            display: block;
+            height: 30px;
+            line-height: 30px;
+
+        }
+        .container>nav .lnb>li>a:hover{
+            color: #fff;
+            font-weight: 800;
+            background-color: #3b82f6;
+        }
+
+
+    </style>
+</head>
+<body class="bg-gray-50">
+<!-- 헤더 -->
+<header th:replace="fragments/header :: siteHeader"></header>
+
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">📢 공지사항</h2>
+
+    <!-- 검색 UI -->
+    <div class="flex items-center space-x-4 mb-6">
+        <select class="border px-3 py-2 rounded">
+            <option>제목</option>
+            <option>내용</option>
+        </select>
+        <input type="text" placeholder="검색어 입력" class="border px-3 py-2 rounded w-64" />
+        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
+    </div>
+
+    <!-- 공지 테이블 -->
+    <div class="overflow-x-auto bg-white border rounded shadow">
+        <table class="min-w-full text-center">
+            <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2 border">번호</th>
+                <th class="px-4 py-2 border">제목</th>
+                <th class="px-4 py-2 border">작성자</th>
+                <th class="px-4 py-2 border">등록일</th>
+                <th class="px-4 py-2 border">조회수</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="notice : ${notices}">
+                <td th:text="${notice.noticeId}" class="px-4 py-2 border"></td>
+                <td class="px-4 py-2 border text-left pl-6">
+                    <a th:href="@{/admin/notice/{noticeId}(noticeId=${notice.noticeId})}"
+                       th:text="${notice.title}"
+                       class="text-blue-600 hover:underline"></a>
+                </td>
+                <td class="px-4 py-2 border">관리자</td>
+                <td class="px-4 py-2 border" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}"></td>
+                <td class="px-4 py-2 border" th:text="${notice.views}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="mt-6 flex justify-center">
+        <nav class="inline-flex space-x-1">
+            <a th:if="${page > 0}"
+               th:href="@{/notice/list(page=${page - 1})}"
+               class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+
+            <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+               th:href="@{/notice/list(page=${i})}"
+               th:text="${i}"
+               th:classappend="${i == page} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
+               class="px-3 py-1 border border-gray-300 rounded">
+            </a>
+
+            <a th:if="${page < totalPages}"
+               th:href="@{/notice/list(page=${page + 1})}"
+               class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+        </nav>
+    </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+        상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+</footer>
+</body>
+</html>
