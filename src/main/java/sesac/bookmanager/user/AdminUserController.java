@@ -17,11 +17,30 @@ public class AdminUserController {
     private final AdminUserService adminUserService;
 
     @GetMapping
-    public String getUsersList(Model model,@RequestParam(defaultValue = "0") int page){
+    public String getUsersList(Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(required = false) String type,
+                               @RequestParam(required = false) String keyword,
+                               @RequestParam(required = false) String status) {
         int size = 10;
-        Page<UserInfoDto> users = adminUserService.getUsersList(page,size);
+
+        Page<UserInfoDto> users = adminUserService.getUsersList(page, size, type, keyword, status);
+
         model.addAttribute("users", users);
+        model.addAttribute("status", status);
+        model.addAttribute("type", type);
+        model.addAttribute("keyword", keyword);
+
         return "admin/user/userList";
+    }
+
+
+    @GetMapping("/quits")
+    public String getQuitUsersList(Model model,@RequestParam(defaultValue = "0") int page){
+        int size = 10;
+        Page<UserInfoDto> users = adminUserService.getQuitUsersList(page,size);
+        model.addAttribute("users", users);
+        return "admin/user/quitUsers";
     }
 
     @GetMapping("/{user_id}")
@@ -30,18 +49,26 @@ public class AdminUserController {
         model.addAttribute("userInfo", userInfo);
         return "admin/user/userInfo";
     }
+    @ResponseBody
+    @PutMapping("/{user_id}")
+    public ResponseEntity<ApiResponse<?>> restoreUserByAdmin(@PathVariable int user_id) {
+        adminUserService.restoreUserByAdmin(user_id);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{user_id}")
+    public ResponseEntity<ApiResponse<?>> withdrawUserByAdmin(@PathVariable int user_id) {
+        adminUserService.withDrawUserByAdmin(user_id);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
 
     /** 폐기 - 정보 수정할 필드가 크게 없음**/
 //    @PutMapping("/{user_id}")
 //    public String modifyUserByAdmin(Model model, @PathVariable String user_id){
 //        return "";
 //    }
-    @DeleteMapping("/{user_id}")
-    public String withdrawUserByAdmin(Model model, @PathVariable int user_id){
-        UserInfoDto userInfo = adminUserService.withDrawUserByAdmin(user_id);
-        model.addAttribute("userInfo", userInfo);
-        return "admin/user/userInfo";
-    }
+
 
     @ResponseBody
     @GetMapping("/status")

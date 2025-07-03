@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final AuthAdminDetailService authAdminDetailService;
     /**
      * ✅ 1) 관리자용 (세션 기반)
-     * 경로: /api/admin/**
+     * 경로: /admin/**
      */
     @Bean
     @Order(1)

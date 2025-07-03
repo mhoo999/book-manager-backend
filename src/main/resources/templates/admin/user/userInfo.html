@@ -2,6 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>북매니저</title>
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -61,23 +63,28 @@
   </head>
   <body class="bg-gray-50">
     <!-- 헤더 -->
-    <header th:replace="fragments/header :: siteHeader"></header>
+    <header th:replace="~{fragments/header :: siteHeader}"></header>
 
     <!-- 본문 -->
     <main class="max-w-screen-xl mx-auto px-4 py-8">
       <h2 class="text-2xl font-bold mb-6">👤 회원정보</h2>
 
-      <!-- 탈퇴신청 버튼 -->
+      <!-- 탈퇴신청/취소 버튼 -->
       <div class="mb-6 text-right">
         <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          수정
-        </button>
-        <button
-          class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
+                th:if="${userInfo.status == '정상 회원'}"
+                th:attr="data-user-id=${userInfo.userId}"
+                onclick="deleteUser(this)"
+                class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
           탈퇴
+        </button>
+
+        <button
+                th:if="${userInfo.status == '탈퇴 회원'}"
+                th:attr="data-user-id=${userInfo.userId}"
+                onclick="restoreUser(this)"
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+          탈퇴 취소
         </button>
       </div>
 
@@ -87,62 +94,52 @@
           <div>
             <label class="block text-gray-700 font-medium">이름</label>
             <input
-              type="text"
-              value="김둘리"
-              class="mt-1 w-full border px-3 py-2 rounded"
-              readonly
+                    type="text"
+                    th:value="${userInfo.userName}"
+                    class="mt-1 w-full border px-3 py-2 rounded"
+                    readonly
             />
           </div>
 
           <div>
             <label class="block text-gray-700 font-medium">비밀번호</label>
             <input
-              type="password"
-              value="password"
-              class="mt-1 w-full border px-3 py-2 rounded"
-              readonly
+                    type="password"
+                    value="***********"
+                    class="mt-1 w-full border px-3 py-2 rounded"
+                    readonly
             />
           </div>
 
           <div>
             <label class="block text-gray-700 font-medium">이메일</label>
             <input
-              type="email"
-              value="hong@example.com"
-              class="mt-1 w-full border px-3 py-2 rounded"
-              readonly
+                    type="email"
+                    th:value="${userInfo.userEmail}"
+                    class="mt-1 w-full border px-3 py-2 rounded"
+                    readonly
             />
           </div>
 
           <div>
             <label class="block text-gray-700 font-medium">전화번호</label>
             <input
-              type="text"
-              value="010-1234-5678"
-              class="mt-1 w-full border px-3 py-2 rounded"
-              readonly
+                    type="text"
+                    th:value="${userInfo.phoneNumber}"
+                    class="mt-1 w-full border px-3 py-2 rounded"
+                    readonly
             />
           </div>
 
           <div>
             <label class="block text-gray-700 font-medium">상태</label>
             <input
-              type="text"
-              value="정상회원"
-              class="mt-1 w-full border px-3 py-2 rounded"
-              readonly
+                    type="text"
+                    th:value="${userInfo.status}"
+                    class="mt-1 w-full border px-3 py-2 rounded"
+                    readonly
             />
           </div>
-        </div>
-
-        <!-- 확인/탈퇴 버튼 -->
-        <div class="pt-6 text-right space-x-2">
-          <button
-            type="submit"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            목록보기
-          </button>
         </div>
       </form>
     </main>
@@ -155,5 +152,56 @@
         상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
       </div>
     </footer>
+    <script>
+      function deleteUser(btn) {
+        const userId = btn.getAttribute("data-user-id");
+
+        if (confirm("정말 탈퇴하시겠습니까?")) {
+          // ✅ 메타태그에서 CSRF 토큰과 헤더 이름 읽기
+          const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+          const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+          fetch(`/admin/user/${userId}`, {
+            method: 'DELETE',
+            headers: { [csrfHeader]: csrfToken },
+            credentials: 'include'
+          })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.success) {
+                      alert("탈퇴 완료");
+                      window.location.reload(); // 목록으로 이동
+                    } else {
+                      alert("탈퇴 실패");
+                    }
+                  });
+        }
+      }
+      function restoreUser(btn) {
+        const userId = btn.getAttribute("data-user-id");
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        if (confirm("정말 탈퇴를 취소하시겠습니까?")) {
+          fetch(`/admin/user/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              [csrfHeader]: csrfToken
+            },
+            credentials: 'include'
+          })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.success) {
+                      alert("탈퇴 취소 완료");
+                      window.location.reload();
+                    } else {
+                      alert("취소 실패");
+                    }
+                  });
+        }
+      }
+    </script>
   </body>
 </html>
