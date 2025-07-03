@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>북매니저</title>
@@ -95,9 +95,9 @@
             </ol>
           </li>
           <li>
-            <a href="/admin/user" class="hover:text-blue-600 transition-colors">회원관리</a>
+            <a href="#" class="text-blue-600 transition-colors">회원관리</a>
             <ol class="lnb">
-              <li><a href="/admin/user">회원목록</a></li>
+              <li><a href="#">회원목록</a></li>
               <li><a href="#">탈퇴회원</a></li>
             </ol>   
           </li>
@@ -125,64 +125,49 @@
 
   <!-- 본문 -->
   <main class="max-w-screen-xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6">📊 관리자 대시보드</h2>
-    <div class="grid grid-cols-3 gap-6">
-      <!-- 대여현황 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">📚 대여현황</h3>
-        <ul class="text-sm space-y-1">
-          <li>오늘의 대여현황: 12건</li>
-          <li>총 대여중인 도서 권수: 128권</li>
-          <li>미납 도서 권수: 7권</li>
-        </ul>
-      </div>
+    <h2 class="text-2xl font-bold mb-6">👤 회원정보</h2>
 
-      <!-- 희망도서 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">📖 희망도서</h3>
-        <ul class="text-sm space-y-1">
-          <li>신청된 도서 권수: 23권</li>
-          <li>처리대기 건수: 5건</li>
-        </ul>
-      </div>
-
-      <!-- 도서관리 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">📗 도서관리</h3>
-        <ul class="text-sm space-y-1">
-          <li>총 도서 수: 540권</li>
-          <li>신규 등록 요청: 3건</li>
-        </ul>
-      </div>
-
-      <!-- 회원관리 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">👤 회원관리</h3>
-        <ul class="text-sm space-y-1">
-          <li>오늘 가입 회원 수: 4명</li>
-          <li>전체 회원 수: 1,240명</li>
-          <li>탈퇴 회원 수: 37명</li>
-        </ul>
-      </div>
-
-      <!-- 관리자 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">🔐 관리자</h3>
-        <ul class="text-sm space-y-1">
-          <li>승인 대기 인원 수: 2명</li>
-          <li>등록된 관리자 수: 10명</li>
-        </ul>
-      </div>
-
-      <!-- 게시판 -->
-      <div class="bg-white rounded shadow p-4">
-        <h3 class="font-semibold text-lg mb-2">📬 게시판</h3>
-        <ul class="text-sm space-y-1">
-          <li>도서문의: 14건</li>
-          <li>오류신고: 3건</li>
-        </ul>
-      </div>
+    <!-- 탈퇴신청 버튼 -->
+    <div class="mb-6 text-right">
+      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">수정</button>
+      <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">탈퇴</button>
     </div>
+
+    <!-- 회원 정보 폼 -->
+    <form class="bg-white p-6 rounded shadow space-y-6">
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium">이름</label>
+          <input type="text" value="김둘리" class="mt-1 w-full border px-3 py-2 rounded" readonly>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">비밀번호</label>
+          <input type="password" value="password" class="mt-1 w-full border px-3 py-2 rounded" readonly>
+        </div>
+
+
+        <div>
+          <label class="block text-gray-700 font-medium">이메일</label>
+          <input type="email" value="hong@example.com" class="mt-1 w-full border px-3 py-2 rounded" readonly>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">전화번호</label>
+          <input type="text" value="010-1234-5678" class="mt-1 w-full border px-3 py-2 rounded" readonly>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-medium">상태</label>
+          <input type="text" value="정상회원" class="mt-1 w-full border px-3 py-2 rounded" readonly>
+        </div>
+      </div>
+
+      <!-- 확인/탈퇴 버튼 -->
+      <div class="pt-6 text-right space-x-2">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">목록보기</button>
+      </div>
+    </form>
   </main>
 
   <!-- 푸터 -->
@@ -191,48 +176,5 @@
       상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
     </div>
   </footer>
-
-
-  <script>
-
-    if (true) {
-      const $gnb = document.querySelector('header .gnb');
-      const $lnbs = document.querySelectorAll('header .lnb');
-      const $bg_lnb = document.querySelector('.bg_lnb');
-
-      const navFadeIn = function () {
-        $bg_lnb.style.display = 'block';
-
-        $lnbs.forEach(function ($lnb) {
-          $lnb.style.display = 'block';
-        });
-      };
-
-      const navFadeOut = function () {
-        $bg_lnb.style.display = 'none';
-
-        $lnbs.forEach(function ($lnb) {
-          $lnb.style.display = 'none';
-        });
-      };
-
-      $gnb.addEventListener('mouseenter', function () {
-        navFadeIn();
-      });
-
-      $gnb.addEventListener('mouseleave', function () {
-        navFadeOut();
-      });
-
-      $bg_lnb.addEventListener('mouseover', function () {
-        navFadeIn();
-      });
-
-      $bg_lnb.addEventListener('mouseout', function () {
-        navFadeOut();
-      });
-    }
-
-  </script>  
 </body>
 </html>
