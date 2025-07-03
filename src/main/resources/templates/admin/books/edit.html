@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>도서 상세정보 - 북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+			display: none;
+			position: absolute;
+			left: 0;
+			top: 72px;
+			width: 100%;
+			height: 120px;
+      background-color: rgba(59, 130, 246, 0.06); 
+      border-top: 3px solid #3b82f6; 
+      border-bottom: 1px solid #bfdbfe;
+			animation: fade 0.3s;
+    }
+
+    .container{
+			position: relative;
+    }
+    .container>nav{
+				position: absolute;
+				right: 0;
+				top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;    
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 헤더 -->
+  <header class="bg-white shadow">
+		<div class="bg_lnb"></div>
+    <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center space-x-3">
+        <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
+        <span class="text-xl font-bold">북매니저 관리자</span>
+      </div>
+      <nav>
+        <ul class="gnb flex space-x-6 text-gray-700 font-medium">
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">대여현황</a>
+            <ol class="lnb">
+              <li><a href="#">대여목록</a></li>
+              <li><a href="#">반납지연</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
+            <ol class="lnb">
+              <li><a href="#">신청목록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="text-blue-600 transition-colors">도서관리</a>
+            <ol class="lnb">
+              <li><a href="#">도서목록</a></li>
+              <li><a href="#">도서등록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
+            <ol class="lnb">
+              <li><a href="#">추천도서</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
+            <ol class="lnb">
+              <li><a href="#">회원목록</a></li>
+              <li><a href="#">탈퇴회원</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">관리자정보</a>
+            <ol class="lnb">
+              <li><a href="#">관리자목록</a></li>
+              <li><a href="#">관리자등록</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
+            <ol class="lnb">
+              <li><a href="#">문의하기</a></li>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">공지사항</a></li>
+            </ol>
+          </li>
+          <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- 본문 -->
+  <main class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">📘 도서정보</h2>
+
+    <div class="bg-white p-6 rounded shadow space-y-8">
+      
+      <!-- 표지 이미지 -->
+      <div class="flex justify-center mb-6">
+        <img src="https://picsum.photos/200/280" alt="도서 표지" class="shadow border rounded-md">
+      </div>
+
+      <!-- 도서 기본 정보 -->
+      <section>
+        <h3 class="text-xl font-semibold mb-4">도서 기본정보</h3>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-gray-700 font-medium">ISBN</label>
+            <input type="text" value="9788942391288 93990" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">도서명</label>
+            <input type="text" value="모던 자바스크립트" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">저자</label>
+            <input type="text" value="홍길동" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">출판사</label>
+            <input type="text" value="한빛미디어" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">출판일</label>
+            <input type="text" value="2024-05-10" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">가격</label>
+            <input type="text" value="30000원" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+        </div>
+      </section>
+
+      <!-- 카테고리 정보 -->
+      <section>
+        <h3 class="text-xl font-semibold mb-4">카테고리</h3>
+        <div class="grid grid-cols-3 gap-6">
+          <div>
+            <label class="block text-gray-700 font-medium">대분류</label>
+            <input type="text" value="프로그래밍" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">중분류</label>
+            <input type="text" value="웹 개발" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">소분류</label>
+            <input type="text" value="자바스크립트" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+        </div>
+      </section>
+
+      <!-- 수량 정보 -->
+      <section>
+        <h3 class="text-xl font-semibold mb-4">보유 수량 정보</h3>
+        <div class="grid grid-cols-3 gap-6">
+          <div>
+            <label class="block text-gray-700 font-medium">총수량</label>
+            <input type="text" value="3권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">대여중</label>
+            <input type="text" value="1권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">잔여수량</label>
+            <input type="text" value="2권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+          </div>
+        </div>
+      </section>
+
+      <!-- 버튼 -->
+      <div class="text-right space-x-2">
+        <button class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">목록으로</button>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">수정</button>
+        <!-- <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">삭제</button> -->
+      </div>
+
+      <!-- 소장사항 -->
+      <section>
+        <h3 class="text-xl font-semibold mb-4">소장사항</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full table-auto border border-gray-200 bg-white">
+            <thead class="bg-gray-100">
+              <tr class="text-center text-gray-700 font-medium">
+                <th class="px-4 py-2 border">번호</th>
+                <th class="px-4 py-2 border">도서코드</th>
+                <th class="px-4 py-2 border">도서위치</th>
+                <th class="px-4 py-2 border">도서상태</th>
+              </tr>
+            </thead>
+            <tbody class="text-center text-gray-800">
+              <tr>
+                <td class="px-4 py-2 border">1</td>
+                <td class="px-4 py-2 border">BK20240001</td>
+                <td class="px-4 py-2 border">A-1</td>
+                <td class="px-4 py-2 border text-green-600">대여가능</td>
+              </tr>
+              <tr class="bg-gray-50">
+                <td class="px-4 py-2 border">2</td>
+                <td class="px-4 py-2 border">BK20240002</td>
+                <td class="px-4 py-2 border">A-1</td>
+                <td class="px-4 py-2 border text-red-500">대여중</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2 border">3</td>
+                <td class="px-4 py-2 border">BK20240003</td>
+                <td class="px-4 py-2 border">A-1</td>
+                <td class="px-4 py-2 border text-green-600">대여가능</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+  </footer>
+
+</body>
+</html>

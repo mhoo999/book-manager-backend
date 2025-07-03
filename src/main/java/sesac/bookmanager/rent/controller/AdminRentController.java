@@ -20,7 +20,7 @@ import sesac.bookmanager.security.CustomAdminDetails;
 import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
-@RequestMapping("/admin/v1/rent")
+@RequestMapping("/admin/v1/rents")
 @RequiredArgsConstructor
 public class AdminRentController {
 
@@ -31,21 +31,21 @@ public class AdminRentController {
         PageRentResponseDto rents = rentService.searchRents(request);
         model.addAttribute("rents", rents);
         model.addAttribute("searchCondition", request);
-        return "admin/rent/list";
+        return "admin/rents/list";
     }
 
     @GetMapping("/{rentId}")
     public String getRent(@PathVariable Long rentId, Model model) {
         RentResponseDto rent = rentService.getRent(rentId);
         model.addAttribute("rent", rent);
-        return "admin/rent/detail";
+        return "admin/rents/detail";
     }
 
     @GetMapping("/{rentId}/edit")
     public String showUpdateForm(@PathVariable Long rentId, Model model) {
         RentResponseDto rent = rentService.getRent(rentId);
         model.addAttribute("rent", rent);
-        return "admin/rent/edit";
+        return "admin/rents/edit";
     }
 
     @PostMapping("/{rentId}/edit")
@@ -58,11 +58,11 @@ public class AdminRentController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("rentId", rentId);
-            return "admin/rent/edit";
+            return "admin/rents/edit";
         }
 
         rentService.updateRent(rentId, request, customAdminDetails);
-        return "redirect:/admin/v1/rent/" + rentId;
+        return "redirect:/admin/v1/rents/" + rentId;
     }
 
     @GetMapping
@@ -71,6 +71,6 @@ public class AdminRentController {
         PageRentResponseDto rents = rentService.searchRents(defaultRequest);
         model.addAttribute("rents", rents);
         model.addAttribute("searchCondition", defaultRequest);
-        return "admin/rent/list";
+        return "admin/rents/list";
     }
 }

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+			display: none;
+			position: absolute;
+			left: 0;
+			top: 72px;
+			width: 100%;
+			height: 120px;
+      background-color: rgba(59, 130, 246, 0.06); 
+      border-top: 3px solid #3b82f6; 
+      border-bottom: 1px solid #bfdbfe;
+			animation: fade 0.3s;
+    }
+
+    .container{
+			position: relative;
+    }
+    .container>nav{
+				position: absolute;
+				right: 0;
+				top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;    
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- 헤더 -->
+  <header class="bg-white shadow">
+		<div class="bg_lnb"></div>
+    <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
+      <div class="flex items-center space-x-3">
+        <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
+        <span class="text-xl font-bold">북매니저 관리자</span>
+      </div>
+      <nav>
+        <ul class="gnb flex space-x-6 text-gray-700 font-medium">
+          <li>
+            <a href="#" class="text-blue-600 transition-colors">대여현황</a>
+            <ol class="lnb">
+              <li><a href="#">대여목록</a></li>
+              <li><a href="#">반납지연</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
+            <ol class="lnb">
+              <li><a href="#">신청목록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">도서관리</a>
+            <ol class="lnb">
+              <li><a href="#">도서목록</a></li>
+              <li><a href="#">도서등록</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
+            <ol class="lnb">
+              <li><a href="#">추천도서</a></li>
+            </ol>
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
+            <ol class="lnb">
+              <li><a href="#">회원목록</a></li>
+              <li><a href="#">탈퇴회원</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">관리자정보</a>
+            <ol class="lnb">
+              <li><a href="#">관리자목록</a></li>
+              <li><a href="#">관리자등록</a></li>
+            </ol>   
+          </li>
+          <li>
+            <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
+            <ol class="lnb">
+              <li><a href="#">문의하기</a></li>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">공지사항</a></li>
+            </ol>
+          </li>
+          <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- 본문 -->
+  <main class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-center mb-6">📚 대여 목록</h2>
+
+    <!-- 검색 영역 -->
+    <div class="flex flex-wrap justify-center mb-4 space-x-2">
+      <select class="border px-3 py-2 rounded">
+        <option selected>회원명</option>
+        <option>연락처</option>
+        <option>도서명</option>
+      </select>
+      <input type="text" class="border px-3 py-2 rounded w-64" placeholder="검색어를 입력하세요">
+      <button class="bg-blue-500 text-white px-4 py-2 rounded">검색</button>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full bg-white border">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="text-center py-2 px-2">대여번호</th>
+            <th class="text-center py-2 px-2">회원명</th>
+            <th class="text-center py-2 px-2">도서번호</th>
+            <th class="text-center py-2 px-2">도서명</th>
+            <th class="text-center py-2 px-2">연락처</th>
+            <th class="text-center py-2 px-2">대여일<br>(반납예정일)</th>
+            <th class="text-center py-2 px-2">
+              진행상태
+              <select class="ml-2 border text-sm px-1 py-1">
+                <option selected>전체보기</option>
+                <option>대여요청</option>
+                <option>대여중</option>
+                <option>반납</option>
+                <option>미납</option>
+              </select>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 데이터 반복 -->
+          <!-- 예시 1 -->
+          <tr class="text-center">
+            <td class="py-2">R-00005<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
+            <td class="py-2">홍길동</td>
+            <td class="py-2">D-0005</td>
+            <td class="py-2 text-left flex items-center space-x-2">
+              <img src="https://picsum.photos/40?5" class="w-10 h-10" alt="썸네일">
+              <span>컴퓨터보안</span>
+            </td>
+            <td class="py-2">010-1234-5555</td>
+            <td class="py-2">
+              2025-06-19<br>
+              <span class="text-gray-400">(2025-06-26)</span>
+            </td>
+            <td class="py-2">
+              <div class="text-red-600">미납중</div>
+              <button class="mt-1 px-2 py-1 bg-red-500 text-white text-sm rounded">반납처리</button>
+            </td>
+          </tr>
+          <!-- 예시 2~5 생략 없이 이어서 포함됨 -->
+          <tr class="text-center">
+            <td class="py-2">R-00004<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
+            <td class="py-2">이몽룡</td>
+            <td class="py-2">D-0004</td>
+            <td class="py-2 text-left flex items-center space-x-2">
+              <img src="https://picsum.photos/40?4" class="w-10 h-10" alt="썸네일">
+              <span>자바스크립트</span>
+            </td>
+            <td class="py-2">010-1111-4444</td>
+            <td class="py-2">
+              2025-06-18<br>
+              <span class="text-gray-400">(2025-06-25)</span>
+            </td>
+            <td class="py-2">
+              <div class="text-blue-600">대여요청</div>
+              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">대여처리</button>
+            </td>
+          </tr>
+          <tr class="text-center">
+            <td class="py-2">R-00003<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
+            <td class="py-2">성춘향</td>
+            <td class="py-2">D-0003</td>
+            <td class="py-2 text-left flex items-center space-x-2">
+              <img src="https://picsum.photos/40?3" class="w-10 h-10" alt="썸네일">
+              <span>리눅스기초</span>
+            </td>
+            <td class="py-2">010-2222-3333</td>
+            <td class="py-2">
+              2025-06-17<br>
+              <span class="text-gray-400">(2025-06-24)</span>
+            </td>
+            <td class="py-2">
+              <div>대여중</div>
+              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">반납처리</button>
+            </td>
+          </tr>
+          <tr class="text-center">
+            <td class="py-2">R-00002<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
+            <td class="py-2">임꺽정</td>
+            <td class="py-2">D-0002</td>
+            <td class="py-2 text-left flex items-center space-x-2">
+              <img src="https://picsum.photos/40?2" class="w-10 h-10" alt="썸네일">
+              <span>네트워크이해</span>
+            </td>
+            <td class="py-2">010-4444-2222</td>
+            <td class="py-2">
+              2025-06-16<br>
+              <span class="text-gray-400">(2025-06-23)</span>
+            </td>
+            <td class="py-2">
+              <div class="text-gray-600">반납</div>
+              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">대여처리</button>
+            </td>
+          </tr>
+          <tr class="text-center">
+            <td class="py-2">R-00001<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
+            <td class="py-2">장보고</td>
+            <td class="py-2">D-0001</td>
+            <td class="py-2 text-left flex items-center space-x-2">
+              <img src="https://picsum.photos/40?1" class="w-10 h-10" alt="썸네일">
+              <span>파이썬입문</span>
+            </td>
+            <td class="py-2">010-5555-1111</td>
+            <td class="py-2">
+              2025-06-15<br>
+              <span class="text-gray-400">(2025-06-22)</span>
+            </td>
+            <td class="py-2">
+              <div>대여중</div>
+              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">반납처리</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="flex justify-center mt-6">
+      <nav class="inline-flex space-x-2">
+        <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded">1</a>
+        <a href="#" class="px-3 py-1 bg-white border rounded">2</a>
+        <a href="#" class="px-3 py-1 bg-white border rounded">3</a>
+        <a href="#" class="px-3 py-1 bg-white border rounded">4</a>
+        <a href="#" class="px-3 py-1 bg-white border rounded">5</a>
+      </nav>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+  </footer>
+</body>
+</html>

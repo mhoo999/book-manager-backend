@@ -14,7 +14,7 @@ import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomUserDetails;
 
 @RestController
-@RequestMapping("/api/v1/rent")
+@RequestMapping("/api/v1/rents")
 @RequiredArgsConstructor
 public class RentController {
 

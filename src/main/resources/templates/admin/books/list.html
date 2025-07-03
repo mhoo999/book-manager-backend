@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 72px;
+      width: 100%;
+      height: 120px;
+      background-color: rgba(59, 130, 246, 0.06);
+      border-top: 3px solid #3b82f6;
+      border-bottom: 1px solid #bfdbfe;
+      animation: fade 0.3s;
+    }
+
+    .container{
+      position: relative;
+    }
+    .container>nav{
+      position: absolute;
+      right: 0;
+      top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+</head>
+<body class="bg-gray-50">
+<!-- 헤더 -->
+<header class="bg-white shadow">
+  <div class="bg_lnb"></div>
+  <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
+    <div class="flex items-center space-x-3">
+      <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
+      <span class="text-xl font-bold">북매니저 관리자</span>
+    </div>
+    <nav>
+      <ul class="gnb flex space-x-6 text-gray-700 font-medium">
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">대여현황</a>
+          <ol class="lnb">
+            <li><a href="#">대여목록</a></li>
+            <li><a href="#">반납지연</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
+          <ol class="lnb">
+            <li><a href="#">신청목록</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="text-blue-600 transition-colors">도서관리</a>
+          <ol class="lnb">
+            <li><a href="#">도서목록</a></li>
+            <li><a href="#">도서등록</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
+          <ol class="lnb">
+            <li><a href="#">추천도서</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
+          <ol class="lnb">
+            <li><a href="#">회원목록</a></li>
+            <li><a href="#">탈퇴회원</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">관리자정보</a>
+          <ol class="lnb">
+            <li><a href="#">관리자목록</a></li>
+            <li><a href="#">관리자등록</a></li>
+          </ol>
+        </li>
+        <li>
+          <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
+          <ol class="lnb">
+            <li><a href="#">문의하기</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">공지사항</a></li>
+          </ol>
+        </li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold mb-6">📚 도서목록</h2>
+
+  <!-- 검색 UI -->
+  <form th:action="@{/admin/v1/books/search}" method="get" th:object="${searchCondition}">
+    <div class="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+      <div class="flex flex-1 items-center space-x-4">
+        <div>
+          <select th:field="*{searchType}" class="border border-gray-300 rounded px-3 py-2">
+            <option value="title">도서명</option>
+            <option value="author">저자</option>
+          </select>
+        </div>
+        <div class="flex space-x-2">
+          <input type="text" th:field="*{keyword}" placeholder="검색어를 입력하세요" class="border border-gray-300 rounded px-3 py-2 w-64">
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">검색</button>
+        </div>
+      </div>
+      <div class="mt-2 md:mt-0 md:ml-auto">
+        <a th:href="@{/admin/v1/books/register}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block">도서등록</a>
+      </div>
+    </div>
+  </form>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 text-center">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="px-4 py-2 border">도서번호</th>
+        <th class="px-4 py-2 border">도서명</th>
+        <th class="px-4 py-2 border">위치</th>
+        <th class="px-4 py-2 border">총수량</th>
+        <th class="px-4 py-2 border">대여권수<br><span class="text-xs text-gray-500">(잔여수량)</span></th>
+        <th class="px-4 py-2 border">대여가능</th>
+        <th class="px-4 py-2 border">도서정보</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 실제 데이터가 있을 때 -->
+      <tr th:each="book : ${books.content}" th:if="${books != null and books.content != null and !books.content.isEmpty()}">
+        <td class="px-4 py-2 border" th:text="${book.bookCode}">BK20240004</td>
+        <td class="px-4 py-2 border text-left" th:text="${book.title}">모던 자바스크립트</td>
+        <td class="px-4 py-2 border" th:text="${book.location}">A-1</td>
+        <td class="px-4 py-2 border" th:text="${book.totalQuantity}">10</td>
+        <td class="px-4 py-2 border">
+          <span th:text="${book.rentedQuantity}">4</span><br>
+          <span class="text-sm text-gray-500" th:text="'(' + ${book.availableQuantity} + ')'">6</span>
+        </td>
+        <td class="px-4 py-2 border">
+          <span th:if="${book.availableQuantity > 0}" class="text-green-600 font-bold">O</span>
+          <span th:unless="${book.availableQuantity > 0}" class="text-red-600 font-bold">X</span>
+        </td>
+        <td class="px-4 py-2 border">
+          <a th:href="@{/admin/v1/books/{bookId}(bookId=${book.id})}" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+
+      <!-- 데이터가 없을 때 기본 예시 데이터 표시 -->
+      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
+        <td class="px-4 py-2 border">BK20240004</td>
+        <td class="px-4 py-2 border text-left">모던 자바스크립트</td>
+        <td class="px-4 py-2 border">A-1</td>
+        <td class="px-4 py-2 border">10</td>
+        <td class="px-4 py-2 border">4<br><span class="text-sm text-gray-500">(6)</span></td>
+        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
+        <td class="px-4 py-2 border">
+          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
+        <td class="px-4 py-2 border">BK20240005</td>
+        <td class="px-4 py-2 border text-left">리액트 완벽 가이드</td>
+        <td class="px-4 py-2 border">B-2</td>
+        <td class="px-4 py-2 border">8</td>
+        <td class="px-4 py-2 border">8<br><span class="text-sm text-gray-500">(0)</span></td>
+        <td class="px-4 py-2 border text-red-600 font-bold">X</td>
+        <td class="px-4 py-2 border">
+          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
+        <td class="px-4 py-2 border">BK20240006</td>
+        <td class="px-4 py-2 border text-left">스프링 부트 실전</td>
+        <td class="px-4 py-2 border">C-3</td>
+        <td class="px-4 py-2 border">6</td>
+        <td class="px-4 py-2 border">3<br><span class="text-sm text-gray-500">(3)</span></td>
+        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
+        <td class="px-4 py-2 border">
+          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
+        <td class="px-4 py-2 border">BK20240007</td>
+        <td class="px-4 py-2 border text-left">AWS 인프라 입문</td>
+        <td class="px-4 py-2 border">D-4</td>
+        <td class="px-4 py-2 border">5</td>
+        <td class="px-4 py-2 border">5<br><span class="text-sm text-gray-500">(0)</span></td>
+        <td class="px-4 py-2 border text-red-600 font-bold">X</td>
+        <td class="px-4 py-2 border">
+          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+      <tr th:if="${books == null or books.content == null or books.content.isEmpty()}">
+        <td class="px-4 py-2 border">BK20240008</td>
+        <td class="px-4 py-2 border text-left">파이썬 자료분석</td>
+        <td class="px-4 py-2 border">E-5</td>
+        <td class="px-4 py-2 border">7</td>
+        <td class="px-4 py-2 border">1<br><span class="text-sm text-gray-500">(6)</span></td>
+        <td class="px-4 py-2 border text-green-600 font-bold">O</td>
+        <td class="px-4 py-2 border">
+          <a href="#" class="px-3 py-1 bg-blue-100 text-blue-600 rounded hover:bg-blue-200">상세보기</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 페이지네이션 -->
+  <div class="mt-6 flex justify-center" th:if="${books != null and books.totalPages > 1}">
+    <nav class="inline-flex space-x-1">
+      <!-- 이전 페이지 -->
+      <a th:if="${books.number > 0}"
+         th:href="@{/admin/v1/books/search(page=${books.number - 1}, searchType=${searchCondition.searchType}, keyword=${searchCondition.keyword})}"
+         class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+
+      <!-- 페이지 번호들 -->
+      <th:block th:each="page : ${#numbers.sequence(0, books.totalPages - 1)}">
+        <a th:if="${page == books.number}"
+           th:href="@{/admin/v1/books/search(page=${page}, searchType=${searchCondition.searchType}, keyword=${searchCondition.keyword})}"
+           class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded"
+           th:text="${page + 1}">1</a>
+        <a th:unless="${page == books.number}"
+           th:href="@{/admin/v1/books/search(page=${page}, searchType=${searchCondition.searchType}, keyword=${searchCondition.keyword})}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded"
+           th:text="${page + 1}">1</a>
+      </th:block>
+
+      <!-- 다음 페이지 -->
+      <a th:if="${books.number < books.totalPages - 1}"
+         th:href="@{/admin/v1/books/search(page=${books.number + 1}, searchType=${searchCondition.searchType}, keyword=${searchCondition.keyword})}"
+         class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+    </nav>
+  </div>
+
+  <!-- 데이터가 없을 때 기본 페이지네이션 (정적) -->
+  <div class="mt-6 flex justify-center" th:if="${books == null or books.totalPages <= 1}">
+    <nav class="inline-flex space-x-1">
+      <a href="#" class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded">1</a>
+      <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">2</a>
+      <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">3</a>
+      <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">4</a>
+      <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">5</a>
+    </nav>
+  </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+  </div>
+</footer>
+
+<script>
+  // 네비게이션 드롭다운 효과
+  document.querySelectorAll('.gnb > li').forEach(item => {
+    const lnb = item.querySelector('.lnb');
+    const bgLnb = document.querySelector('.bg_lnb');
+
+    if (lnb) {
+      item.addEventListener('mouseenter', () => {
+        lnb.style.display = 'block';
+        bgLnb.style.display = 'block';
+      });
+
+      item.addEventListener('mouseleave', () => {
+        lnb.style.display = 'none';
+        bgLnb.style.display = 'none';
+      });
+    }
+  });
+</script>
+</body>
+</html>

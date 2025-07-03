@@ -37,7 +37,7 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/admin/**")
+                .securityMatcher("/admin/**")
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 세션 기반은 CSRF 활성화
                 )
@@ -45,20 +45,20 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/auth/login").permitAll()
+                        .requestMatchers("/admin/auth/login").permitAll()
                         .anyRequest().hasRole("ADMIN")
                 )
                 // 필터 내용 포함
                 .formLogin(form -> form
-                        .loginPage("/api/admin/auth/login")
+                        .loginPage("/admin/auth/login")
                         .usernameParameter("accountId")   // 🔑 여기! 기본 "username" → "email"
                         .passwordParameter("password") // 기본은 "password", 그대로 쓰면 됨
-                        .defaultSuccessUrl("/api/admin/dashboard", true)
+                        .defaultSuccessUrl("/admin/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/api/admin/auth/logout")
-                        .logoutSuccessUrl("/api/admin/auth/login")
+                        .logoutUrl("/admin/auth/logout")
+                        .logoutSuccessUrl("/admin/auth/login")
                 )
                 .authenticationManager(adminAuthenticationManager());
 
