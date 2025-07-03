@@ -82,7 +82,7 @@
     <span class="block sm:inline" th:text="${errorMessage}"></span>
   </div>
 
-  <form action="/admin/v1/books/register" method="post" class="bg-white p-6 rounded border border-gray-300 shadow space-y-6">
+  <form th:action="@{/admin/v1/books/register}" method="post" class="bg-white p-6 rounded border border-gray-300 shadow space-y-6">
 
     <!-- 카테고리 -->
     <div class="grid md:grid-cols-3 gap-4">
@@ -129,8 +129,8 @@
         <input type="text" name="author" class="w-full border border-gray-300 px-3 py-2 rounded" required />
       </div>
       <div>
-        <label class="block font-medium mb-1">출판사</label>
-        <input type="text" name="publisher" class="w-full border border-gray-300 px-3 py-2 rounded" />
+        <label class="block font-medium mb-1">출판사 <span class="text-red-500">*</span></label>
+        <input type="text" name="publisher" class="w-full border border-gray-300 px-3 py-2 rounded" required />
       </div>
       <div>
         <label class="block font-medium mb-1">ISBN <span class="text-red-500">*</span></label>
@@ -138,12 +138,12 @@
                placeholder="예: 9788960773431 (10자리 또는 13자리 숫자)" />
       </div>
       <div>
-        <label class="block font-medium mb-1">출간일</label>
-        <input type="datetime-local" name="publishedAt" class="w-full border border-gray-300 px-3 py-2 rounded" />
+        <label class="block font-medium mb-1">출간일 <span class="text-red-500">*</span></label>
+        <input type="date" name="publishedAt" class="w-full border border-gray-300 px-3 py-2 rounded" required />
       </div>
       <div>
-        <label class="block font-medium mb-1">도서 위치</label>
-        <select name="location" class="w-full border border-gray-300 px-3 py-2 rounded">
+        <label class="block font-medium mb-1">도서 위치 <span class="text-red-500">*</span></label>
+        <select name="location" class="w-full border border-gray-300 px-3 py-2 rounded" required>
           <option value="">선택</option>
           <option value="A-1">A-1</option>
           <option value="A-2">A-2</option>
@@ -168,8 +168,8 @@
         <label for="available" class="font-medium">대여 가능</label>
       </div>
       <div>
-        <label class="block font-medium mb-1">표지 이미지 URL</label>
-        <input type="url" name="cover" class="w-full border border-gray-300 px-3 py-2 rounded"
+        <label class="block font-medium mb-1">표지 이미지 URL <span class="text-red-500">*</span></label>
+        <input type="url" name="cover" class="w-full border border-gray-300 px-3 py-2 rounded" required
                placeholder="예: https://example.com/cover.jpg" />
       </div>
     </div>
@@ -224,7 +224,7 @@
         headers[csrfHeader] = csrfToken;
       }
 
-      fetch(`/api/categories/medium/${largeCode}`, {
+      fetch(`/admin/api/categories/medium/${largeCode}`, {
         method: 'GET',
         headers: headers
       })
@@ -272,7 +272,7 @@
         headers[csrfHeader] = csrfToken;
       }
 
-      fetch(`/api/categories/small/${largeCode}/${mediumCode}`, {
+      fetch(`/admin/api/categories/small/${largeCode}/${mediumCode}`, {
         method: 'GET',
         headers: headers
       })

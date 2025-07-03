@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +13,7 @@ public class CreateBookRequestDto {
     private String title;
     private String author;
     private String publisher;
-    private LocalDateTime publishedAt;
+    private LocalDate publishedAt;
     private String location;
     private int stock;
     private Boolean isAvailable;

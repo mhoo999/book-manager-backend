@@ -41,7 +41,11 @@ public class BookService {
         book.setTitle(request.getTitle());
         book.setAuthor(request.getAuthor());
         book.setPublisher(request.getPublisher());
-        book.setPublishedAt(request.getPublishedAt());
+        if (request.getPublishedAt() != null) {
+            book.setPublishedAt(request.getPublishedAt().atStartOfDay());
+        } else {
+            book.setPublishedAt(null);
+        }
         book.setLocation(request.getLocation());
         book.setStock(request.getStock());
         book.setCover(request.getCover());
