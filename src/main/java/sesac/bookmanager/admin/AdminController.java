@@ -7,8 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
-
-import java.util.Map;
+import sesac.bookmanager.admin.data.AdminInfoDto;
 
 @Controller
 @RequestMapping("/admin/admins")
@@ -23,15 +22,16 @@ public class AdminController {
         int size =10;
         Page<AdminInfoDto> admins = adminService.getAdminsList(page,size);
         model.addAttribute("admins", admins);
-        return "admin/adminList";
+        return "admin/admin/adminList";
     }
 
     @GetMapping("/{adminId}")
     public String getAdmin(Model model, @PathVariable("adminId") int adminId){
         AdminInfoDto adminInfo = adminService.getAdminInfo(adminId);
         model.addAttribute("adminInfo", adminInfo);
-        return "admin/adminInfo";
+        return "admin/admin/adminInfo";
     }
+
 
     @GetMapping("/status")
     @ResponseBody
@@ -39,5 +39,10 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(adminService.getCount()));
     }
 
+    @PostMapping("/{adminId}")
+    public String deleteAdmin(@PathVariable("adminId") int adminId){
+        adminService.deleteAdmin(adminId);
+        return "redirect:/admin/admins";
+    }
 
 }
