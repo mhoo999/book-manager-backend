@@ -50,7 +50,6 @@ class NoticeServiceTest {
     @Test
     void 공지사항_생성_성공() {
         NoticeCreateRequest request = new NoticeCreateRequest();
-        request.setAdminId(1);
         request.setTitle("공지 제목");
         request.setContent("공지 내용");
         request.setType(NoticeType.DEFAULT);
@@ -58,7 +57,7 @@ class NoticeServiceTest {
         when(adminRepository.findById(1)).thenReturn(Optional.of(admin));
         when(noticeRepository.save(any(Notice.class))).thenReturn(notice);
 
-        NoticeResponse response = noticeService.createNotice(request);
+        NoticeResponse response = noticeService.createNotice(request, admin);
 
         assertEquals("공지 제목", response.getTitle());
         assertEquals(NoticeType.DEFAULT, response.getType());

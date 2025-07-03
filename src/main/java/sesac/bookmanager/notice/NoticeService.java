@@ -23,17 +23,17 @@ public class NoticeService {
     private final AdminRepository adminRepository;
 
 
-    public NoticeResponse createNotice(NoticeCreateRequest request) {
-        // TODO: Admin 레포지토리 생성 후 메서드명 변경
-        Admin admin = adminRepository.findById(request.getAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Admin : " + request.getAdminId()));
+    public NoticeResponse createNotice(NoticeCreateRequest request, Admin admin) {
+        Admin checkAdmin = adminRepository.findById(admin.getId())
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 Admin : " + admin.getId()));
 
         Notice newNotice = Notice.builder()
                 .type(request.getType())
                 .title(request.getTitle())
                 .content(request.getContent())
                 .createdAt(LocalDateTime.now())
-                .admin(admin)
+                .views(0)
+                .admin(checkAdmin)
                 .build();
 
         Notice savedNotice = noticeRepository.save(newNotice);
@@ -52,12 +52,21 @@ public class NoticeService {
         return NoticePageResponse.from(searchResult.getContent(), searchRequest, searchResult.getTotalElements());
     }
 
+    public NoticeResponse getNoticeByIdWithViewCounting(Integer noticeId) {
+        Notice viewNotice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
+
+        viewNotice.setViews(viewNotice.getViews() + 1);
+
+        return NoticeResponse.from(viewNotice);
+    }
+
     @Transactional(readOnly = true)
     public NoticeResponse getNoticeById(Integer noticeId) {
         Notice viewNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
 
-        viewNotice.setViews(viewNotice.getViews() == null ? 1 : viewNotice.getViews() + 1);
+        viewNotice.setViews(viewNotice.getViews() + 1);
 
         return NoticeResponse.from(viewNotice);
     }
