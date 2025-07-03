@@ -1,7 +1,6 @@
 package sesac.bookmanager.question;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ import sesac.bookmanager.security.CustomUserDetails;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/question")
-public class QuestionController {
+public class QuestionAdminController {
 
     private final QuestionService questionService;
 
