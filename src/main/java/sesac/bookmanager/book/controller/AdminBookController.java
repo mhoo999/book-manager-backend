@@ -80,6 +80,7 @@ public class AdminBookController {
     @GetMapping
     public String bookList(Model model) {
         SearchBookRequestDto defaultRequest = new SearchBookRequestDto();
+
         PageBookResponseDto books = bookService.searchBooks(defaultRequest);
         model.addAttribute("books", books);
         model.addAttribute("searchCondition", defaultRequest);
