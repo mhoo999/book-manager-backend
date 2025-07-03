@@ -59,7 +59,7 @@
               >
               <ol class="lnb">
                 <li><a href="/admin/admins">관리자목록</a></li>
-                <li><a href="#">관리자등록</a></li>
+                <li><a href="/admin/auth/registration">관리자등록</a></li>
               </ol>
             </li>
             <li>
@@ -73,9 +73,12 @@
               </ol>
             </li>
             <li>
-              <a href="#" class="hover:text-blue-600 transition-colors"
-                >로그아웃</a
-              >
+              <form th:action="@{/admin/auth/logout}" method="post">
+                <button type="submit"
+                        class="hover:text-blue-600 transition-colors">
+                  로그아웃
+                </button>
+              </form>
             </li>
           </ul>
         </nav>

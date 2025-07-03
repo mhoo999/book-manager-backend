@@ -1,4 +1,4 @@
-package sesac.bookmanager.admin;
+package sesac.bookmanager.admin.data;
 
 import lombok.Builder;
 import lombok.Getter;

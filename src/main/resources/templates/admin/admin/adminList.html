@@ -56,86 +56,15 @@
 
 
   </style>
+  <script src="/Global/js/GlobalNavBarHover.js" defer></script>
 </head>
 <body class="bg-gray-50">
   <!-- 헤더 -->
-  <header class="bg-white shadow">
-		<div class="bg_lnb"></div>
-    <div class="container max-w-screen-xl mx-auto flex justify-between items-center p-4">
-      <div class="flex items-center space-x-3">
-        <img src="https://picsum.photos/40" alt="로고" class="w-10 h-10">
-        <span class="text-xl font-bold">북매니저 관리자</span>
-      </div>
-      <nav>
-        <ul class="gnb flex space-x-6 text-gray-700 font-medium">
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">대여현황</a>
-            <ol class="lnb">
-              <li><a href="#">대여목록</a></li>
-              <li><a href="#">반납지연</a></li>
-            </ol>
-          </li>
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">희망도서</a>
-            <ol class="lnb">
-              <li><a href="#">신청목록</a></li>
-            </ol>
-          </li>
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">도서관리</a>
-            <ol class="lnb">
-              <li><a href="#">도서목록</a></li>
-              <li><a href="#">도서등록</a></li>
-            </ol>
-          </li>
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">배너관리</a>
-            <ol class="lnb">
-              <li><a href="#">추천도서</a></li>
-            </ol>
-          </li>
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">회원관리</a>
-            <ol class="lnb">
-              <li><a href="#">회원목록</a></li>
-              <li><a href="#">탈퇴회원</a></li>
-            </ol>   
-          </li>
-          <li>
-            <a href="#" class="text-blue-600 transition-colors">관리자정보</a>
-            <ol class="lnb">
-              <li><a href="#">관리자목록</a></li>
-              <li><a href="#">관리자등록</a></li>
-            </ol>   
-          </li>
-          <li>
-            <a href="#" class="hover:text-blue-600 transition-colors">게시판관리</a>
-            <ol class="lnb">
-              <li><a href="#">문의하기</a></li>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">공지사항</a></li>
-            </ol>
-          </li>
-          <li><a href="#" class="hover:text-blue-600 transition-colors">로그아웃</a></li>
-        </ul>
-      </nav>
-
-    </div>
-  </header>
+  <header th:replace="~{fragments/header :: siteHeader}"></header>
 
   <!-- 본문 -->
   <main class="max-w-screen-xl mx-auto px-4 py-8">
     <h2 class="text-2xl font-bold mb-6">👨‍💼 관리자목록</h2>
-
-    <!-- 검색 UI -->
-    <div class="flex items-center space-x-4 mb-6">
-      <select class="border px-3 py-2 rounded">
-        <option>이름</option>
-        <option>아이디</option>
-      </select>
-      <input type="text" placeholder="검색어 입력" class="border px-3 py-2 rounded w-64">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
-    </div>
 
     <!-- 테이블 -->
     <div class="overflow-x-auto">
@@ -151,16 +80,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td class="px-4 py-2 border">홍길동</td><td class="px-4 py-2 border">admin01</td><td class="px-4 py-2 border">도서부</td><td class="px-4 py-2 border">팀장</td><td class="px-4 py-2 border">010-1111-1111</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">김민지</td><td class="px-4 py-2 border">admin02</td><td class="px-4 py-2 border">IT지원부</td><td class="px-4 py-2 border">대리</td><td class="px-4 py-2 border">010-2222-2222</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">이영희</td><td class="px-4 py-2 border">admin03</td><td class="px-4 py-2 border">회원부</td><td class="px-4 py-2 border">과장</td><td class="px-4 py-2 border">010-3333-3333</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">박민수</td><td class="px-4 py-2 border">admin04</td><td class="px-4 py-2 border">게시판부</td><td class="px-4 py-2 border">사원</td><td class="px-4 py-2 border">010-4444-4444</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">정다은</td><td class="px-4 py-2 border">admin05</td><td class="px-4 py-2 border">희망도서부</td><td class="px-4 py-2 border">사원</td><td class="px-4 py-2 border">010-5555-5555</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">최서준</td><td class="px-4 py-2 border">admin06</td><td class="px-4 py-2 border">대여부</td><td class="px-4 py-2 border">대리</td><td class="px-4 py-2 border">010-6666-6666</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">강나래</td><td class="px-4 py-2 border">admin07</td><td class="px-4 py-2 border">도서부</td><td class="px-4 py-2 border">과장</td><td class="px-4 py-2 border">010-7777-7777</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">서지훈</td><td class="px-4 py-2 border">admin08</td><td class="px-4 py-2 border">IT지원부</td><td class="px-4 py-2 border">사원</td><td class="px-4 py-2 border">010-8888-8888</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">나예진</td><td class="px-4 py-2 border">admin09</td><td class="px-4 py-2 border">회원부</td><td class="px-4 py-2 border">대리</td><td class="px-4 py-2 border">010-9999-9999</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
-          <tr><td class="px-4 py-2 border">오세훈</td><td class="px-4 py-2 border">admin10</td><td class="px-4 py-2 border">게시판부</td><td class="px-4 py-2 border">과장</td><td class="px-4 py-2 border">010-0000-0000</td><td class="px-4 py-2 border"><a href="#" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">상세보기</a></td></tr>
+        <tr th:each="admins : ${admins.content}">
+          <td th:text="${admins.adminName}"></td>
+          <td th:text="${admins.adminAccountId}"></td>
+          <td th:text="${admins.dept}"></td>
+          <td th:text="${admins.position}"></td>
+          <td th:text="${admins.phoneNumber}"></td>
+          <td>
+            <a th:href="@{'/admin/admins/' + ${admins.adminId}}"
+               class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -168,11 +98,25 @@
     <!-- 페이지네이션 -->
     <div class="mt-6 flex justify-center">
       <nav class="inline-flex space-x-1">
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded">1</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">2</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">3</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">4</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">5</a>
+
+        <!-- 이전 페이지 -->
+        <a th:if="${!admins.first}"
+           th:href="@{'/admin/adminList?page=' + ${admins.number - 1}}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+
+        <!-- 페이지 번호 -->
+        <a th:each="i : ${#numbers.sequence(0, admins.totalPages - 1)}"
+           th:href="@{'/admin/adminList?page=' + ${i}}"
+           th:text="${i + 1}"
+           th:classappend="${i} == ${admins.number} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
+           class="px-3 py-1 border border-gray-300 rounded">
+        </a>
+
+        <!-- 다음 페이지 -->
+        <a th:if="${!admins.last}"
+           th:href="@{'/admin/adminList?page=' + ${admins.number + 1}}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+
       </nav>
     </div>
   </main>
