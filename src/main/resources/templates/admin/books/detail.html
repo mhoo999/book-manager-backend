@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <title>도서 상세정보 - 북매니저</title>
@@ -16,25 +16,25 @@
 
     header{position: relative;}
     header>.bg_lnb{
-			display: none;
-			position: absolute;
-			left: 0;
-			top: 72px;
-			width: 100%;
-			height: 120px;
-      background-color: rgba(59, 130, 246, 0.06); 
-      border-top: 3px solid #3b82f6; 
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 72px;
+      width: 100%;
+      height: 120px;
+      background-color: rgba(59, 130, 246, 0.06);
+      border-top: 3px solid #3b82f6;
       border-bottom: 1px solid #bfdbfe;
-			animation: fade 0.3s;
+      animation: fade 0.3s;
     }
 
     .container{
-			position: relative;
+      position: relative;
     }
     .container>nav{
-				position: absolute;
-				right: 0;
-				top: 32px;
+      position: absolute;
+      right: 0;
+      top: 32px;
     }
 
     .container>nav .lnb{
@@ -46,154 +46,168 @@
       display: block;
       height: 30px;
       line-height: 30px;
-      
+
     }
     .container>nav .lnb>li>a:hover{
       color: #fff;
-      font-weight: 800;    
+      font-weight: 800;
       background-color: #3b82f6;
     }
-
 
   </style>
 </head>
 <body class="bg-gray-50">
-  <!-- 헤더 -->
-  <header th:replace="fragments/header :: siteHeader"></header>
+<!-- 헤더 -->
+<header th:replace="~{fragments/header :: siteHeader}"></header>
 
-  <!-- 본문 -->
-  <main class="max-w-screen-xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6">📘 도서정보</h2>
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold mb-6">📘 도서정보</h2>
 
-    <div class="bg-white p-6 rounded shadow space-y-8">
-      
-      <!-- 표지 이미지 -->
-      <div class="flex justify-center mb-6">
-        <img src="https://picsum.photos/200/280" alt="도서 표지" class="shadow border rounded-md">
-      </div>
+  <div class="bg-white p-6 rounded shadow space-y-8" th:if="${book != null}">
 
-      <!-- 도서 기본 정보 -->
-      <section>
-        <h3 class="text-xl font-semibold mb-4">도서 기본정보</h3>
-        <div class="grid grid-cols-2 gap-6">
-          <div>
-            <label class="block text-gray-700 font-medium">ISBN</label>
-            <input type="text" value="9788942391288 93990" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">도서명</label>
-            <input type="text" value="모던 자바스크립트" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">저자</label>
-            <input type="text" value="홍길동" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">출판사</label>
-            <input type="text" value="한빛미디어" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">출판일</label>
-            <input type="text" value="2024-05-10" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">가격</label>
-            <input type="text" value="30000원" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-        </div>
-      </section>
-
-      <!-- 카테고리 정보 -->
-      <section>
-        <h3 class="text-xl font-semibold mb-4">카테고리</h3>
-        <div class="grid grid-cols-3 gap-6">
-          <div>
-            <label class="block text-gray-700 font-medium">대분류</label>
-            <input type="text" value="프로그래밍" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">중분류</label>
-            <input type="text" value="웹 개발" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">소분류</label>
-            <input type="text" value="자바스크립트" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-        </div>
-      </section>
-
-      <!-- 수량 정보 -->
-      <section>
-        <h3 class="text-xl font-semibold mb-4">보유 수량 정보</h3>
-        <div class="grid grid-cols-3 gap-6">
-          <div>
-            <label class="block text-gray-700 font-medium">총수량</label>
-            <input type="text" value="3권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">대여중</label>
-            <input type="text" value="1권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">잔여수량</label>
-            <input type="text" value="2권" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
-          </div>
-        </div>
-      </section>
-
-      <!-- 버튼 -->
-      <div class="text-right space-x-2">
-        <button class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">목록으로</button>
-        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">수정</button>
-        <!-- <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">삭제</button> -->
-      </div>
-
-      <!-- 소장사항 -->
-      <section>
-        <h3 class="text-xl font-semibold mb-4">소장사항</h3>
-        <div class="overflow-x-auto">
-          <table class="min-w-full table-auto border border-gray-200 bg-white">
-            <thead class="bg-gray-100">
-              <tr class="text-center text-gray-700 font-medium">
-                <th class="px-4 py-2 border">번호</th>
-                <th class="px-4 py-2 border">도서코드</th>
-                <th class="px-4 py-2 border">도서위치</th>
-                <th class="px-4 py-2 border">도서상태</th>
-              </tr>
-            </thead>
-            <tbody class="text-center text-gray-800">
-              <tr>
-                <td class="px-4 py-2 border">1</td>
-                <td class="px-4 py-2 border">BK20240001</td>
-                <td class="px-4 py-2 border">A-1</td>
-                <td class="px-4 py-2 border text-green-600">대여가능</td>
-              </tr>
-              <tr class="bg-gray-50">
-                <td class="px-4 py-2 border">2</td>
-                <td class="px-4 py-2 border">BK20240002</td>
-                <td class="px-4 py-2 border">A-1</td>
-                <td class="px-4 py-2 border text-red-500">대여중</td>
-              </tr>
-              <tr>
-                <td class="px-4 py-2 border">3</td>
-                <td class="px-4 py-2 border">BK20240003</td>
-                <td class="px-4 py-2 border">A-1</td>
-                <td class="px-4 py-2 border text-green-600">대여가능</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
+    <!-- 표지 이미지 -->
+    <div class="flex justify-center mb-6">
+      <img th:src="${book.cover != null ? book.cover : 'https://picsum.photos/200/280'}"
+           th:alt="${book.title + ' 표지'}"
+           class="shadow border rounded-md max-w-[200px] max-h-[280px]">
     </div>
-  </main>
 
-  <!-- 푸터 -->
-  <footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    <!-- 도서 기본 정보 -->
+    <section>
+      <h3 class="text-xl font-semibold mb-4">도서 기본정보</h3>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium">ISBN</label>
+          <input type="text" th:value="${book.isbn}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">도서명</label>
+          <input type="text" th:value="${book.title}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">저자</label>
+          <input type="text" th:value="${book.author}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">출판사</label>
+          <input type="text" th:value="${book.publisher}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">출판일</label>
+          <input type="text" th:value="${book.publish_date != null ? #temporals.format(book.publish_date, 'yyyy-MM-dd') : 'N/A'}"
+                 class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">도서 위치</label>
+          <input type="text" th:value="${book.location != null ? book.location : 'N/A'}"
+                 class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+      </div>
+    </section>
+
+    <!-- 카테고리 정보 -->
+    <section>
+      <h3 class="text-xl font-semibold mb-4">카테고리</h3>
+      <div class="grid grid-cols-1 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium">카테고리 코드</label>
+          <input type="text" th:value="${book.categoryCode}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div th:if="${categoryPath != null}">
+          <label class="block text-gray-700 font-medium">카테고리 경로</label>
+          <input type="text" th:value="${categoryPath}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+      </div>
+    </section>
+
+    <!-- 수량 정보 -->
+    <section>
+      <h3 class="text-xl font-semibold mb-4">보유 수량 정보</h3>
+      <div class="grid grid-cols-3 gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium">총수량</label>
+          <input type="text" th:value="${book.stock + '권'}" class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">대여중</label>
+          <input type="text" th:value="${book.rentedQuantity != null ? book.rentedQuantity + '권' : '0권'}"
+                 class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">잔여수량</label>
+          <input type="text" th:value="${book.availableQuantity != null ? book.availableQuantity + '권' : book.stock + '권'}"
+                 class="mt-1 w-full border px-3 py-2 rounded bg-gray-100" readonly>
+        </div>
+      </div>
+    </section>
+
+    <!-- 설명 (있는 경우) -->
+    <section th:if="${book.description != null and !book.description.isEmpty()}">
+      <h3 class="text-xl font-semibold mb-4">도서 설명</h3>
+      <div class="bg-gray-50 p-4 rounded">
+        <p th:text="${book.description}"></p>
+      </div>
+    </section>
+
+    <!-- 버튼 -->
+    <div class="text-right space-x-2">
+      <a th:href="@{/admin/v1/books}" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 inline-block">목록으로</a>
+      <a th:href="@{/admin/v1/books/{bookId}/edit(bookId=${book.bookId})}"
+         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block">수정</a>
+      <!-- 삭제 기능은 필요시 추가 -->
     </div>
-  </footer>
+
+    <!-- 소장사항 -->
+    <section>
+      <h3 class="text-xl font-semibold mb-4">소장사항</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border border-gray-200 bg-white">
+          <thead class="bg-gray-100">
+          <tr class="text-center text-gray-700 font-medium">
+            <th class="px-4 py-2 border">번호</th>
+            <th class="px-4 py-2 border">도서코드</th>
+            <th class="px-4 py-2 border">도서위치</th>
+            <th class="px-4 py-2 border">도서상태</th>
+          </tr>
+          </thead>
+          <tbody class="text-center text-gray-800">
+          <tr th:each="bookItem, iterStat : ${book.books}"
+              th:class="${iterStat.even} ? 'bg-gray-50' : ''">
+            <td class="px-4 py-2 border" th:text="${iterStat.count}"></td>
+            <td class="px-4 py-2 border" th:text="${bookItem.bookCode}"></td>
+            <td class="px-4 py-2 border" th:text="${bookItem.location}"></td>
+            <td class="px-4 py-2 border">
+              <span th:if="${bookItem.status.name() == 'RENTABLE'}" class="text-green-600 font-bold">대여가능</span>
+              <span th:if="${bookItem.status.name() == 'RENTED'}" class="text-red-500 font-bold">대여중</span>
+              <span th:if="${bookItem.status.name() == 'UNRENTABLE'}" class="text-gray-500 font-bold">대여불가</span>
+            </td>
+          </tr>
+          <tr th:if="${book.books == null or book.books.isEmpty()}">
+            <td colspan="4" class="px-4 py-8 border text-center text-gray-500">
+              등록된 도서 아이템이 없습니다.
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 도서가 없는 경우 -->
+  <div th:if="${book == null}" class="bg-white p-6 rounded shadow text-center">
+    <h3 class="text-xl font-semibold mb-4 text-gray-600">도서를 찾을 수 없습니다</h3>
+    <a th:href="@{/admin/v1/books}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 inline-block">목록으로 돌아가기</a>
+  </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+  </div>
+</footer>
 
 </body>
 </html>

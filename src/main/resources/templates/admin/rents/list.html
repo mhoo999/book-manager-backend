@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>북매니저</title>
@@ -16,25 +16,25 @@
 
     header{position: relative;}
     header>.bg_lnb{
-			display: none;
-			position: absolute;
-			left: 0;
-			top: 72px;
-			width: 100%;
-			height: 120px;
-      background-color: rgba(59, 130, 246, 0.06); 
-      border-top: 3px solid #3b82f6; 
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 72px;
+      width: 100%;
+      height: 120px;
+      background-color: rgba(59, 130, 246, 0.06);
+      border-top: 3px solid #3b82f6;
       border-bottom: 1px solid #bfdbfe;
-			animation: fade 0.3s;
+      animation: fade 0.3s;
     }
 
     .container{
-			position: relative;
+      position: relative;
     }
     .container>nav{
-				position: absolute;
-				right: 0;
-				top: 32px;
+      position: absolute;
+      right: 0;
+      top: 32px;
     }
 
     .container>nav .lnb{
@@ -46,11 +46,11 @@
       display: block;
       height: 30px;
       line-height: 30px;
-      
+
     }
     .container>nav .lnb>li>a:hover{
       color: #fff;
-      font-weight: 800;    
+      font-weight: 800;
       background-color: #3b82f6;
     }
 
@@ -58,162 +58,174 @@
   </style>
 </head>
 <body class="bg-gray-50">
-  <!-- 헤더 -->
-  <header th:replace="fragments/header :: siteHeader"></header>
+<!-- 헤더 -->
+<header th:replace="fragments/header :: siteHeader"></header>
 
-  <!-- 본문 -->
-  <main class="max-w-screen-xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold text-center mb-6">📚 대여 목록</h2>
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-8">
+  <h2 class="text-2xl font-bold text-center mb-6">📚 대여 목록</h2>
 
-    <!-- 검색 영역 -->
+  <!-- 검색 영역 -->
+  <form th:action="@{/admin/v1/rents/search}" method="get" class="mb-6">
     <div class="flex flex-wrap justify-center mb-4 space-x-2">
-      <select class="border px-3 py-2 rounded">
-        <option selected>회원명</option>
-        <option>연락처</option>
-        <option>도서명</option>
+      <select name="searchType" class="border px-3 py-2 rounded">
+        <option value="username" th:selected="${searchCondition?.searchType == 'username'}">회원명</option>
+        <option value="userPhone" th:selected="${searchCondition?.searchType == 'userPhone'}">연락처</option>
+        <option value="bookName" th:selected="${searchCondition?.searchType == 'bookName'}">도서명</option>
       </select>
-      <input type="text" class="border px-3 py-2 rounded w-64" placeholder="검색어를 입력하세요">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded">검색</button>
+      <input type="text" name="searchKeyword" th:value="${searchCondition?.searchKeyword}"
+             class="border px-3 py-2 rounded w-64" placeholder="검색어를 입력하세요">
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
+      <a th:href="@{/admin/v1/rents}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">전체보기</a>
     </div>
+  </form>
 
-    <!-- 테이블 -->
-    <div class="overflow-x-auto">
-      <table class="table-auto w-full bg-white border">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="text-center py-2 px-2">대여번호</th>
-            <th class="text-center py-2 px-2">회원명</th>
-            <th class="text-center py-2 px-2">도서번호</th>
-            <th class="text-center py-2 px-2">도서명</th>
-            <th class="text-center py-2 px-2">연락처</th>
-            <th class="text-center py-2 px-2">대여일<br>(반납예정일)</th>
-            <th class="text-center py-2 px-2">
-              진행상태
-              <select class="ml-2 border text-sm px-1 py-1">
-                <option selected>전체보기</option>
-                <option>대여요청</option>
-                <option>대여중</option>
-                <option>반납</option>
-                <option>미납</option>
-              </select>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- 데이터 반복 -->
-          <!-- 예시 1 -->
-          <tr class="text-center">
-            <td class="py-2">R-00005<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
-            <td class="py-2">홍길동</td>
-            <td class="py-2">D-0005</td>
-            <td class="py-2 text-left flex items-center space-x-2">
-              <img src="https://picsum.photos/40?5" class="w-10 h-10" alt="썸네일">
-              <span>컴퓨터보안</span>
-            </td>
-            <td class="py-2">010-1234-5555</td>
-            <td class="py-2">
-              2025-06-19<br>
-              <span class="text-gray-400">(2025-06-26)</span>
-            </td>
-            <td class="py-2">
-              <div class="text-red-600">미납중</div>
-              <button class="mt-1 px-2 py-1 bg-red-500 text-white text-sm rounded">반납처리</button>
-            </td>
-          </tr>
-          <!-- 예시 2~5 생략 없이 이어서 포함됨 -->
-          <tr class="text-center">
-            <td class="py-2">R-00004<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
-            <td class="py-2">이몽룡</td>
-            <td class="py-2">D-0004</td>
-            <td class="py-2 text-left flex items-center space-x-2">
-              <img src="https://picsum.photos/40?4" class="w-10 h-10" alt="썸네일">
-              <span>자바스크립트</span>
-            </td>
-            <td class="py-2">010-1111-4444</td>
-            <td class="py-2">
-              2025-06-18<br>
-              <span class="text-gray-400">(2025-06-25)</span>
-            </td>
-            <td class="py-2">
-              <div class="text-blue-600">대여요청</div>
-              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">대여처리</button>
-            </td>
-          </tr>
-          <tr class="text-center">
-            <td class="py-2">R-00003<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
-            <td class="py-2">성춘향</td>
-            <td class="py-2">D-0003</td>
-            <td class="py-2 text-left flex items-center space-x-2">
-              <img src="https://picsum.photos/40?3" class="w-10 h-10" alt="썸네일">
-              <span>리눅스기초</span>
-            </td>
-            <td class="py-2">010-2222-3333</td>
-            <td class="py-2">
-              2025-06-17<br>
-              <span class="text-gray-400">(2025-06-24)</span>
-            </td>
-            <td class="py-2">
-              <div>대여중</div>
-              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">반납처리</button>
-            </td>
-          </tr>
-          <tr class="text-center">
-            <td class="py-2">R-00002<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
-            <td class="py-2">임꺽정</td>
-            <td class="py-2">D-0002</td>
-            <td class="py-2 text-left flex items-center space-x-2">
-              <img src="https://picsum.photos/40?2" class="w-10 h-10" alt="썸네일">
-              <span>네트워크이해</span>
-            </td>
-            <td class="py-2">010-4444-2222</td>
-            <td class="py-2">
-              2025-06-16<br>
-              <span class="text-gray-400">(2025-06-23)</span>
-            </td>
-            <td class="py-2">
-              <div class="text-gray-600">반납</div>
-              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">대여처리</button>
-            </td>
-          </tr>
-          <tr class="text-center">
-            <td class="py-2">R-00001<br><button class="mt-1 text-sm text-blue-600 underline">상세정보</button></td>
-            <td class="py-2">장보고</td>
-            <td class="py-2">D-0001</td>
-            <td class="py-2 text-left flex items-center space-x-2">
-              <img src="https://picsum.photos/40?1" class="w-10 h-10" alt="썸네일">
-              <span>파이썬입문</span>
-            </td>
-            <td class="py-2">010-5555-1111</td>
-            <td class="py-2">
-              2025-06-15<br>
-              <span class="text-gray-400">(2025-06-22)</span>
-            </td>
-            <td class="py-2">
-              <div>대여중</div>
-              <button class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded">반납처리</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- 테이블 -->
+  <div class="overflow-x-auto">
+    <table class="table-auto w-full bg-white border">
+      <thead class="bg-gray-100">
+      <tr>
+        <th class="text-center py-2 px-2">대여번호</th>
+        <th class="text-center py-2 px-2">회원명</th>
+        <th class="text-center py-2 px-2">도서번호</th>
+        <th class="text-center py-2 px-2">도서명</th>
+        <th class="text-center py-2 px-2">연락처</th>
+        <th class="text-center py-2 px-2">대여일<br>(반납예정일)</th>
+        <th class="text-center py-2 px-2">
+          진행상태
+          <select class="ml-2 border text-sm px-1 py-1" onchange="filterByStatus(this.value)">
+            <option value="">전체보기</option>
+            <option value="REQUESTED">대여요청</option>
+            <option value="RENTED">대여중</option>
+            <option value="RETURNED">반납</option>
+            <option value="OVERDUE">미납</option>
+          </select>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 데이터가 없을 때 -->
+      <tr th:if="${rents.rents.empty}">
+        <td colspan="7" class="text-center py-8 text-gray-500">대여 기록이 없습니다.</td>
+      </tr>
 
-    <!-- 페이지네이션 -->
-    <div class="flex justify-center mt-6">
-      <nav class="inline-flex space-x-2">
-        <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded">1</a>
-        <a href="#" class="px-3 py-1 bg-white border rounded">2</a>
-        <a href="#" class="px-3 py-1 bg-white border rounded">3</a>
-        <a href="#" class="px-3 py-1 bg-white border rounded">4</a>
-        <a href="#" class="px-3 py-1 bg-white border rounded">5</a>
-      </nav>
-    </div>
-  </main>
+      <!-- 데이터 반복 -->
+      <tr th:each="rent : ${rents.rents}" class="text-center">
+        <td class="py-2">
+          <span th:text="${rent.rentCode}">R-00005</span><br>
+          <a th:href="@{/admin/v1/rents/{rentId}(rentId=${rent.rentCode})}"
+             class="mt-1 text-sm text-blue-600 underline">상세정보</a>
+        </td>
+        <td class="py-2" th:text="${rent.userName}">홍길동</td>
+        <td class="py-2" th:text="${rent.bookCode}">D-0005</td>
+        <td class="py-2 text-left flex items-center space-x-2">
+          <img th:src="${rent.bookThumbnail ?: 'https://picsum.photos/40?5'}"
+               class="w-10 h-10" alt="썸네일">
+          <span th:text="${rent.bookName}">컴퓨터보안</span>
+        </td>
+        <td class="py-2" th:text="${rent.userPhone}">010-1234-5555</td>
+        <td class="py-2">
+          <span th:text="${rent.rentDate != null ? #temporals.format(rent.rentDate, 'yyyy-MM-dd') : ''}">2025-06-19</span><br>
+          <span class="text-gray-400"
+                th:text="${rent.dueDate != null ? '(' + #temporals.format(rent.dueDate, 'yyyy-MM-dd') + ')' : ''}">
+                (2025-06-26)
+              </span>
+        </td>
+        <td class="py-2">
+          <div th:switch="${rent.rentStatus}">
+            <div th:case="'OVERDUE'" class="text-red-600">미납중</div>
+            <div th:case="'REQUESTED'" class="text-blue-600">대여요청</div>
+            <div th:case="'RETURNED'" class="text-gray-600">반납</div>
+            <div th:case="*">대여중</div>
+          </div>
 
-  <!-- 푸터 -->
-  <footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
-    </div>
-  </footer>
+          <!-- 상태별 버튼 -->
+          <button th:if="${rent.rentStatus == 'OVERDUE'}"
+                  class="mt-1 px-2 py-1 bg-red-500 text-white text-sm rounded"
+                  onclick="alert('반납 처리 기능은 상세 페이지에서 구현 예정')">반납처리</button>
+
+          <button th:if="${rent.rentStatus == 'REQUESTED'}"
+                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
+                  onclick="alert('대여 처리 기능은 상세 페이지에서 구현 예정')">대여처리</button>
+
+          <button th:if="${rent.rentStatus == 'RENTED'}"
+                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
+                  onclick="alert('반납 처리 기능은 상세 페이지에서 구현 예정')">반납처리</button>
+
+          <button th:if="${rent.rentStatus == 'RETURNED'}"
+                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
+                  onclick="alert('대여 처리 기능은 상세 페이지에서 구현 예정')">대여처리</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 페이지네이션 -->
+  <div class="flex justify-center mt-6">
+    <nav class="inline-flex space-x-2">
+      <!-- 데이터가 있고 여러 페이지일 때 -->
+      <span th:if="${rents.totalPages > 1}">
+          <!-- 이전 페이지 -->
+          <a th:if="${rents.page > 0}"
+             th:href="@{/admin/v1/rents/search(page=${rents.page - 1}, size=${rents.size}, searchType=${searchCondition?.searchType}, searchKeyword=${searchCondition?.searchKeyword})}"
+             class="px-3 py-1 bg-white border rounded">이전</a>
+
+        <!-- 페이지 번호들 -->
+          <span th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, rents.page - 2), T(java.lang.Math).min(rents.totalPages - 1, rents.page + 2))}">
+            <a th:if="${i == rents.page}"
+               th:text="${i + 1}"
+               class="px-3 py-1 bg-blue-500 text-white rounded">1</a>
+            <a th:unless="${i == rents.page}"
+               th:href="@{/admin/v1/rents/search(page=${i}, size=${rents.size}, searchType=${searchCondition?.searchType}, searchKeyword=${searchCondition?.searchKeyword})}"
+               th:text="${i + 1}"
+               class="px-3 py-1 bg-white border rounded">1</a>
+          </span>
+
+        <!-- 다음 페이지 -->
+          <a th:if="${rents.page < rents.totalPages - 1}"
+             th:href="@{/admin/v1/rents/search(page=${rents.page + 1}, size=${rents.size}, searchType=${searchCondition?.searchType}, searchKeyword=${searchCondition?.searchKeyword})}"
+             class="px-3 py-1 bg-white border rounded">다음</a>
+        </span>
+
+      <!-- 데이터가 없거나 1페이지뿐일 때 기본 1 버튼 -->
+      <a th:if="${rents.totalPages <= 1}" href="#" class="px-3 py-1 bg-blue-500 text-white rounded">1</a>
+    </nav>
+  </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+  </div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+  // 상태별 필터링
+  function filterByStatus(status) {
+    const currentUrl = new URL(window.location.href);
+    if (status) {
+      currentUrl.searchParams.set('rentStatus', status);
+    } else {
+      currentUrl.searchParams.delete('rentStatus');
+    }
+    currentUrl.searchParams.set('page', '0');
+    window.location.href = currentUrl.toString();
+  }
+
+  // 페이지 로드 시 상태 셀렉트 박스 값 설정
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const rentStatus = urlParams.get('rentStatus');
+    if (rentStatus) {
+      const statusSelect = document.querySelector('select[onchange="filterByStatus(this.value)"]');
+      if (statusSelect) {
+        statusSelect.value = rentStatus;
+      }
+    }
+  });
+</script>
 </body>
 </html>

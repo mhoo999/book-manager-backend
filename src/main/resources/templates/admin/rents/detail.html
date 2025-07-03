@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>북매니저</title>
@@ -16,25 +16,25 @@
 
     header{position: relative;}
     header>.bg_lnb{
-			display: none;
-			position: absolute;
-			left: 0;
-			top: 72px;
-			width: 100%;
-			height: 120px;
-      background-color: rgba(59, 130, 246, 0.06); 
-      border-top: 3px solid #3b82f6; 
+      display: none;
+      position: absolute;
+      left: 0;
+      top: 72px;
+      width: 100%;
+      height: 120px;
+      background-color: rgba(59, 130, 246, 0.06);
+      border-top: 3px solid #3b82f6;
       border-bottom: 1px solid #bfdbfe;
-			animation: fade 0.3s;
+      animation: fade 0.3s;
     }
 
     .container{
-			position: relative;
+      position: relative;
     }
     .container>nav{
-				position: absolute;
-				right: 0;
-				top: 32px;
+      position: absolute;
+      right: 0;
+      top: 32px;
     }
 
     .container>nav .lnb{
@@ -46,79 +46,148 @@
       display: block;
       height: 30px;
       line-height: 30px;
-      
+
     }
     .container>nav .lnb>li>a:hover{
       color: #fff;
-      font-weight: 800;    
+      font-weight: 800;
       background-color: #3b82f6;
     }
-
-
   </style>
 </head>
 <body class="bg-gray-50">
-  <!-- 헤더 -->
-  <header th:replace="fragments/header :: siteHeader"></header>
+<!-- 헤더 -->
+<header th:replace="fragments/header :: siteHeader"></header>
 
-  <!-- 본문 -->
-  <main class="max-w-screen-xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6">
-      대여정보 <span class="text-gray-500 text-lg">(R-00001)</span>
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">
+      대여정보 <span class="text-gray-500 text-lg" th:text="'(R-' + ${rent.rentCode} + ')'">
+          (R-00001)
+        </span>
     </h2>
+    <a th:href="@{/admin/v1/rents}"
+       class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+      목록으로
+    </a>
+  </div>
 
-    <!-- 진행상태 수정 UI -->
-    <div class="bg-white p-4 rounded shadow mb-6 flex items-center space-x-4">
+  <!-- 진행상태 수정 UI -->
+  <form th:action="@{/admin/v1/rents/{rentId}/edit(rentId=${rent.rentCode})}" method="post" class="mb-6">
+    <div class="bg-white p-4 rounded shadow flex items-center space-x-4">
       <label for="status" class="font-medium">진행상태:</label>
       <select id="status" name="status" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-400">
-        <option>신청중</option>
-        <option>대여중</option>
-        <option>반납</option>
-        <option>미납중</option>
+        <option value="REQUESTED" th:selected="${rent.status.name() == 'REQUESTED'}">대여요청</option>
+        <option value="RENTED" th:selected="${rent.status.name() == 'RENTED'}">대여중</option>
+        <option value="RETURNED" th:selected="${rent.status.name() == 'RETURNED'}">반납</option>
+        <option value="OVERDUE" th:selected="${rent.status.name() == 'OVERDUE'}">미납중</option>
+        <option value="REJECTED" th:selected="${rent.status.name() == 'REJECTED'}">거절</option>
       </select>
-      <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">변경</button>
-    </div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">변경</button>
 
-    <!-- 대여 정보 -->
-    <div class="bg-white p-6 rounded-lg shadow mb-8">
-      <div class="flex items-center space-x-4 mb-4">
-        <img src="https://picsum.photos/60" alt="도서 썸네일" class="w-16 h-16 rounded">
-        <div>
-          <p class="text-lg font-semibold">파이썬 프로그래밍</p>
-          <p class="text-sm text-gray-600">수량: 1권</p>
-        </div>
+      <!-- 현재 상태 표시 -->
+      <span class="ml-4 px-3 py-1 rounded text-sm font-medium"
+            th:classappend="${rent.status.name() == 'OVERDUE' ? 'bg-red-100 text-red-800' :
+                              rent.status.name() == 'REQUESTED' ? 'bg-blue-100 text-blue-800' :
+                              rent.status.name() == 'RETURNED' ? 'bg-gray-100 text-gray-800' :
+                              rent.status.name() == 'REJECTED' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-green-100 text-green-800'}"
+            th:text="${rent.status.name() == 'OVERDUE' ? '미납중' :
+                       rent.status.name() == 'REQUESTED' ? '대여요청' :
+                       rent.status.name() == 'RETURNED' ? '반납' :
+                       rent.status.name() == 'REJECTED' ? '거절' : '대여중'}">
+          대여중
+        </span>
+    </div>
+  </form>
+
+  <!-- 대여 정보 -->
+  <div class="bg-white p-6 rounded-lg shadow mb-8">
+    <h3 class="text-lg font-semibold mb-4">📚 도서 정보</h3>
+    <div class="flex items-center space-x-4 mb-4">
+      <img th:src="${rent.bookCover ?: 'https://picsum.photos/60'}"
+           alt="도서 썸네일" class="w-16 h-16 rounded object-cover">
+      <div>
+        <p class="text-lg font-semibold" th:text="${rent.bookName}">파이썬 프로그래밍</p>
+        <p class="text-sm text-gray-600" th:text="'수량: ' + ${rent.stock} + '권'">수량: 1권</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div><strong>담당자:</strong> 김서준</div>
-        <div><strong>대여일자:</strong> 2025-06-18</div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div><strong>담당자:</strong> <span th:text="${rent.adminName}">김서준</span></div>
+      <div><strong>대여일자:</strong>
+        <span th:text="${rent.rentalDate != null ? #temporals.format(rent.rentalDate, 'yyyy-MM-dd HH:mm') : '미배정'}">
+            2025-06-18
+          </span>
       </div>
     </div>
+  </div>
 
-    <!-- 대여자 정보 -->
-    <div class="bg-white p-6 rounded-lg shadow mb-8">
-      <h3 class="text-lg font-semibold mb-4">📌 대여자 정보</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div><strong>이름:</strong> 홍길동</div>
-        <div><strong>연락처:</strong> 010-1234-5678</div>
-        <div><strong>이메일:</strong> hong123@example.com</div>
+  <!-- 대여자 정보 -->
+  <div class="bg-white p-6 rounded-lg shadow mb-8">
+    <h3 class="text-lg font-semibold mb-4">📌 대여자 정보</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div><strong>이름:</strong> <span th:text="${rent.userName}">홍길동</span></div>
+      <div><strong>연락처:</strong> <span th:text="${rent.userPhone}">010-1234-5678</span></div>
+      <div><strong>이메일:</strong> <span th:text="${rent.userEmail}">hong123@example.com</span></div>
+    </div>
+  </div>
+
+  <!-- 관리자 메모 -->
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h3 class="text-lg font-semibold mb-4">📝 관리자 메모</h3>
+    <form th:action="@{/admin/v1/rents/{rentId}/memo(rentId=${rent.rentCode})}" method="post">
+        <textarea name="description"
+                  class="w-full h-32 p-3 border border-gray-300 rounded mb-4"
+                  placeholder="메모를 입력하세요..."
+                  th:text="${rent.description}"></textarea>
+      <div class="flex space-x-2">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">저장</button>
+        <a th:href="@{/admin/v1/rents/{rentId}/edit(rentId=${rent.rentCode})}"
+           class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">수정</a>
       </div>
-    </div>
+    </form>
+  </div>
 
-    <!-- 관리자 메모 -->
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-semibold mb-4">📝 관리자 메모</h3>
-      <textarea class="w-full h-32 p-3 border border-gray-300 rounded mb-4" placeholder="메모를 입력하세요..."></textarea>
-      <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">저장</button>
-    </div>
+  <!-- 성공/에러 메시지 -->
+  <div th:if="${message}"
+       class="fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded shadow-lg z-50"
+       role="alert">
+    <span th:text="${message}"></span>
+  </div>
 
+  <div th:if="${error}"
+       class="fixed top-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg z-50"
+       role="alert">
+    <span th:text="${error}"></span>
+  </div>
+</main>
 
-  </main>
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+  <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+    상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+  </div>
+</footer>
 
-  <!-- 푸터 -->
-  <footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
-    </div>
-  </footer>
+<script>
+  // 상태 변경 확인
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const selectedStatus = document.getElementById('status').value;
+    const statusText = document.querySelector('#status option:checked').textContent;
+
+    if (!confirm(`상태를 "${statusText}"로 변경하시겠습니까?`)) {
+      e.preventDefault();
+    }
+  });
+
+  // 메시지 자동 숨김
+  setTimeout(function() {
+    const messages = document.querySelectorAll('[role="alert"]');
+    messages.forEach(function(message) {
+      message.style.display = 'none';
+    });
+  }, 3000);
+</script>
 </body>
 </html>
