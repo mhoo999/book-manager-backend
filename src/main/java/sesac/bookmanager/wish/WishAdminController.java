@@ -10,7 +10,7 @@ import sesac.bookmanager.wish.data.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/admin/wish")
+@RequestMapping("/admin/wish")
 public class WishAdminController {
 
     private final WishService wishService;
@@ -21,26 +21,24 @@ public class WishAdminController {
                                                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         WishResponse response = wishService.createWish(request, customUserDetails);
-        return "redirect:/api/admin/wish/" + response.getWishId();
+        return "redirect:/admin/wish/" + response.getWishId();
     }
 
-    @ResponseBody
     @GetMapping
     public String getWishlist(WishSearchRequest search) {
         WishPageResponse pageResponse = wishService.getWishlist(search);
-        return "redirect:/api/admin/wish";
+        return "/admin/wish";
     }
 
-    @ResponseBody
     @GetMapping("/{wishId}")
     public String getWishById(@PathVariable Integer wishId) {
         WishResponse response = wishService.getWishById(wishId);
-        return "redirect:/api/admin/wish/" + response.getWishId();
+        return "/admin/wish/" + response.getWishId();
     }
 
     @PutMapping("/{wishId}/progress")
     public String updateProgress(@PathVariable Integer wishId, @ModelAttribute WishStatusUpdateRequest request) {
         wishService.updateProgress(wishId, request);
-        return "redirect:/api/admin/wish/" + wishId;
+        return "redirect:/admin/wish/" + wishId;
     }
 }
