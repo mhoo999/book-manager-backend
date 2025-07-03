@@ -99,7 +99,7 @@ CREATE TABLE `wish` (
 CREATE TABLE `category` (
     `id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT null,
-    `depth` TINYINT(1) NOT NULL ,
+    `depth` TINYINT NOT NULL ,
     `large_code` VARCHAR(2) NOT NULL ,
     `medium_code`  VARCHAR(2) NOT NULL ,
     `small_code`  VARCHAR(2) NOT NULL ,
