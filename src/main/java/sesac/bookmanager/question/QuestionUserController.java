@@ -8,33 +8,24 @@ import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.question.data.*;
 import sesac.bookmanager.security.CustomUserDetails;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/question")
-public class QuestionController {
+public class QuestionUserController {
 
     private final QuestionService questionService;
 
-    @ResponseBody
-    @PostMapping("/create")
-    public ResponseEntity<QuestionResponse> createQuestion(@RequestBody QuestionCreateRequest request,
-                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        return ResponseEntity.ok(questionService.createQuestion(request, customUserDetails));
-    }
 
-    @ResponseBody
     @GetMapping
     public ResponseEntity<QuestionPageResponse> getAllQuestions(QuestionSearchRequest search) {
         return ResponseEntity.ok(questionService.getAllQuestions(search));
     }
 
-    @ResponseBody
     @GetMapping("/{questionId}")
     public ResponseEntity<QuestionWithReplyResponse> getQuestionById(@PathVariable Integer questionId) {
         return ResponseEntity.ok(questionService.getQuestionById(questionId));
     }
 
-    @ResponseBody
     @PutMapping("/{questionId}/edit")
     public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -46,13 +37,5 @@ public class QuestionController {
 
         questionService.updateStatus(questionId, request);
         return "redirect:/api/question/" + questionId;
-    }
-
-    @DeleteMapping("/{questionId}")
-    public String deleteQuestion(@PathVariable Integer questionId,
-                                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        questionService.deleteQuestion(questionId, customUserDetails);
-
-        return "redirect:/api/question";
     }
 }

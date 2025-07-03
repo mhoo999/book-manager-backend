@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class NoticeSearchRequest {
-    private String title;
+    @Builder.Default
+    private String title = "";
 
     @Builder.Default
     private int page = 0;
