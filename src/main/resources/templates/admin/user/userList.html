@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>북매니저</title>
@@ -59,7 +59,7 @@
 </head>
 <body class="bg-gray-50">
   <!-- 헤더 -->
-  <header th:replace="fragments/header :: siteHeader"></header>
+  <header th:replace="~{fragments/header :: siteHeader}"></header>
 
   <!-- 본문 -->
   <main class="max-w-screen-xl mx-auto px-4 py-8">
@@ -67,124 +67,52 @@
 
     <!-- 검색 UI -->
     <div class="flex items-center space-x-4 mb-6">
-      <select class="border px-3 py-2 rounded">
-        <option>이름</option>
-        <option>아이디</option>
+      <select id="searchType" name="type" class="...">
+        <option th:value="name" th:selected="${type == 'name'}">이름</option>
+        <option th:value="id" th:selected="${type == 'id'}">아이디</option>
       </select>
-      <input type="text" placeholder="검색어 입력" class="border px-3 py-2 rounded w-64">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
+      <input id="searchKeyword" name="keyword"
+             type="text"
+             placeholder="검색어 입력"
+             class="border px-3 py-2 rounded w-64"
+             th:value="${keyword}"
+             onkeypress="if(event.key === 'Enter'){ event.preventDefault(); searchUser(); }">
+      <button type="button"
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onclick="searchUser()">
+        검색
+      </button>
     </div>
 
     <!-- 테이블 -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-white border border-gray-200 text-center">
+    <div class="overflow-x-auto overflow-y-hidden">
+      <table class="min-w-full bg-white border border-gray-200 text-center table-fixed">
         <thead>
           <tr class="bg-gray-100">
             <th class="px-4 py-2 border">이름</th>
             <th class="px-4 py-2 border">전화번호</th>
             <th class="px-4 py-2 border">이메일</th>
             <th class="px-4 py-2 border">
-              <select class="border px-2 py-1 rounded">
-                <option selected>전체회원</option>
-                <option>정상회원</option>
-                <option>탈퇴회원</option>
+              <select class="border px-2 py-1 rounded" onchange="filterStatus(this)">
+                <option th:value="''" th:selected="${status == null}">전체회원</option>
+                <option th:value="active" th:selected="${status == 'active'}">정상회원</option>
+                <option th:value="quit" th:selected="${status == 'quit'}">탈퇴회원</option>
               </select>
             </th>
             <th class="px-4 py-2 border">보기</th>
           </tr>
         </thead>
         <tbody>
-          <!-- 10명의 더미 회원 데이터 -->
-          <tr>
-            <td class="px-4 py-2 border">홍길동</td>
-            <td class="px-4 py-2 border">010-1111-1111</td>
-            <td class="px-4 py-2 border">hong@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">김철수</td>
-            <td class="px-4 py-2 border">010-2222-2222</td>
-            <td class="px-4 py-2 border">kim@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">이영희</td>
-            <td class="px-4 py-2 border">010-3333-3333</td>
-            <td class="px-4 py-2 border">lee@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">박민수</td>
-            <td class="px-4 py-2 border">010-4444-4444</td>
-            <td class="px-4 py-2 border">park@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">정다은</td>
-            <td class="px-4 py-2 border">010-5555-5555</td>
-            <td class="px-4 py-2 border">jeong@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">최서준</td>
-            <td class="px-4 py-2 border">010-6666-6666</td>
-            <td class="px-4 py-2 border">choi@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">강나래</td>
-            <td class="px-4 py-2 border">010-7777-7777</td>
-            <td class="px-4 py-2 border">kang@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">서지훈</td>
-            <td class="px-4 py-2 border">010-8888-8888</td>
-            <td class="px-4 py-2 border">seo@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">나예진</td>
-            <td class="px-4 py-2 border">010-9999-9999</td>
-            <td class="px-4 py-2 border">na@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="px-4 py-2 border">오세훈</td>
-            <td class="px-4 py-2 border">010-0000-0000</td>
-            <td class="px-4 py-2 border">oh@example.com</td>
-            <td class="px-4 py-2 border">정상회원</td>
-            <td class="px-4 py-2 border">
-              <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
-            </td>
-          </tr>
+        <tr th:each="user : ${users.content}">
+          <td th:text="${user.userName}"></td>
+          <td th:text="${user.phoneNumber}"></td>
+          <td th:text="${user.userEmail}"></td>
+          <td th:text="${user.status}"></td>
+          <td>
+            <a th:href="@{'/admin/user/' + ${user.userId}}"
+               class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -192,11 +120,12 @@
     <!-- 페이지네이션 -->
     <div class="mt-6 flex justify-center">
       <nav class="inline-flex space-x-1">
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded">1</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">2</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">3</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">4</a>
-        <a href="#" class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">5</a>
+        <a th:each="i : ${#numbers.sequence(0, (users.totalPages != null ? users.totalPages : 1) - 1)}"
+           th:href="@{|/admin/user?page=${i}${status != null ? '&status=' + status : ''}${type != null ? '&type=' + type : ''}${keyword != null ? '&keyword=' + keyword : ''}|}"
+           th:text="${i != null ? i + 1 : 1}"
+           th:classappend="${i == users.number} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
+           class="px-3 py-1 border border-gray-300 rounded">
+        </a>
       </nav>
     </div>
   </main>
@@ -207,5 +136,46 @@
       상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
     </div>
   </footer>
+  <script>
+    function filterStatus(select) {
+      const status = select.value;
+      const type = document.getElementById('searchType').value;
+      const keyword = document.getElementById('searchKeyword').value;
+
+      let url = '/admin/user';
+      const params = new URLSearchParams();
+      if (status) params.append('status', status);
+      if (type) params.append('type', type);
+      if (keyword) params.append('keyword', keyword);
+
+      if ([...params].length > 0) {
+        url += '?' + params.toString();
+      }
+
+      window.location.href = url;
+    }
+
+    function searchUser() {
+      const type = document.getElementById('searchType').value;
+      const keyword = document.getElementById('searchKeyword').value;
+      let url = '/admin/user';
+
+      const params = new URLSearchParams();
+      if (type) params.append('type', type);
+      if (keyword) params.append('keyword', keyword);
+
+      const statusSelect = document.querySelector('select[onchange="filterStatus(this)"]');
+      if (statusSelect) {
+        const status = statusSelect.value;
+        if (status) params.append('status', status);
+      }
+
+      if ([...params].length > 0) {
+        url += '?' + params.toString();
+      }
+
+      window.location.href = url;
+    }
+  </script>
 </body>
 </html>
