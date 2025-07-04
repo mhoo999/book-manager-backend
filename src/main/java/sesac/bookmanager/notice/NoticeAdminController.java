@@ -41,7 +41,7 @@ public class NoticeAdminController {
 
 
         model.addAttribute("page", pageResponse.getPage() + 1);
-        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalPages", (pageResponse.getTotalPages() > 0) ? pageResponse.getTotalPages() : 1);
         model.addAttribute("totalCount", pageResponse.getTotalCount());
         model.addAttribute("notices", pageResponse.getNotices());
 
