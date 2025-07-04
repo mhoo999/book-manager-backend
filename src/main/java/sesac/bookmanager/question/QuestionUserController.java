@@ -16,6 +16,12 @@ public class QuestionUserController {
     private final QuestionService questionService;
 
 
+    @PostMapping("/create")
+    public ResponseEntity<QuestionResponse> createQuestion(@RequestBody QuestionCreateRequest request,
+                                 @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(questionService.createQuestion(request, customUserDetails));
+    }
+
     @GetMapping
     public ResponseEntity<QuestionPageResponse> getAllQuestions(QuestionSearchRequest search) {
         return ResponseEntity.ok(questionService.getAllQuestions(search));
@@ -30,12 +36,5 @@ public class QuestionUserController {
     public ResponseEntity<QuestionResponse> updateQuestion(@PathVariable Integer questionId, @RequestBody QuestionUpdateRequest request,
                                                            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(questionService.updateQuestion(questionId, request, customUserDetails));
-    }
-
-    @PutMapping("/{questionId}/progress")
-    public String progressEdit(@PathVariable Integer questionId, @ModelAttribute QuestionStatusUpdateRequest request) {
-
-        questionService.updateStatus(questionId, request);
-        return "redirect:/api/question/" + questionId;
     }
 }
