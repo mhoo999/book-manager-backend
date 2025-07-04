@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.notice.data.*;
 

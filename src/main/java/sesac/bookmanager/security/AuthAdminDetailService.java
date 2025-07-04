@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.admin.AdminRepository;
 
 @Service

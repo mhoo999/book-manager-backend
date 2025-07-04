@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>북매니저</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @keyframes fade {
+      0% {
+        opacity: 0.4;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    header{position: relative;}
+    header>.bg_lnb{
+			display: none;
+			position: absolute;
+			left: 0;
+			top: 72px;
+			width: 100%;
+			height: 120px;
+      background-color: rgba(59, 130, 246, 0.06); 
+      border-top: 3px solid #3b82f6; 
+      border-bottom: 1px solid #bfdbfe;
+			animation: fade 0.3s;
+    }
+
+    .container{
+			position: relative;
+    }
+    .container>nav{
+				position: absolute;
+				right: 0;
+				top: 32px;
+    }
+
+    .container>nav .lnb{
+      display: none;
+      margin-top: 32px;
+      animation: fade 0.3s;
+    }
+    .container>nav .lnb>li>a{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      
+    }
+    .container>nav .lnb>li>a:hover{
+      color: #fff;
+      font-weight: 800;    
+      background-color: #3b82f6;
+    }
+
+
+  </style>
+  <script src="/Global/js/GlobalNavBarHover.js" defer></script>
+</head>
+<body class="bg-gray-50">
+  <!-- 헤더 -->
+  <header th:replace="~{fragments/header :: siteHeader}"></header>
+
+  <!-- 본문 -->
+  <main class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">👨‍💼 관리자목록</h2>
+
+    <!-- 테이블 -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200 text-center">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 border">이름</th>
+            <th class="px-4 py-2 border">아이디</th>
+            <th class="px-4 py-2 border">근무부서</th>
+            <th class="px-4 py-2 border">직위</th>
+            <th class="px-4 py-2 border">연락처</th>
+            <th class="px-4 py-2 border">상세보기</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr th:each="admins : ${admins.content}">
+          <td th:text="${admins.adminName}"></td>
+          <td th:text="${admins.adminAccountId}"></td>
+          <td th:text="${admins.dept}"></td>
+          <td th:text="${admins.position}"></td>
+          <td th:text="${admins.phoneNumber}"></td>
+          <td>
+            <a th:href="@{'/admin/admins/' + ${admins.adminId}}"
+               class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">보기</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="mt-6 flex justify-center">
+      <nav class="inline-flex space-x-1">
+
+        <!-- 이전 페이지 -->
+        <a th:if="${!admins.first}"
+           th:href="@{'/admin/adminList?page=' + ${admins.number - 1}}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+
+        <!-- 페이지 번호 -->
+        <a th:each="i : ${#numbers.sequence(0, admins.totalPages - 1)}"
+           th:href="@{'/admin/adminList?page=' + ${i}}"
+           th:text="${i + 1}"
+           th:classappend="${i} == ${admins.number} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
+           class="px-3 py-1 border border-gray-300 rounded">
+        </a>
+
+        <!-- 다음 페이지 -->
+        <a th:if="${!admins.last}"
+           th:href="@{'/admin/adminList?page=' + ${admins.number + 1}}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+
+      </nav>
+    </div>
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+      상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+  </footer>
+
+</body>
+</html>

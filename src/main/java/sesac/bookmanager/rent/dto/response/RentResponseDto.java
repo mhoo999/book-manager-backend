@@ -3,7 +3,7 @@ package sesac.bookmanager.rent.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.rent.domain.Rent;
 import sesac.bookmanager.rent.enums.RentStatus;
 
