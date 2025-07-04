@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>북매니저</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        @keyframes fade {
+            0% {
+                opacity: 0.4;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        header{position: relative;}
+        header>.bg_lnb{
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 72px;
+            width: 100%;
+            height: 120px;
+            background-color: rgba(59, 130, 246, 0.06);
+            border-top: 3px solid #3b82f6;
+            border-bottom: 1px solid #bfdbfe;
+            animation: fade 0.3s;
+        }
+
+        .container{
+            position: relative;
+        }
+        .container>nav{
+            position: absolute;
+            right: 0;
+            top: 32px;
+        }
+
+        .container>nav .lnb{
+            display: none;
+            margin-top: 32px;
+            animation: fade 0.3s;
+        }
+        .container>nav .lnb>li>a{
+            display: block;
+            height: 30px;
+            line-height: 30px;
+
+        }
+        .container>nav .lnb>li>a:hover{
+            color: #fff;
+            font-weight: 800;
+            background-color: #3b82f6;
+        }
+
+
+    </style>
+</head>
+<body class="bg-gray-50">
+<!-- 헤더 -->
+<header th:replace="fragments/header :: siteHeader"></header>
+
+<!-- 본문 -->
+<main class="max-w-screen-xl mx-auto px-4 py-10">
+    <h2 class="text-2xl font-bold mb-6">📄 문의내용</h2>
+
+    <!-- 게시글 내용 -->
+    <div class="bg-white p-6 rounded shadow space-y-4 mb-8">
+        <div class="flex justify-between items-center">
+            <h3 th:text="${question.title}" class="text-xl font-semibold"></h3>
+            <span class="text-sm text-gray-500">작성자: <span th:text="${question.userName}" class="text-sm text-gray-500"></span>
+                | 작성일: <span th:text="${question.createdAt}" class="text-sm text-gray-500"></span>
+            </span>
+        </div>
+        <p th:text="${question.content}" class="text-gray-700"></p>
+        <div class="text-right">
+            <form th:action="@{/admin/question/{questionId}/delete(questionId=${question.questionId})}" method="post">
+            <button
+               class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">삭제하기</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 처리 상태 선택 -->
+    <div class="bg-white p-6 rounded shadow mb-8">
+        <label class="block text-gray-700 font-semibold mb-2">🔄 처리 상태</label>
+        <form th:action="@{/admin/question/{questionId}/progress(questionId=${question.questionId})}"
+              th:object="${QuestionStatusUpdateRequest}" method="post">
+        <select th:field="*{status}" class="w-full px-4 py-2 border rounded">
+            <option th:value="0">접수대기</option>
+            <option th:value="1">처리중</option>
+            <option th:value="2">처리완료</option>
+        </select>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">변경</button>
+        </form>
+    </div>
+
+    <!-- 답변이 있을 경우 표시 -->
+    <div th:if="${reply != null}" class="bg-gray-100 p-6 rounded shadow-inner mb-8">
+        <h4 class="text-lg font-semibold mb-2 text-green-700">📌 관리자 답변</h4>
+        <p th:text="${reply.content}" class="text-gray-700"></p>
+    </div>
+
+    <!-- 답변 입력 폼 -->
+    <div class="bg-white p-6 rounded shadow space-y-4">
+        <h4 class="text-lg font-bold"><✍️ 답변 작성/h4>
+        <form th:action="@{/admin/reply/{questionId}/create(questionId=${question.questionId})}" th:object="${ReplyCreateRequest}" method="post" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-medium">답변 내용</label>
+                <textarea rows="5" class="w-full mt-1 border px-3 py-2 rounded"
+                          th:field="*{content}" placeholder="답변 내용을 입력하세요"></textarea>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">답변 등록</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 답변 수정 폼 -->
+    <div class="bg-white p-6 rounded shadow space-y-4">
+        <h4 class="text-lg font-bold">✏️ 답변 수정</h4>
+        <form th:action="@{/admin/reply/{questionId}/update(questionId=${question.questionId})}" th:object="${ReplyUpdateRequest}" method="post" class="space-y-4">
+            <div>
+                <label class="block text-gray-700 font-medium">답변 내용</label>
+                <textarea rows="5" class="w-full mt-1 border px-3 py-2 rounded"
+                          th:field="*{content}" placeholder="답변 내용을 입력하세요"></textarea>
+            </div>
+            <div class="text-right">
+                <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">답변 수정</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<!-- 푸터 -->
+<footer class="bg-white border-t mt-12">
+    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+        상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+    </div>
+</footer>
+</body>
+</html>

@@ -10,13 +10,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum WishStatus {
-    EXAMINING((byte) 1),
-    APPROVED((byte) 2),
-    PURCHASE((byte) 3),
-    STOCK((byte) 4),
-    REJECTED((byte) 0);
+    EXAMINING((byte) 1, "검토중"),
+    APPROVED((byte) 2, "승인됨"),
+    PURCHASE((byte) 3, "구매중"),
+    STOCK((byte) 4, "입고완료"),
+    REJECTED((byte) 0, "반려됨");
 
     private final byte code;
+    private final String label;
 
     @JsonValue
     public byte getCode() {

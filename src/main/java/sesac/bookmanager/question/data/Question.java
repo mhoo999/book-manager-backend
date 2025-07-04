@@ -24,7 +24,7 @@ public class Question {
     // true면 문의게시판, false면 오류신고게시판
     private Boolean questionType;
 
-    // 0이면 미처리, 1이면 처리중, 2면 처리완료
+    // 0이면 접수대기, 1이면 처리중, 2면 처리완료
     private Byte status;
 
     private String title;
@@ -35,6 +35,5 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    // TODO: 이후 User 클래스 구성되면 교체할 것
 
 }

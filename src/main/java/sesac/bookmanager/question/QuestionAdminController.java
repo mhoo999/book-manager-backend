@@ -3,8 +3,11 @@ package sesac.bookmanager.question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.question.data.*;
+import sesac.bookmanager.reply.data.ReplyCreateRequest;
+import sesac.bookmanager.reply.data.ReplyUpdateRequest;
 import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
@@ -14,39 +17,64 @@ public class QuestionAdminController {
 
     private final QuestionService questionService;
 
-    @PostMapping("/create")
-    public String createQuestion(@RequestBody QuestionCreateRequest request,
-                                                           @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        QuestionResponse newQuestion = questionService.createQuestion(request, customUserDetails);
-        return "redirect:/admin/question/" + newQuestion.getQuestionId();
-    }
 
     @GetMapping
-    public String getAllQuestions(QuestionSearchRequest search) {
+    public String getAllQuestions(Model model, @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
 
-        QuestionPageResponse pageResponse = questionService.getAllQuestions(search);
-        return "/admin/question";
+        QuestionPageResponse pageResponse = null;
+
+        if(page == null || page < 1) {
+            pageResponse = questionService.getAllQuestions(new QuestionSearchRequest());
+        } else {
+            pageResponse = questionService.getAllQuestions(new QuestionSearchRequest(page - 1, 5));
+        }
+
+        model.addAttribute("page", pageResponse.getPage() + 1);
+        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalCount", pageResponse.getTotalCount());
+        model.addAttribute("questions", pageResponse.getQuestions());
+
+        return "/admin/question/list";
     }
 
     @GetMapping("/{questionId}")
-    public String getQuestionById(@PathVariable Integer questionId) {
+    public String getQuestionById(Model model, @PathVariable Integer questionId) {
 
         QuestionWithReplyResponse response = questionService.getQuestionById(questionId);
-        return "/admin/question/" + questionId;
+
+        QuestionStatusUpdateRequest updateRequest = new QuestionStatusUpdateRequest();
+        updateRequest.setStatus(response.getQuestion().getStatus());
+
+        model.addAttribute("question", response.getQuestion());
+        model.addAttribute("reply", response.getReply());
+        model.addAttribute("QuestionStatusUpdateRequest", updateRequest);
+
+
+        ReplyCreateRequest replyCreateRequest = new ReplyCreateRequest();
+        ReplyUpdateRequest replyUpdateRequest = new ReplyUpdateRequest();
+
+        if(response.getReply() != null) {
+            replyUpdateRequest.setContent(response.getReply().getContent());
+        }
+
+        model.addAttribute("ReplyCreateRequest", replyCreateRequest);
+        model.addAttribute("ReplyUpdateRequest", replyUpdateRequest);
+
+        return "/admin/question/one";
     }
 
-    @PutMapping("/{questionId}/progress")
+    @PostMapping("/{questionId}/progress")
     public String progressEdit(@PathVariable Integer questionId, @ModelAttribute QuestionStatusUpdateRequest request) {
 
         questionService.updateStatus(questionId, request);
         return "redirect:/admin/question/" + questionId;
     }
 
-    @DeleteMapping("/{questionId}")
+    @PostMapping("/{questionId}/delete")
     public String deleteQuestion(@PathVariable Integer questionId) {
         questionService.deleteQuestion(questionId);
 
-        return "redirect:/api/question";
+        return "redirect:/admin/question";
     }
 }
