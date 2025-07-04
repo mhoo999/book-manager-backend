@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
+import sesac.bookmanager.auth.data.LoginResponseDto;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.auth.data.FindPasswordRequestDto;
 import sesac.bookmanager.auth.data.LoginRequestDto;
 import sesac.bookmanager.auth.data.RegisterRequestDto;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,8 +24,23 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequestDto request) {
-        return ResponseEntity.ok(ApiResponse.success(authService.login(request)));
+    public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody LoginRequestDto request,
+                                                     HttpServletResponse response) {
+        LoginResponseDto loginResponseDto = authService.login(request);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", loginResponseDto.getRefreshToken())
+                .httpOnly(true)            // JS 접근 불가!
+                .sameSite("Strict")        // CSRF 방지
+                .path("/")                 // 모든 경로에 쿠키 전송
+                .maxAge(Duration.ofDays(7)) // 유효기간 7일
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
+        loginResponseDto.setRefreshToken("moved to cookie");
+        return ResponseEntity.ok(ApiResponse.success(loginResponseDto));
+    }
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<String>> refreshToken(@CookieValue("refreshToken") String refreshToken) {
+        String newAccessToken = authService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(ApiResponse.success(newAccessToken));
     }
 
     @PostMapping("/logout")
