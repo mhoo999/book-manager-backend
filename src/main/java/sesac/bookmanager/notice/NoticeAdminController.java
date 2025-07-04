@@ -36,7 +36,7 @@ public class NoticeAdminController {
         if(page == null || page < 1) {
             pageResponse = noticeService.searchNotice(new NoticeSearchRequest());
         } else {
-            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", page - 1, 5));
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", page - 1, 10));
         }
 
 

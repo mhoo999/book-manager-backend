@@ -31,7 +31,7 @@ public class NoticeService {
         Notice newNotice = Notice.builder()
                 .type(request.getType())
                 .title(request.getTitle())
-                .content(request.getContent())
+                .content(request.getContent().replace("\r\n", "\n"))
                 .createdAt(LocalDateTime.now())
                 .views(0)
                 .admin(checkAdmin)
@@ -77,7 +77,7 @@ public class NoticeService {
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
 
         notice.setTitle(updateRequest.getTitle());
-        notice.setContent(updateRequest.getContent());
+        notice.setContent(updateRequest.getContent().replace("\r\n", "\n"));
         notice.setType(updateRequest.getType());
 
         return NoticeResponse.from(notice);
