@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
@@ -16,27 +17,41 @@ public class WishAdminController {
     private final WishService wishService;
 
 
-    @PostMapping("/create")
-    public String createWish(@RequestBody WishCreateRequest request,
-                                                   @AuthenticationPrincipal CustomUserDetails customUserDetails) {
-
-        WishResponse response = wishService.createWish(request, customUserDetails);
-        return "redirect:/admin/wish/" + response.getWishId();
-    }
-
     @GetMapping
-    public String getWishlist(WishSearchRequest search) {
-        WishPageResponse pageResponse = wishService.getWishlist(search);
-        return "/admin/wish";
+    public String getWishlist(Model model, @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+
+        WishPageResponse pageResponse = null;
+
+        if(page == null || page < 1) {
+            pageResponse = wishService.getWishlist(new WishSearchRequest());
+        } else {
+            pageResponse = wishService.getWishlist(new WishSearchRequest(page - 1, 5));
+        }
+
+        model.addAttribute("page", pageResponse.getPage() + 1);
+        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalCount", pageResponse.getTotalCount());
+        model.addAttribute("wishes", pageResponse.getWishes());
+
+        model.addAttribute("status", WishStatus.values());
+
+        return "/admin/wish/list";
     }
 
     @GetMapping("/{wishId}")
-    public String getWishById(@PathVariable Integer wishId) {
+    public String getWishById(Model model, @PathVariable Integer wishId) {
         WishResponse response = wishService.getWishById(wishId);
-        return "/admin/wish/" + response.getWishId();
+
+        WishStatusUpdateRequest updateRequest = new WishStatusUpdateRequest();
+        updateRequest.setStatus(response.getStatus());
+
+        model.addAttribute("wish", response);
+        model.addAttribute("wishId", wishId);
+        model.addAttribute("WishStatusUpdateRequest", updateRequest);
+        return "/admin/wish/one";
     }
 
-    @PutMapping("/{wishId}/progress")
+    @PostMapping("/{wishId}/progress")
     public String updateProgress(@PathVariable Integer wishId, @ModelAttribute WishStatusUpdateRequest request) {
         wishService.updateProgress(wishId, request);
         return "redirect:/admin/wish/" + wishId;
