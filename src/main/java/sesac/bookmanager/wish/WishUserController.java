@@ -16,6 +16,13 @@ public class WishUserController {
     private final WishService wishService;
 
 
+    @PostMapping("/create")
+    public ResponseEntity<WishResponse> createWish(@RequestBody WishCreateRequest request,
+                             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        return ResponseEntity.ok(wishService.createWish(request, customUserDetails));
+    }
+
     @GetMapping
     public ResponseEntity<WishPageResponse> getWishlist(WishSearchRequest search) {
         return ResponseEntity.ok(wishService.getWishlist(search));
