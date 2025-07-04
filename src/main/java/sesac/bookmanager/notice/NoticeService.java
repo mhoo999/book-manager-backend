@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.admin.data.Admin;
@@ -43,7 +44,7 @@ public class NoticeService {
 
     @Transactional(readOnly = true)
     public NoticePageResponse searchNotice(NoticeSearchRequest searchRequest) {
-        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
+        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), Sort.by(Sort.Direction.DESC, "noticeId"));
 
         Page<NoticeResponse> searchResult = noticeRepository
                 .findByTitleContaining(searchRequest.getTitle(), pageable)
