@@ -144,35 +144,37 @@
   </div>
 
   <!-- 페이지네이션 -->
-  <div class="mt-6 flex justify-center" th:if="${books != null and books.totalPages != null and books.totalPages > 1}">
+  <div class="mt-6 flex justify-center">
     <nav class="inline-flex space-x-1">
-      <!-- 이전 페이지 -->
-      <a th:if="${books.page != null and books.page > 0}"
-         th:href="@{/admin/v1/books(page=${books.page - 1})}"
-         class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+      <!-- 데이터가 있고 여러 페이지일 때 -->
+      <span th:if="${books != null and books.totalPages != null and books.totalPages > 1}">
+        <!-- 이전 페이지 -->
+        <a th:if="${books.page != null and books.page > 0}"
+           th:href="@{/admin/v1/books(page=${books.page - 1})}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
 
-      <!-- 페이지 번호들 -->
-      <th:block th:each="pageNum : ${#numbers.sequence(0, books.totalPages - 1)}">
-        <a th:if="${pageNum == books.page}"
-           th:href="@{/admin/v1/books(page=${pageNum})}"
-           class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded"
-           th:text="${pageNum + 1}">1</a>
-        <a th:unless="${pageNum == books.page}"
-           th:href="@{/admin/v1/books(page=${pageNum})}"
-           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded"
-           th:text="${pageNum + 1}">1</a>
-      </th:block>
+        <!-- 페이지 번호들 (현재 페이지 기준 ±2 페이지만 표시) -->
+        <th:block th:each="pageNum : ${#numbers.sequence(T(java.lang.Math).max(0, books.page - 2), T(java.lang.Math).min(books.totalPages - 1, books.page + 2))}">
+          <a th:if="${pageNum == books.page}"
+             th:href="@{/admin/v1/books(page=${pageNum})}"
+             class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded"
+             th:text="${pageNum + 1}">1</a>
+          <a th:unless="${pageNum == books.page}"
+             th:href="@{/admin/v1/books(page=${pageNum})}"
+             class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded"
+             th:text="${pageNum + 1}">1</a>
+        </th:block>
 
-      <!-- 다음 페이지 -->
-      <a th:if="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
-         th:href="@{/admin/v1/books(page=${books.page + 1})}"
-         class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+        <!-- 다음 페이지 -->
+        <a th:if="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
+           th:href="@{/admin/v1/books(page=${books.page + 1})}"
+           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+      </span>
+
+      <!-- 데이터가 없거나 1페이지뿐일 때 기본 1 버튼 -->
+      <a th:if="${books == null or books.totalPages == null or books.totalPages <= 1}"
+         href="#" class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded">1</a>
     </nav>
-  </div>
-
-  <!-- 데이터가 없을 때 기본 페이지네이션 숨김 -->
-  <div class="mt-6 flex justify-center" th:if="${books == null or books.totalPages == null or books.totalPages <= 1}">
-    <!-- 페이지네이션 숨김 -->
   </div>
 </main>
 

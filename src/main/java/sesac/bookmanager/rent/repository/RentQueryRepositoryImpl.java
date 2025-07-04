@@ -29,7 +29,7 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if (request.getRentCode() > 0) {
+        if (request.getRentCode() != null && request.getRentCode() > 0) {
             builder.and(rent.id.eq(request.getRentCode()));
         }
 
