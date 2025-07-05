@@ -36,12 +36,12 @@ public class NoticeAdminController {
         if(page == null || page < 1) {
             pageResponse = noticeService.searchNotice(new NoticeSearchRequest());
         } else {
-            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", page - 1, 5));
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", page - 1, 10));
         }
 
 
         model.addAttribute("page", pageResponse.getPage() + 1);
-        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalPages", (pageResponse.getTotalPages() > 0) ? pageResponse.getTotalPages() : 1);
         model.addAttribute("totalCount", pageResponse.getTotalCount());
         model.addAttribute("notices", pageResponse.getNotices());
 
