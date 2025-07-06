@@ -26,8 +26,6 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
             "ORDER BY bi.bookCode DESC")
     List<String> findBookCodesByCategoryOrdered(@Param("category") String category, Pageable pageable);
 
-    Optional<BookItem> findByBookCode(String bookCode);
-
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT bi FROM BookItem bi WHERE bi.bookCode = :bookCode")
     Optional<BookItem> findByBookCodeWithLock(@Param("bookCode") String bookCode);
