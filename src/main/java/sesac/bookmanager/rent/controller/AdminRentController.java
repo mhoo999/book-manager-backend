@@ -2,22 +2,17 @@ package sesac.bookmanager.rent.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
-import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomAdminDetails;
-import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
 @RequestMapping("/admin/v1/rents")

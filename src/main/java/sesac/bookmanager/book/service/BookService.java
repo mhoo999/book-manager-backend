@@ -2,6 +2,7 @@ package sesac.bookmanager.book.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -32,41 +33,48 @@ public class BookService {
     private final CategoryService categoryService;
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
-        // 카테고리 유효성 검증
-        if (!categoryService.isValidCategoryCode(request.getCategory())) {
-            throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
-        }
-
-        Book book = new Book();
-        book.setTitle(request.getTitle());
-        book.setAuthor(request.getAuthor());
-        book.setPublisher(request.getPublisher());
-        book.setPublishedAt(request.getPublishedAt());
-        book.setLocation(request.getLocation());
-        book.setStock(request.getStock());
-        book.setCover(request.getCover());
-        book.setIsbn(request.getIsbn());
-        book.setCategoryCode(request.getCategory()); // 6자리 전체 카테고리 코드 저장
-        book.setDescription(null);
-
-        BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
-                ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
-
-        if (request.getStock() > 0) {
-            // 해당 카테고리의 다음 시퀀스 번호 가져오기
-            int startSequence = getNextSequence(request.getCategory());
-
-            for (int i = 0; i < request.getStock(); i++) {
-                BookItem bookItem = new BookItem();
-                // 도서 코드 생성: BK + 6자리카테고리코드 + 4자리순번
-                bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
-                bookItem.setStatus(status);
-                book.addBookItem(bookItem);
+        try {
+            // 카테고리 유효성 검증
+            if (!categoryService.isValidCategoryCode(request.getCategory())) {
+                throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
             }
-        }
 
-        Book savedBook = bookRepository.save(book);
-        return new BookIdResponseDto(savedBook.getId());
+            Book book = new Book();
+            book.setTitle(request.getTitle());
+            book.setAuthor(request.getAuthor());
+            book.setPublisher(request.getPublisher());
+            book.setPublishedAt(request.getPublishedAt());
+            book.setLocation(request.getLocation());
+            book.setStock(request.getStock());
+            book.setCover(request.getCover());
+            book.setIsbn(request.getIsbn());
+            book.setCategoryCode(request.getCategory()); // 6자리 전체 카테고리 코드 저장
+            book.setDescription(null);
+
+            BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
+                    ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
+
+            if (request.getStock() > 0) {
+                // 해당 카테고리의 다음 시퀀스 번호 가져오기
+                int startSequence = getNextSequence(request.getCategory());
+
+                for (int i = 0; i < request.getStock(); i++) {
+                    BookItem bookItem = new BookItem();
+                    // 도서 코드 생성: BK + 6자리카테고리코드 + 4자리순번
+                    bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
+                    bookItem.setStatus(status);
+                    book.addBookItem(bookItem);
+                }
+            }
+
+            Book savedBook = bookRepository.save(book);
+            return new BookIdResponseDto(savedBook.getId());
+        } catch (DataIntegrityViolationException e) {
+            if (e.getMessage().contains("Duplicate entry")) {
+                throw new RuntimeException("도서 코드 중복이 발생했습니다. 다시 시도해주세요.");
+            }
+            throw e;
+        }
     }
 
     /**
@@ -74,7 +82,7 @@ public class BookService {
      * @param category 6자리 카테고리 코드 (예: "010101")
      * @return 다음 시퀀스 번호
      */
-    private int getNextSequence(String category) {
+    private synchronized int getNextSequence(String category) {
         List<String> latestCodes = bookItemRepository.findBookCodesByCategoryOrdered(
                 category,
                 PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "bookCode"))

@@ -1,8 +1,10 @@
 package sesac.bookmanager.book.repository;
 
+import jakarta.persistence.LockModeType;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import sesac.bookmanager.book.domain.BookItem;
@@ -25,4 +27,8 @@ public interface BookItemRepository extends JpaRepository<BookItem, Long> {
     List<String> findBookCodesByCategoryOrdered(@Param("category") String category, Pageable pageable);
 
     Optional<BookItem> findByBookCode(String bookCode);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT bi FROM BookItem bi WHERE bi.bookCode = :bookCode")
+    Optional<BookItem> findByBookCodeWithLock(@Param("bookCode") String bookCode);
 }
