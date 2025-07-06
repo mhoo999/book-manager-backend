@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.book.domain.BookItem;
 import sesac.bookmanager.rent.enums.RentStatus;
 import sesac.bookmanager.user.data.User;

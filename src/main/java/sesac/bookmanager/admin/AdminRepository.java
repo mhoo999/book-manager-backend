@@ -1,6 +1,7 @@
 package sesac.bookmanager.admin;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import sesac.bookmanager.admin.data.Admin;
 
 import java.util.Optional;
 

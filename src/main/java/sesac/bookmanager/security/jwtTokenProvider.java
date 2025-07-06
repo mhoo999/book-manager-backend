@@ -45,8 +45,8 @@ public class jwtTokenProvider {
                 .compact();
     }
 
-    public String createAccessToken(CustomUserDetails customUserDetails){
-        return generateToken(customUserDetails.getUser(), accessExpiration);
+    public String createAccessToken(User user){
+        return generateToken(user, accessExpiration);
     }
 
     public String createRefreshToken(CustomUserDetails customUserDetails){

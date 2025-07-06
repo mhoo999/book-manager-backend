@@ -81,7 +81,7 @@ CREATE TABLE `question` (
 	`question_type`	bit(1)	NOT NULL,
 	`title`	VARCHAR(255)	NOT NULL,
 	`content`	longtext	NULL,
-    `status` TINYINT NOT NULL,
+    `status` TINYINT NOT NULL default 0,
 	`created_at`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE `wish` (
 	`wish_id`	int	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`user_id`	int	NOT NULL,
 	`due_date`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`status`	bit(3)	NOT NULL,
+	`status`	bit(3)	NOT NULL default 1,
 	`book_name`	VARCHAR(255)	NOT NULL,
 	`author`	VARCHAR(255)	NOT NULL,
 	`publisher`	VARCHAR(255)	NOT NULL,

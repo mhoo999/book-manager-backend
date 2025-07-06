@@ -16,11 +16,7 @@ public class RefreshTokenService {
 
 
     //for DB-works
-    public void saveRefreshToken(int userId, String refreshToken) {
-        refreshTokenRepository.save(userId, refreshToken);
-    }
-
-    public String CreateRefreshToken(int userId) {
+    public String createRefreshToken(int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         String refreshToken = jwtTokenProvider.createRefreshToken(new CustomUserDetails(user));
@@ -29,7 +25,13 @@ public class RefreshTokenService {
 
     }
     public void delete(int userId) {
+
         refreshTokenRepository.deleteByUserId(userId);
+    }
+
+    public boolean isValid(int userId, String refreshToken) {
+        String inRedisToken = refreshTokenRepository.findByUserId(userId);
+        return refreshToken.equals(inRedisToken);
     }
 
 

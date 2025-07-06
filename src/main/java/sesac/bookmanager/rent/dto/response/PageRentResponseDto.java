@@ -18,14 +18,32 @@ public class PageRentResponseDto {
     private List<RentResponseDto> rents;
 
     public static PageRentResponseDto from(List<RentResponseDto> rents, SearchRentRequestDto search, Long count) {
-        int totalPages = (int) Math.ceil((double) count / search.getSize());
+        int pageValue = search.getPageValue();
+        int sizeValue = search.getSizeValue();
+        int totalPages = (int) Math.ceil((double) count / sizeValue);
         return new PageRentResponseDto(
-                search.getPage(),
-                search.getSize(),
+                pageValue,
+                sizeValue,
                 count,
                 totalPages,
                 rents
         );
     }
 
+//    // 페이지네이션 관련 유틸리티 메서드들
+//    public boolean isFirstPage() {
+//        return page == 0;
+//    }
+//
+//    public boolean isLastPage() {
+//        return page >= totalPages - 1;
+//    }
+//
+//    public boolean hasPrevious() {
+//        return page > 0;
+//    }
+//
+//    public boolean hasNext() {
+//        return page < totalPages - 1;
+//    }
 }

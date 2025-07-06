@@ -2,7 +2,7 @@ package sesac.bookmanager.notice.data;
 
 import jakarta.persistence.*;
 import lombok.*;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package sesac.bookmanager.admin;
+package sesac.bookmanager.admin.data;
 
 
 import jakarta.persistence.*;

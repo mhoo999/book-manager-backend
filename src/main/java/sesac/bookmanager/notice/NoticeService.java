@@ -5,9 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.notice.data.*;
 
@@ -30,7 +31,7 @@ public class NoticeService {
         Notice newNotice = Notice.builder()
                 .type(request.getType())
                 .title(request.getTitle())
-                .content(request.getContent())
+                .content(request.getContent().replace("\r\n", "\n"))
                 .createdAt(LocalDateTime.now())
                 .views(0)
                 .admin(checkAdmin)
@@ -43,7 +44,7 @@ public class NoticeService {
 
     @Transactional(readOnly = true)
     public NoticePageResponse searchNotice(NoticeSearchRequest searchRequest) {
-        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize());
+        Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getSize(), Sort.by(Sort.Direction.DESC, "noticeId"));
 
         Page<NoticeResponse> searchResult = noticeRepository
                 .findByTitleContaining(searchRequest.getTitle(), pageable)
@@ -76,7 +77,7 @@ public class NoticeService {
                 .orElseThrow(() -> new EntityNotFoundException("ID에 해당하는 공지사항이 없습니다 : " + noticeId));
 
         notice.setTitle(updateRequest.getTitle());
-        notice.setContent(updateRequest.getContent());
+        notice.setContent(updateRequest.getContent().replace("\r\n", "\n"));
         notice.setType(updateRequest.getType());
 
         return NoticeResponse.from(notice);

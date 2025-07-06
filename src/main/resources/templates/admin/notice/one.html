@@ -76,7 +76,7 @@
         </div>
 
         <!-- 내용 -->
-        <div th:text="${notice.getContent()}" class="text-gray-800 leading-relaxed pt-2">
+        <div th:utext="${#strings.replace(notice.content, '\n', '<br />')}" class="text-gray-800 leading-relaxed pt-2">
 
         </div>
 

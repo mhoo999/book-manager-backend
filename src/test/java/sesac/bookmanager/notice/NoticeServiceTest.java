@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.*;
 
-import sesac.bookmanager.admin.Admin;
+import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.notice.data.*;
 

@@ -1,5 +1,6 @@
 package sesac.bookmanager.auth;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sesac.bookmanager.global.exceptions.InvalidRefreshTokenException;
+import sesac.bookmanager.global.exceptions.UserWasDeletedException;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.security.RefreshTokenService;
 import sesac.bookmanager.security.jwtTokenProvider;
@@ -39,8 +42,8 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String accessToken = jwtTokenProvider.createAccessToken(customUserDetails);
-        String refreshToken = refreshTokenService.CreateRefreshToken(customUserDetails.getUser().getId());
+        String accessToken = jwtTokenProvider.createAccessToken(customUserDetails.getUser());
+        String refreshToken = refreshTokenService.createRefreshToken(customUserDetails.getUser().getId());
 
         return new LoginResponseDto(customUserDetails.getUsername(), accessToken,refreshToken);
     }
@@ -77,5 +80,17 @@ public class AuthService {
                 .isDeleted(false)
                 .build();
         userRepository.save(user);
+    }
+
+    public String refreshAccessToken(String refreshToken) {
+        final Claims claims = jwtTokenProvider.getAllClaimsFromToken(refreshToken);
+        final int userId = Integer.parseInt(claims.getSubject());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저의 정보가 존재하지 않음"));
+        if(user.getIsDeleted()) throw new UserWasDeletedException("해당 유저는 탈퇴된 유저");
+        if (!refreshTokenService.isValid(userId, refreshToken)) {
+            throw new InvalidRefreshTokenException("Invalid or expired Refresh Token");
+        }
+        return jwtTokenProvider.createAccessToken(user);
     }
 }

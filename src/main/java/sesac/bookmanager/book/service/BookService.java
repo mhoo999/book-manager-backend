@@ -38,7 +38,7 @@ public class BookService {
             if (!categoryService.isValidCategoryCode(request.getCategory())) {
                 throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
             }
-
+          
             Book book = new Book();
             book.setTitle(request.getTitle());
             book.setAuthor(request.getAuthor());

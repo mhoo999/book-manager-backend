@@ -95,15 +95,29 @@ public class AdminBookController {
     public String searchBooks(SearchBookRequestDto request, Model model) {
         PageBookResponseDto books = bookService.searchBooks(request);
         model.addAttribute("books", books);
-        model.addAttribute("searchCondition", request);
+        model.addAttribute("searchCondition", request); // 검색 시에만 추가
+
         return "admin/books/list";
     }
 
     @GetMapping("/{bookId}")
-    public String getBook(@PathVariable long bookId, Model model) {
-        BookResponseDto book = bookService.getBook(bookId);
-        model.addAttribute("book", book);
-        return "admin/books/detail";
+    public String getBook(@PathVariable Long bookId, Model model) {
+        try {
+            BookResponseDto book = bookService.getBook(bookId);
+            model.addAttribute("book", book);
+
+            // 카테고리 경로 추가 (선택사항)
+            if (book.getCategoryCode() != null) {
+                String categoryPath = categoryService.getCategoryPath(book.getCategoryCode());
+                model.addAttribute("categoryPath", categoryPath);
+            }
+
+            return "admin/books/detail";
+        } catch (Exception e) {
+            log.error("도서 조회 실패: bookId={}", bookId, e);
+            model.addAttribute("book", null);
+            return "admin/books/detail";
+        }
     }
 
     @GetMapping("/{bookId}/edit")
@@ -129,12 +143,15 @@ public class AdminBookController {
     }
 
     @GetMapping
-    public String bookList(Model model) {
+    public String bookList(@RequestParam(defaultValue = "0") int page, Model model) {
+        // 기본 검색 조건으로 전체 도서 조회
         SearchBookRequestDto defaultRequest = new SearchBookRequestDto();
+        defaultRequest.setPage(page);
 
         PageBookResponseDto books = bookService.searchBooks(defaultRequest);
         model.addAttribute("books", books);
-        model.addAttribute("searchCondition", defaultRequest);
+        // searchCondition은 추가하지 않음 (기본 리스트이므로)
+
         return "admin/books/list";
     }
 }

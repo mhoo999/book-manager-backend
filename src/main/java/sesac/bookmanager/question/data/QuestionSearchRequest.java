@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class QuestionSearchRequest {
-    private Boolean questionType;
-
     @Builder.Default
     private int page = 0;
 
