@@ -19,7 +19,7 @@ public class QuestionWithReplyResponse {
     public static QuestionWithReplyResponse from(Question question, Reply reply) {
         return QuestionWithReplyResponse.builder()
                 .question(QuestionResponse.from(question))
-                .reply(ReplyResponse.from(reply))
+                .reply((reply != null) ? ReplyResponse.from(reply) : null)
                 .build();
     }
 }

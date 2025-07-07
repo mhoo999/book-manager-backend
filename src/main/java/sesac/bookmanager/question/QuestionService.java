@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.admin.AdminRepository;
@@ -41,7 +42,7 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public QuestionPageResponse getAllQuestions(QuestionSearchRequest search) {
-        Pageable pageable = PageRequest.of(search.getPage(), search.getSize());
+        Pageable pageable = PageRequest.of(search.getPage(), search.getSize(), Sort.by(Sort.Direction.DESC, "questionId"));
 
         Page<QuestionResponse> pagedQuestion = questionRepository.findAll(pageable)
                 .map(QuestionResponse::from);
