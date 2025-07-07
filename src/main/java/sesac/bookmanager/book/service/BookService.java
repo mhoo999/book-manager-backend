@@ -3,7 +3,6 @@ package sesac.bookmanager.book.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import org.springframework.data.domain.Page;
@@ -45,49 +44,45 @@ public class BookService {
     private final String STATIC_PATH = "src/main/resources/static";
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
-        try {
+		try {
             // 카테고리 유효성 검증
             if (!categoryService.isValidCategoryCode(request.getCategory())) {
                 throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
             }
-          
+		  // 파일 업로드 처리 - ISBN 기반 디렉토리
+			String coverPath = null;
+			if (request.getCoverFile() != null && !request.getCoverFile().isEmpty()) {
+				coverPath = saveBookCover(request.getCoverFile(), request.getIsbn());
+			} else if (request.getCover() != null && !request.getCover().trim().isEmpty()) {
+				// URL로 제공된 경우 그대로 사용
+				coverPath = request.getCover();
+			}
             Book book = new Book();
             book.setTitle(request.getTitle());
             book.setAuthor(request.getAuthor());
             book.setPublisher(request.getPublisher());
             book.setPublishedAt(request.getPublishedAt().atStartOfDay());
-        } else {
-            book.setPublishedAt(null);
-        }
-        book.setLocation(request.getLocation());
-        book.setStock(request.getStock());
+            book.setLocation(request.getLocation());
+            book.setStock(request.getStock());
+			book.setCover(coverPath);
+            book.setIsbn(request.getIsbn());
+            book.setCategoryCode(request.getCategory()); // 6자리 전체 카테고리 코드 저장
+            book.setDescription(request.getDescription());
 
-        // 파일 업로드 처리 - ISBN 기반 디렉토리
-        String coverPath = null;
-        if (request.getCoverFile() != null && !request.getCoverFile().isEmpty()) {
-            coverPath = saveBookCover(request.getCoverFile(), request.getIsbn());
-        } else if (request.getCover() != null && !request.getCover().trim().isEmpty()) {
-            // URL로 제공된 경우 그대로 사용
-            coverPath = request.getCover();
-        }
-        book.setCover(coverPath);
+            BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
+                    ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
 
-        book.setIsbn(request.getIsbn());
-        book.setCategoryCode(request.getCategory());
-        book.setDescription(request.getDescription());
+            if (request.getStock() > 0) {
+                // 해당 카테고리의 다음 시퀀스 번호 가져오기
+                int startSequence = getNextSequence(request.getCategory());
 
-        BookStatus status = Boolean.TRUE.equals(request.getIsAvailable())
-                ? BookStatus.RENTABLE : BookStatus.UNRENTABLE;
-
-        if (request.getStock() > 0) {
-            // 해당 카테고리의 다음 시퀀스 번호 가져오기
-            int startSequence = getNextSequence(request.getCategory());
-
-            for (int i = 0; i < request.getStock(); i++) {
-                BookItem bookItem = new BookItem();
-                bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
-                bookItem.setStatus(status);
-                book.addBookItem(bookItem);
+                for (int i = 0; i < request.getStock(); i++) {
+                    BookItem bookItem = new BookItem();
+                    // 도서 코드 생성: BK + 6자리카테고리코드 + 4자리순번
+                    bookItem.setBookCode(generateBookCode(request.getCategory(), startSequence + i));
+                    bookItem.setStatus(status);
+                    book.addBookItem(bookItem);
+                }
             }
 
             Book savedBook = bookRepository.save(book);
