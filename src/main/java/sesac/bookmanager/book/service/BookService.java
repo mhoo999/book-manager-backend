@@ -43,7 +43,7 @@ public class BookService {
             book.setTitle(request.getTitle());
             book.setAuthor(request.getAuthor());
             book.setPublisher(request.getPublisher());
-            book.setPublishedAt(request.getPublishedAt());
+            book.setPublishedAt(request.getPublishedAt().atStartOfDay());
             book.setLocation(request.getLocation());
             book.setStock(request.getStock());
             book.setCover(request.getCover());

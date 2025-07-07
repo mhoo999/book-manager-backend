@@ -50,10 +50,11 @@ public class BookQueryRepositoryImpl implements BookQueryRepository {
         boolean isAsc = !"desc".equalsIgnoreCase(parts[1]);
         Order direction = isAsc ? Order.ASC : Order.DESC;
         OrderSpecifier<?> order = switch (sortBy) {
+            case "title" -> new OrderSpecifier<>(direction, book.title);
             case "author" -> new OrderSpecifier<>(direction, book.author);
             case "publisher" -> new OrderSpecifier<>(direction, book.publisher);
             case "isbn" -> new OrderSpecifier<>(direction, book.isbn);
-            default -> new OrderSpecifier<>(direction, book.title);
+            default -> new OrderSpecifier<>(direction, book.id);
         };
 
         Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
