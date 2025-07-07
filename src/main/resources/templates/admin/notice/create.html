@@ -56,50 +56,50 @@
 
 
     </style>
+    <script src="/Global/js/GlobalNavBarHover.js" defer></script>
 </head>
-<body class="bg-gray-50">
-<!-- 헤더 -->
-<header th:replace="fragments/header :: siteHeader"></header>
+    <body class="bg-gray-50">
+        <header th:replace="~{fragments/header :: siteHeader}"></header>
 
-<!-- 본문 -->
-<main class="max-w-screen-xl mx-auto px-4 py-10">
-    <h2 class="text-2xl font-bold mb-6">📢 공지등록</h2>
+        <!-- 본문 -->
+        <main class="max-w-screen-xl mx-auto px-4 py-10">
+            <h2 class="text-2xl font-bold mb-6">📢 공지등록</h2>
 
-    <form th:action="@{/admin/notice/create}" th:object="${NoticeCreateRequest}" method="post" class="bg-white p-6 rounded shadow space-y-6">
-        <div>
-            <label class="block font-medium text-gray-700">카테고리 선택</label>
-            <select th:field="*{type}" class="mt-1 w-full border px-3 py-2 rounded">
-                <option value=0 selected>일반</option>
-                <option value=1>휴무</option>
-                <option value=2>일정</option>
-                <option value=3>구인</option>
-            </select>
-        </div>
-        <!-- 제목 입력 -->
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">제목</label>
-            <input type="text" th:field="*{title}" placeholder="공지사항 제목을 입력하세요" class="w-full border px-4 py-2 rounded" />
-        </div>
+            <form th:action="@{/admin/notice/create}" th:object="${NoticeCreateRequest}" method="post" class="bg-white p-6 rounded shadow space-y-6">
+                <div>
+                    <label class="block font-medium text-gray-700">카테고리 선택</label>
+                    <select th:field="*{type}" class="mt-1 w-full border px-3 py-2 rounded">
+                        <option value=0 selected>일반</option>
+                        <option value=1>휴무</option>
+                        <option value=2>일정</option>
+                        <option value=3>구인</option>
+                    </select>
+                </div>
+                <!-- 제목 입력 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">제목</label>
+                    <input type="text" th:field="*{title}" placeholder="공지사항 제목을 입력하세요" class="w-full border px-4 py-2 rounded" />
+                </div>
 
-        <!-- 내용 입력 -->
-        <div>
-            <label class="block text-gray-700 font-medium mb-1">내용</label>
-            <textarea rows="10" th:field="*{content}" placeholder="공지사항 내용을 입력하세요" class="w-full border px-4 py-2 rounded resize-none"></textarea>
-        </div>
+                <!-- 내용 입력 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-1">내용</label>
+                    <textarea rows="10" th:field="*{content}" placeholder="공지사항 내용을 입력하세요" class="w-full border px-4 py-2 rounded resize-none"></textarea>
+                </div>
 
-        <!-- 버튼 -->
-        <div class="text-right space-x-2">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">등록</button>
-            <button type="button" onclick="window.history.back()" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">취소</button>
-        </div>
-    </form>
-</main>
+                <!-- 버튼 -->
+                <div class="text-right space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">등록</button>
+                    <button type="button" onclick="window.history.back()" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">취소</button>
+                </div>
+            </form>
+        </main>
 
-<!-- 푸터 -->
-<footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-        상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
-    </div>
-</footer>
-</body>
+        <!-- 푸터 -->
+        <footer class="bg-white border-t mt-12">
+            <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+                상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+            </div>
+        </footer>
+    </body>
 </html>
