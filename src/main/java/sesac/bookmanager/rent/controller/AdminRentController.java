@@ -88,4 +88,21 @@ public class AdminRentController {
         return "redirect:/admin/v1/rents/" + rentId;
     }
 
+    @GetMapping("/overdue")
+    public String rentListWithOverdue(Model model) {
+        SearchRentRequestDto defaultRequest = new SearchRentRequestDto();
+        // 모든 필드 명시적 초기화
+        defaultRequest.setPage(0);
+        defaultRequest.setSize(10);
+        defaultRequest.setRentCode(null);  // 명시적으로 null 설정
+        defaultRequest.setSearchType(null);
+        defaultRequest.setSearchKeyword(null);
+        defaultRequest.setRentStatus("OVERDUE");
+
+        PageRentResponseDto rents = rentService.searchRents(defaultRequest);
+        model.addAttribute("rents", rents);
+        model.addAttribute("searchCondition", defaultRequest);
+        return "admin/rents/list";
+    }
+
 }
