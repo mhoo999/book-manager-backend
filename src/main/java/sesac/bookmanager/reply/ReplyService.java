@@ -15,6 +15,8 @@ import sesac.bookmanager.reply.data.ReplyResponse;
 import sesac.bookmanager.reply.data.ReplyUpdateRequest;
 import sesac.bookmanager.user.UserRepository;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,6 +38,7 @@ public class ReplyService {
                 .content(request.getContent())
                 .admin(admin)
                 .question(question)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Reply savedReply = replyRepository.save(newReplyToQuestion);
