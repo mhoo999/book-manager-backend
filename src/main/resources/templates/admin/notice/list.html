@@ -58,89 +58,86 @@
     </style>
 </head>
 <body class="bg-gray-50">
-<!-- 헤더 -->
-<header th:replace="fragments/header :: siteHeader"></header>
+    <header th:replace="~{fragments/header :: siteHeader}"></header>
+    <main class="max-w-screen-xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-6">📢 공지사항</h2>
 
-<!-- 본문 -->
-<main class="max-w-screen-xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold mb-6">📢 공지사항</h2>
-
-    <!-- 검색 UI -->
-    <!-- 검색 UI -->
-    <div class="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
-        <div class="flex flex-1 items-center space-x-4">
-            <div>
-                <select class="border px-3 py-2 rounded">
-                    <option>제목</option>
-                    <option>내용</option>
-                </select>
+        <!-- 검색 UI -->
+        <!-- 검색 UI -->
+        <div class="flex flex-col md:flex-row md:items-center md:space-x-4 mb-6">
+            <div class="flex flex-1 items-center space-x-4">
+                <div>
+                    <select class="border px-3 py-2 rounded">
+                        <option>제목</option>
+                        <option>내용</option>
+                    </select>
+                </div>
+                <div class="flex space-x-2">
+                    <input type="text" placeholder="검색어 입력" class="border px-3 py-2 rounded w-64">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
+                </div>
             </div>
-            <div class="flex space-x-2">
-                <input type="text" placeholder="검색어 입력" class="border px-3 py-2 rounded w-64">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">검색</button>
+            <div class="mt-2 md:mt-0 md:ml-auto">
+                <a th:href="@{/admin/notice/create}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block text-center">공지등록</a>
             </div>
         </div>
-        <div class="mt-2 md:mt-0 md:ml-auto">
-            <a th:href="@{/admin/notice/create}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 inline-block text-center">공지등록</a>
+
+        <!-- 공지 테이블 -->
+        <div class="overflow-x-auto bg-white border rounded shadow">
+            <table class="min-w-full text-center">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 border">번호</th>
+                    <th class="px-4 py-2 border">카테고리</th>
+                    <th class="px-4 py-2 border">제목</th>
+                    <th class="px-4 py-2 border">작성자</th>
+                    <th class="px-4 py-2 border">등록일</th>
+                    <th class="px-4 py-2 border">조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="notice : ${notices}">
+                    <td th:text="${notice.noticeId}" class="px-4 py-2 border"></td>
+                    <td th:text="${notice.type.label}" class="px-4 py-2 border"></td>
+                    <td class="px-4 py-2 border text-left pl-6">
+                        <a th:href="@{/admin/notice/{noticeId}(noticeId=${notice.noticeId})}"
+                           th:text="${notice.title}"
+                           class="text-blue-600 hover:underline"></a>
+                    </td>
+                    <td class="px-4 py-2 border">관리자</td>
+                    <td class="px-4 py-2 border" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}"></td>
+                    <td class="px-4 py-2 border" th:text="${notice.views}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
 
-    <!-- 공지 테이블 -->
-    <div class="overflow-x-auto bg-white border rounded shadow">
-        <table class="min-w-full text-center">
-            <thead class="bg-gray-100">
-            <tr>
-                <th class="px-4 py-2 border">번호</th>
-                <th class="px-4 py-2 border">카테고리</th>
-                <th class="px-4 py-2 border">제목</th>
-                <th class="px-4 py-2 border">작성자</th>
-                <th class="px-4 py-2 border">등록일</th>
-                <th class="px-4 py-2 border">조회수</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="notice : ${notices}">
-                <td th:text="${notice.noticeId}" class="px-4 py-2 border"></td>
-                <td th:text="${notice.type.label}" class="px-4 py-2 border"></td>
-                <td class="px-4 py-2 border text-left pl-6">
-                    <a th:href="@{/admin/notice/{noticeId}(noticeId=${notice.noticeId})}"
-                       th:text="${notice.title}"
-                       class="text-blue-600 hover:underline"></a>
-                </td>
-                <td class="px-4 py-2 border">관리자</td>
-                <td class="px-4 py-2 border" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}"></td>
-                <td class="px-4 py-2 border" th:text="${notice.views}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- 페이지네이션 -->
+        <div class="mt-6 flex justify-center">
+            <nav class="inline-flex space-x-1">
+                <a th:if="${page > 1}"
+                   th:href="@{/admin/notice(page=${page - 1})}"
+                   class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
 
-    <!-- 페이지네이션 -->
-    <div class="mt-6 flex justify-center">
-        <nav class="inline-flex space-x-1">
-            <a th:if="${page > 1}"
-               th:href="@{/admin/notice(page=${page - 1})}"
-               class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+                <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+                   th:href="@{/admin/notice(page=${i})}"
+                   th:text="${i}"
+                   th:classappend="${i == page} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
+                   class="px-3 py-1 border border-gray-300 rounded">
+                </a>
 
-            <a th:each="i : ${#numbers.sequence(1, totalPages)}"
-               th:href="@{/admin/notice(page=${i})}"
-               th:text="${i}"
-               th:classappend="${i == page} ? 'bg-blue-500 text-white' : 'bg-white hover:bg-gray-100'"
-               class="px-3 py-1 border border-gray-300 rounded">
-            </a>
-
-            <a th:if="${page < totalPages}"
-               th:href="@{/admin/notice(page=${page + 1})}"
-               class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
-        </nav>
-    </div>
-</main>
+                <a th:if="${page < totalPages}"
+                   th:href="@{/admin/notice(page=${page + 1})}"
+                   class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+            </nav>
+        </div>
+    </main>
 
 <!-- 푸터 -->
-<footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-        상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
-    </div>
-</footer>
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+            상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
+        </div>
+    </footer>
 </body>
 </html>

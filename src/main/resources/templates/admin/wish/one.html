@@ -58,85 +58,84 @@
     </style>
 </head>
 <body class="bg-gray-50">
-<!-- 헤더 -->
-<header th:replace="fragments/header :: siteHeader"></header>
+    <header th:replace="fragments/header :: siteHeader"></header>
 
-<!-- 본문 -->
-<main class="max-w-screen-xl mx-auto px-4 py-10">
-    <h2 class="text-2xl font-bold mb-6">📖 신청도서</h2>
+    <!-- 본문 -->
+    <main class="max-w-screen-xl mx-auto px-4 py-10">
+        <h2 class="text-2xl font-bold mb-6">📖 신청도서</h2>
 
-    <!-- 도서 정보 -->
-    <section class="bg-white p-6 rounded shadow space-y-6 mb-10">
-        <h3 class="text-lg font-bold text-gray-800 border-b pb-2">📘 도서정보</h3>
-        <div class="grid grid-cols-2 gap-6">
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">도서명</label>
-                <input type="text" th:value="${wish.bookName}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+        <!-- 도서 정보 -->
+        <section class="bg-white p-6 rounded shadow space-y-6 mb-10">
+            <h3 class="text-lg font-bold text-gray-800 border-b pb-2">📘 도서정보</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">도서명</label>
+                    <input type="text" th:value="${wish.bookName}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">출판사</label>
+                    <input type="text" th:value="${wish.publisher}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">저자</label>
+                    <input type="text" th:value="${wish.author}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
+
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">출판일</label>
+                    <input type="text" th:value="${wish.publishDate}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
             </div>
+        </section>
 
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">출판사</label>
-                <input type="text" th:value="${wish.publisher}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
-            </div>
+        <!-- 신청자 정보 -->
+        <section class="bg-white p-6 rounded shadow space-y-6 mb-10">
+            <h3 class="text-lg font-bold text-gray-800 border-b pb-2">👤 신청자 정보</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">신청자 이름</label>
+                    <input type="text" th:value="${wish.userName}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
 
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">저자</label>
-                <input type="text" th:value="${wish.author}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
-            </div>
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">이메일</label>
+                    <input type="text" th:value="${wish.userEmail}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
 
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">출판일</label>
-                <input type="text" th:value="${wish.publishDate}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">전화번호</label>
+                    <input type="text" th:value="${wish.userPhone}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
+                </div>
+
+                <form id="wishStatusForm" th:action="@{/admin/wish/{wishId}/progress(wishId=${wishId})}" th:object="${WishStatusUpdateRequest}" method="post">
+                <div>
+                    <label class="block text-gray-600 font-medium mb-1">처리상태</label>
+                    <select th:field="*{status}" class="w-full px-4 py-2 border rounded">
+                        <option th:value="EXAMINING" th:text="검토중"></option>
+                        <option th:value="APPROVED" th:text="승인됨"></option>
+                        <option th:value="PURCHASE" th:text="구매중"></option>
+                        <option th:value="STOCK" th:text="입고완료"></option>
+                        <option th:value="REJECTED" th:text="반려됨"></option>
+                    </select>
+                </div>
+                </form>
             </div>
+        </section>
+
+        <!-- 버튼 영역 -->
+        <div class="flex justify-end space-x-2">
+            <button type="submit" form="wishStatusForm" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">상태변경</button>
+            <a th:href="@{/admin/wish}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">목록으로</a>
         </div>
-    </section>
+    </main>
 
-    <!-- 신청자 정보 -->
-    <section class="bg-white p-6 rounded shadow space-y-6 mb-10">
-        <h3 class="text-lg font-bold text-gray-800 border-b pb-2">👤 신청자 정보</h3>
-        <div class="grid grid-cols-2 gap-6">
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">신청자 이름</label>
-                <input type="text" th:value="${wish.userName}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
-            </div>
-
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">이메일</label>
-                <input type="text" th:value="${wish.userEmail}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
-            </div>
-
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">전화번호</label>
-                <input type="text" th:value="${wish.userPhone}" class="w-full px-4 py-2 border rounded bg-gray-100" readonly>
-            </div>
-
-            <form id="wishStatusForm" th:action="@{/admin/wish/{wishId}/progress(wishId=${wishId})}" th:object="${WishStatusUpdateRequest}" method="post">
-            <div>
-                <label class="block text-gray-600 font-medium mb-1">처리상태</label>
-                <select th:field="*{status}" class="w-full px-4 py-2 border rounded">
-                    <option th:value="EXAMINING" th:text="검토중"></option>
-                    <option th:value="APPROVED" th:text="승인됨"></option>
-                    <option th:value="PURCHASE" th:text="구매중"></option>
-                    <option th:value="STOCK" th:text="입고완료"></option>
-                    <option th:value="REJECTED" th:text="반려됨"></option>
-                </select>
-            </div>
-            </form>
+    <!-- 푸터 -->
+    <footer class="bg-white border-t mt-12">
+        <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+            상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
         </div>
-    </section>
-
-    <!-- 버튼 영역 -->
-    <div class="flex justify-end space-x-2">
-        <button type="submit" form="wishStatusForm" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">상태변경</button>
-        <a th:href="@{/admin/wish}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">목록으로</a>
-    </div>
-</main>
-
-<!-- 푸터 -->
-<footer class="bg-white border-t mt-12">
-    <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-        상호: 북매니저 | 전화: 010-7294-3724 | 이메일: admin@bookmanager.com
-    </div>
-</footer>
-</body>
+    </footer>
+    </body>
 </html>
