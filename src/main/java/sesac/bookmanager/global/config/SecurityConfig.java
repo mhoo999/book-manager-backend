@@ -21,6 +21,8 @@ import sesac.bookmanager.security.AuthAdminDetailService;
 import sesac.bookmanager.security.AuthUserDetailService;
 import sesac.bookmanager.security.JwtAuthenticationFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -80,6 +82,7 @@ public class SecurityConfig {
     @Order(2) // 포함 관계 때문에 넓은 경로는 나중에 매칭
     public SecurityFilterChain userSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(withDefaults())
                 .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable) // JWT는 CSRF 필요 없음
                 .sessionManagement(session -> session

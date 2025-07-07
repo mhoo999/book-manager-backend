@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.admin.data.Admin;
 import sesac.bookmanager.admin.AdminRepository;
 import sesac.bookmanager.book.domain.BookItem;
+import sesac.bookmanager.book.enums.BookStatus;
 import sesac.bookmanager.book.repository.BookItemRepository;
 import sesac.bookmanager.rent.domain.Rent;
 import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
@@ -40,13 +41,20 @@ public class RentService {
         User user = userRepository.findById(customUserDetails.getUser().getId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다: " + customUserDetails.getUser().getId()));
 
-        BookItem bookItem = bookItemRepository.findByBookCode(request.getBookCode())
-                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 도서가 존재하지 않습니다: " + request.getBookCode()));
+        BookItem bookItem = bookItemRepository.findByBookCodeWithLock(request.getBookCode())
+                .orElseThrow(() -> new EntityNotFoundException("해당 도서 코드를 가진 도서가 존재하지 않습니다: " + request.getBookCode()));
+
+        if (bookItem.getStatus() != BookStatus.RENTABLE) {
+            throw new IllegalStateException("현재 대여 불가능한 도서입니다. 상태: " + bookItem.getStatus());
+        }
+
+        bookItem.setStatus(BookStatus.RENTED);
 
         Rent rent = new Rent();
         rent.setUser(user);
         rent.setBookItem(bookItem);
         rent.setStatus(RentStatus.REQUESTED);
+        rent.setRentalDate(LocalDateTime.now());
 
         Rent savedRent = rentRepository.save(rent);
         return new RentIdResponseDto(savedRent.getId());

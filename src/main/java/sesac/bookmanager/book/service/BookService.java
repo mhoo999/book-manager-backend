@@ -2,8 +2,10 @@ package sesac.bookmanager.book.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,7 +32,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -44,16 +45,16 @@ public class BookService {
     private final String STATIC_PATH = "src/main/resources/static";
 
     public BookIdResponseDto createBook(CreateBookRequestDto request) {
-        // 카테고리 유효성 검증
-        if (!categoryService.isValidCategoryCode(request.getCategory())) {
-            throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
-        }
-
-        Book book = new Book();
-        book.setTitle(request.getTitle());
-        book.setAuthor(request.getAuthor());
-        book.setPublisher(request.getPublisher());
-        if (request.getPublishedAt() != null) {
+        try {
+            // 카테고리 유효성 검증
+            if (!categoryService.isValidCategoryCode(request.getCategory())) {
+                throw new IllegalArgumentException("존재하지 않는 카테고리 코드입니다: " + request.getCategory());
+            }
+          
+            Book book = new Book();
+            book.setTitle(request.getTitle());
+            book.setAuthor(request.getAuthor());
+            book.setPublisher(request.getPublisher());
             book.setPublishedAt(request.getPublishedAt().atStartOfDay());
         } else {
             book.setPublishedAt(null);
@@ -88,10 +89,15 @@ public class BookService {
                 bookItem.setStatus(status);
                 book.addBookItem(bookItem);
             }
-        }
 
-        Book savedBook = bookRepository.save(book);
-        return new BookIdResponseDto(savedBook.getId());
+            Book savedBook = bookRepository.save(book);
+            return new BookIdResponseDto(savedBook.getId());
+        } catch (DataIntegrityViolationException e) {
+            if (e.getMessage().contains("Duplicate entry")) {
+                throw new RuntimeException("도서 코드 중복이 발생했습니다. 다시 시도해주세요.");
+            }
+            throw e;
+        }
     }
 
     /**
@@ -116,11 +122,9 @@ public class BookService {
             // 파일 저장 (기존 파일 덮어쓰기)
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            log.info("파일 저장 성공: {}", filePath);
             return "/images/covers/" + isbn + "/" + fileName;
 
         } catch (IOException e) {
-            log.error("파일 저장 실패: {}", e.getMessage(), e);
             throw new RuntimeException("파일 저장 중 오류가 발생했습니다: " + e.getMessage(), e);
         }
     }

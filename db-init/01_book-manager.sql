@@ -39,7 +39,7 @@ CREATE TABLE `book` (
 
 CREATE TABLE `book_item` (
 	`book_item_id`	BIGINT	NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `book_item_code` VARCHAR(255) NOT NULL ,
+    `book_item_code` VARCHAR(255) NOT NULL UNIQUE ,
 	`book_id`	BIGINT	NOT NULL,
 	`status`	VARCHAR(20) NOT NULL,
 	`created_at`	datetime	NOT NULL DEFAULT CURRENT_TIMESTAMP,

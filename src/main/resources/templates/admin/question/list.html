@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <title>북매니저</title>
@@ -56,10 +56,11 @@
 
 
     </style>
+    <script src="/Global/js/GlobalNavBarHover.js" defer></script>
 </head>
 <body class="bg-gray-50">
 <!-- 헤더 -->
-<header th:replace="fragments/header :: siteHeader"></header>
+<header th:replace="~{fragments/header :: siteHeader}"></header>
 
 <!-- 본문 -->
 <main class="max-w-screen-xl mx-auto px-4 py-8">
@@ -82,7 +83,7 @@
                 <td th:text="${question.questionId}" class="px-4 py-2 border"></td>
                 <td th:text="${question.questionType ? '문의' : '오류신고'}" class="px-4 py-2 border"></td>
                 <td class="px-4 py-2 border text-left pl-6">
-                    <a th:href="@{/admin/question/{questionId}(qustionId=${question.questionId})}" th:text="${question.title}" class="text-blue-600 hover:underline"></a>
+                    <a th:href="@{/admin/question/{questionId}(questionId=${question.questionId})}" th:text="${question.title}" class="text-blue-600 hover:underline"></a>
                 </td>
                 <td th:text="${question.userName}" class="px-4 py-2 border"></td>
                 <td th:text="${question.createdAt}" class="px-4 py-2 border"></td>
