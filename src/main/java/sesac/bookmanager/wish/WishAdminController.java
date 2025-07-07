@@ -25,11 +25,11 @@ public class WishAdminController {
         if(page == null || page < 1) {
             pageResponse = wishService.getWishlist(new WishSearchRequest());
         } else {
-            pageResponse = wishService.getWishlist(new WishSearchRequest(page - 1, 5));
+            pageResponse = wishService.getWishlist(new WishSearchRequest(page - 1, 10));
         }
 
         model.addAttribute("page", pageResponse.getPage() + 1);
-        model.addAttribute("totalPages", pageResponse.getTotalPages());
+        model.addAttribute("totalPages", (pageResponse.getTotalPages() > 0) ? pageResponse.getTotalPages() : 1);
         model.addAttribute("totalCount", pageResponse.getTotalCount());
         model.addAttribute("wishes", pageResponse.getWishes());
 

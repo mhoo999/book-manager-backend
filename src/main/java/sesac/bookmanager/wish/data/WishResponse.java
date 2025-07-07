@@ -36,7 +36,7 @@ public class WishResponse {
                 wish.getBookName(),
                 wish.getAuthor(),
                 wish.getPublisher(),
-                wish.getPublishDate().toLocalDate(),
+                (wish.getPublishDate() != null) ? wish.getPublishDate().toLocalDate() : null,
                 wish.getUser().getEmail(),
                 wish.getUser().getName(),
                 wish.getUser().getPhone()
