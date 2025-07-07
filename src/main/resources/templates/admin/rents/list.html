@@ -137,25 +137,9 @@
             <div th:case="'OVERDUE'" class="text-red-600">미납중</div>
             <div th:case="'REQUESTED'" class="text-blue-600">대여요청</div>
             <div th:case="'RETURNED'" class="text-gray-600">반납</div>
+            <div th:case="'REJECTED'" class="text-gray-600">거절</div>
             <div th:case="*">대여중</div>
           </div>
-
-          <!-- 상태별 버튼 -->
-          <button th:if="${rent.rentStatus == 'OVERDUE'}"
-                  class="mt-1 px-2 py-1 bg-red-500 text-white text-sm rounded"
-                  onclick="alert('반납 처리 기능은 상세 페이지에서 구현 예정')">반납처리</button>
-
-          <button th:if="${rent.rentStatus == 'REQUESTED'}"
-                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
-                  onclick="alert('대여 처리 기능은 상세 페이지에서 구현 예정')">대여처리</button>
-
-          <button th:if="${rent.rentStatus == 'RENTED'}"
-                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
-                  onclick="alert('반납 처리 기능은 상세 페이지에서 구현 예정')">반납처리</button>
-
-          <button th:if="${rent.rentStatus == 'RETURNED'}"
-                  class="mt-1 px-2 py-1 bg-gray-300 text-sm rounded"
-                  onclick="alert('대여 처리 기능은 상세 페이지에서 구현 예정')">대여처리</button>
         </td>
       </tr>
       </tbody>

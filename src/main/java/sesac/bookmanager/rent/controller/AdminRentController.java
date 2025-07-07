@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
+import sesac.bookmanager.rent.dto.request.UpdateRentMemoRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
@@ -81,10 +83,36 @@ public class AdminRentController {
         return "admin/rents/list";
     }
 
+    @GetMapping("/overdue")
+    public String rentListWithOverdue(Model model) {
+        SearchRentRequestDto defaultRequest = new SearchRentRequestDto();
+        // 모든 필드 명시적 초기화
+        defaultRequest.setPage(0);
+        defaultRequest.setSize(10);
+        defaultRequest.setRentCode(null);  // 명시적으로 null 설정
+        defaultRequest.setSearchType(null);
+        defaultRequest.setSearchKeyword(null);
+        defaultRequest.setRentStatus("OVERDUE");
+
+        PageRentResponseDto rents = rentService.searchRents(defaultRequest);
+        model.addAttribute("rents", rents);
+        model.addAttribute("searchCondition", defaultRequest);
+        return "admin/rents/list";
+    }
+
     @PostMapping("/{rentId}/memo")
-    public String saveMemo(@PathVariable Long rentId,
-                           @RequestParam String description) {
-        // 메모 저장 로직
+    public String updateRentMemo(
+            @PathVariable Long rentId,
+            @ModelAttribute UpdateRentMemoRequestDto request,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            rentService.updateRentMemo(rentId, request.getDescription());
+            redirectAttributes.addFlashAttribute("message", "메모가 성공적으로 저장되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "메모 저장에 실패했습니다: " + e.getMessage());
+        }
+
         return "redirect:/admin/v1/rents/" + rentId;
     }
 
