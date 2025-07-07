@@ -89,7 +89,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 상태 유지 안 함
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/home","/api/auth/**").permitAll() // 회원가입, 로그인 등 공개 API
+                        .requestMatchers("/","/home","/api/auth/**","/api/notice/**,",
+                                "/api/question","/api/reply/**","/api/v1/books/**").permitAll()
                         .anyRequest().authenticated() // 그 외는 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가
