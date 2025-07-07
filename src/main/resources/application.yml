@@ -13,11 +13,26 @@ spring:
       hibernate:
         format_sql: true
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 200MB
 
 server:
   servlet:
     session:
       timeout: 10m
+
+  tomcat:
+    max-parameter-count: -1
+    max-http-form-post-size: -1
+    max-swallow-size: -1
+    connection-timeout: 120000
+    max-connections: 20000
+    accept-count: 2000
+    max-keep-alive-requests: -1
+    keep-alive-timeout: 60000
 
 jwt:
   secret: VzS3N6v9y$B&E)H@McQfTjWnZr4u7x!A%D*F-JaNdRgUkXp2s5v8y/B?E(H+KbPe
@@ -28,3 +43,6 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.apache.catalina: INFO
+    org.apache.coyote: INFO
+    org.apache.tomcat: INFO
