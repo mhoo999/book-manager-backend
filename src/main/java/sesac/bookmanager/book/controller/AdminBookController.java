@@ -44,14 +44,13 @@ public class AdminBookController {
     @PostMapping("/register")
     public String createBook(
             @Valid @ModelAttribute CreateBookRequestDto request,
-            @RequestParam(value = "cover", required = false) MultipartFile coverFile, // 따로 받기
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes)
     {
+        /// ////////////
+        MultipartFile coverFile = request.getCoverFile();
 
-        // coverFile을 request에 수동으로 설정
-        request.setCoverFile(coverFile);
 
         // 카테고리 코드 형식 검증
         if (request.getCategory() == null || request.getCategory().length() != 6) {

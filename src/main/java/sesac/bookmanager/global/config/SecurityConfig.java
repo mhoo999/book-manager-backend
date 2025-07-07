@@ -40,15 +40,12 @@ public class SecurityConfig {
                 .securityMatcher("/admin/**")
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 세션 기반은 CSRF 활성화
-                        .ignoringRequestMatchers("/admin/v1/books/register", "/admin/v1/books/*/edit") // 파일 업로드 경로는 CSRF 검증 무시
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/auth/login").permitAll()
-                        .requestMatchers("/uploads/**").permitAll() // 정적 리소스 접근 허용
-                        .requestMatchers("/images/**").permitAll() // static 이미지 접근 허용
                         .anyRequest().hasRole("ADMIN") // anyRequest는 반드시 마지막에
                 )
                 // 필터 내용 포함
