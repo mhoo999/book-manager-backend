@@ -24,7 +24,7 @@ public class WishCreateRequest {
         wish.setBookName(bookName);
         wish.setAuthor(author);
         wish.setPublisher(publisher);
-        wish.setPublishDate(publishDate.atStartOfDay());
+        wish.setPublishDate((publishDate != null) ? publishDate.atStartOfDay() : null);
 
         return wish;
     }
