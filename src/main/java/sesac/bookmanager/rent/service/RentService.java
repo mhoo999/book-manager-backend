@@ -78,41 +78,70 @@ public class RentService {
                 .orElseThrow(() -> new IllegalArgumentException("대여 기록을 찾을 수 없습니다: " + rentId));
 
         RentStatus newStatus = request.getStatus();
+        validateStatusTransition(rent.getStatus(), newStatus);
 
         switch (newStatus) {
             case RENTED:
-                if (rent.getStatus() != RentStatus.REQUESTED) {
-                    throw new IllegalStateException("대여요청 상태에서만 대여중으로 변경할 수 있습니다.");
-                }
                 rent.setStatus(RentStatus.RENTED);
                 rent.setRentalDate(LocalDateTime.now());
                 rent.setExpectedReturnDate(LocalDate.now().plusWeeks(2));
-                int adminId = customAdminDetails.getAdmin().getId();
-                Admin admin = adminRepository.findById(adminId)
-                        .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 관리자가 존재하지 않습니다: " + adminId));
-                rent.setAdmin(admin);
+                rent.setAdmin(getAdminFromDetails(customAdminDetails));
                 break;
             case RETURNED:
-                if (rent.getStatus() != RentStatus.RENTED && rent.getStatus() != RentStatus.OVERDUE) {
-                    throw new IllegalStateException("대여중 또는 미납 상태에서만 반납할 수 있습니다.");
-                }
                 rent.setStatus(RentStatus.RETURNED);
+                rent.setExpectedReturnDate(LocalDate.now()); // Consider adding this field
                 break;
             case OVERDUE:
-                if (rent.getStatus() != RentStatus.RENTED) {
-                    throw new IllegalStateException("대여중 상태에서만 미납으로 변경할 수 있습니다.");
-                }
                 rent.setStatus(RentStatus.OVERDUE);
                 break;
             case REJECTED:
-                if (rent.getStatus() != RentStatus.REQUESTED) {
-                    throw new IllegalStateException("대여요청 상태에서만 거절로 변경할 수 있습니다.");
-                }
                 rent.setStatus(RentStatus.REJECTED);
+                rent.setAdmin(getAdminFromDetails(customAdminDetails));
+                break;
             default:
                 throw new IllegalArgumentException("유효하지 않은 상태입니다: " + newStatus);
         }
 
-        return new RentIdResponseDto(rent.getId());
+        Rent savedRent = rentRepository.save(rent);
+        return new RentIdResponseDto(savedRent.getId());
+    }
+
+    private void validateStatusTransition(RentStatus currentStatus, RentStatus newStatus) {
+        switch (newStatus) {
+            case RENTED:
+            case REJECTED:
+                if (currentStatus != RentStatus.REQUESTED) {
+                    throw new IllegalStateException("대여요청 상태에서만 " +
+                            (newStatus == RentStatus.RENTED ? "대여중" : "거절") + "으로 변경할 수 있습니다.");
+                }
+                break;
+            case RETURNED:
+                if (currentStatus != RentStatus.RENTED && currentStatus != RentStatus.OVERDUE) {
+                    throw new IllegalStateException("대여중 또는 미납 상태에서만 반납할 수 있습니다.");
+                }
+                break;
+            case OVERDUE:
+                if (currentStatus != RentStatus.RENTED) {
+                    throw new IllegalStateException("대여중 상태에서만 미납으로 변경할 수 있습니다.");
+                }
+                break;
+        }
+    }
+
+    private Admin getAdminFromDetails(CustomAdminDetails customAdminDetails) {
+        int adminId = customAdminDetails.getAdmin().getId();
+        return adminRepository.findById(adminId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 아이디를 가진 관리자가 존재하지 않습니다: " + adminId));
+    }
+
+    // RentService.java에 추가
+    public RentIdResponseDto updateRentMemo(Long rentId, String description) {
+        Rent rent = rentRepository.findById(rentId)
+                .orElseThrow(() -> new IllegalArgumentException("대여 기록을 찾을 수 없습니다: " + rentId));
+
+        rent.setDescription(description);
+
+        Rent savedRent = rentRepository.save(rent);
+        return new RentIdResponseDto(savedRent.getId());
     }
 }
