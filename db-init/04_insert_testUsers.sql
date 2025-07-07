@@ -1,4 +1,4 @@
-INSERT INTO user (user_id, email, name, phone, pwd, is_deleted, created_at, updated_at, deleted_at) VALUES
-                                                                                                        (1, 'user1@example.com', '홍길동', '010-1234-5678', '$2a$10$encryptedPwd1', false, NOW() - INTERVAL 10 DAY, NOW() - INTERVAL 5 DAY, NULL),
-                                                                                                        (2, 'user2@example.com', '김철수', '010-9876-5432', '$2a$10$encryptedPwd2', false, NOW() - INTERVAL 1 MONTH, NOW() - INTERVAL 20 DAY, NULL),
-                                                                                                        (3, 'user3@example.com', '이영희', '010-2432-2343', '$2a$10$encryptedPwd3', true, NOW() - INTERVAL 1 YEAR, NOW() - INTERVAL 6 MONTH, NOW() - INTERVAL 5 MONTH);
+INSERT INTO user (
+    email, name, phone, pwd, is_deleted, created_at
+) VALUES ('example@email.com1','홍길동','010-1234-5678','$2a$12$R6Uu24.vh/XB2ASdxXbWsun6uBYXBNrNUQtGc9S6wn91o/uzaXPDq',0,NOW()), --hashed_password
+         ('example@email.com2','홍길동2','010-1234-5678','$2a$12$R6Uu24.vh/XB2ASdxXbWsun6uBYXBNrNUQtGc9S6wn91o/uzaXPDq',0,NOW()) --user1234
