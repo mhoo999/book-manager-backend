@@ -3,6 +3,7 @@ package sesac.bookmanager.book.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import sesac.bookmanager.book.domain.Book;
 
 @Data
@@ -14,15 +15,5 @@ public class UpdateBookRequestDto {
     private String publisher;
     private String location;
     private String cover;
-
-    public Book toDomain() {
-        Book book = new Book();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPublisher(publisher);
-        book.setLocation(location);
-        book.setCover(cover);
-
-        return book;
-    }
+    private MultipartFile coverFile;
 }

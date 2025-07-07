@@ -44,11 +44,11 @@ public class SecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 세션 기반은 CSRF 활성화
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 필요 시 생성
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/auth/login").permitAll()
-                        .anyRequest().hasRole("ADMIN")
+                        .anyRequest().hasRole("ADMIN") // anyRequest는 반드시 마지막에
                 )
                 // 필터 내용 포함
                 .formLogin(form -> form

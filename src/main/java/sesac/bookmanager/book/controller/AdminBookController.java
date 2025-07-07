@@ -1,5 +1,6 @@
 package sesac.bookmanager.book.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sesac.bookmanager.category.domain.Category;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
@@ -44,7 +46,11 @@ public class AdminBookController {
             @Valid @ModelAttribute CreateBookRequestDto request,
             BindingResult bindingResult,
             Model model,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes)
+    {
+        /// ////////////
+        MultipartFile coverFile = request.getCoverFile();
+
 
         // 카테고리 코드 형식 검증
         if (request.getCategory() == null || request.getCategory().length() != 6) {
