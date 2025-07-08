@@ -53,6 +53,9 @@ public class NoticeAdminController {
     @GetMapping("/{noticeId}")
     public String getNoticeById(@PathVariable Integer noticeId, Model model) {
         NoticeResponse response = noticeService.getNoticeByIdWithViewCounting(noticeId);
+
+        response.setContent(response.getContent().replace("\n", "<br />"));
+
         model.addAttribute("notice", response);
         model.addAttribute("noticeTypes", NoticeType.values());
         return "/admin/notice/one";
