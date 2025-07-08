@@ -28,8 +28,10 @@ public class RentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<PageRentResponseDto> searchRents(SearchRentRequestDto request) {
-        return ResponseEntity.ok(rentService.searchRents(request));
+    public ResponseEntity<PageRentResponseDto> searchRents(
+            SearchRentRequestDto request,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(rentService.searchRentsById(request, customUserDetails));
     }
 
     @GetMapping("/{rentId}")

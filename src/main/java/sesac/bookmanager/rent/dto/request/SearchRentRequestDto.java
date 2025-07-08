@@ -14,6 +14,7 @@ public class SearchRentRequestDto {
 
     // 기존 필드들
     private Integer rentCode;
+    private Integer userId;
     private String username;
     private String bookCode;
     private String bookName;

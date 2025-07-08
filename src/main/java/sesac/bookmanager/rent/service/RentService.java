@@ -168,4 +168,12 @@ public class RentService {
         dashboard.setOverdueRentCount(getOverdueRentCount());
         return dashboard;
     }
+
+    @Transactional(readOnly = true)
+    public PageRentResponseDto searchRentsById(SearchRentRequestDto request, CustomUserDetails customUserDetails) {
+        int userId = customUserDetails.getUser().getId();
+        request.setUserId(userId);
+        Page<RentResponseDto> page = rentRepository.searchRents(request);
+        return PageRentResponseDto.from(page.getContent(), request, page.getTotalElements());
+    }
 }
