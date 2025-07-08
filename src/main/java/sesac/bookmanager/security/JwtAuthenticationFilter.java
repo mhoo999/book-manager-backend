@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final jwtTokenProvider jwtTokenProvider;
     private static final List<String> WHITELIST = List.of(
-            "/", "/home", "/api/auth", "/api/notice", "/api/question", "/api/reply", "/api/v1/books"
+            "/home", "/api/auth", "/api/notice", "/api/question", "/api/reply", "/api/v1/books"
     );
 
     @Autowired
