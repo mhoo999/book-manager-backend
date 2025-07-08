@@ -59,7 +59,7 @@ public class WishAdminController {
 
 
     @ResponseBody
-    @GetMapping("/statistics")
+    @GetMapping("/status")
     public ResponseEntity<WishStatisticsResponse> getStatistics() {
 
         return ResponseEntity.ok(wishService.getStatistics());
