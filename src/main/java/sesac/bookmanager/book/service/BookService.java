@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -213,13 +214,31 @@ public class BookService {
         return new BookIdResponseDto(book.getId());
     }
 
+    @Transactional(readOnly = true)
     public Integer getTotalBookCount() {
         return Math.toIntExact(bookRepository.count());
     }
 
+    @Transactional(readOnly = true)
     public BookDashboardResponseDto getDashboardInfo() {
         BookDashboardResponseDto dashboard = new BookDashboardResponseDto();
         dashboard.setTotalBookCount(getTotalBookCount());
         return dashboard;
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookResponseDto> getRecommendedBooks(int limit) {
+        return bookRepository.findRecommendedBooks(PageRequest.of(0, limit))
+                .stream()
+                .map(BookResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<BookResponseDto> getNewBooks(int limit) {
+        return bookRepository.findNewBooks(PageRequest.of(0, limit))
+                .stream()
+                .map(BookResponseDto::from)
+                .collect(Collectors.toList());
     }
 }
