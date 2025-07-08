@@ -56,4 +56,12 @@ public class WishAdminController {
         wishService.updateProgress(wishId, request);
         return "redirect:/admin/wish/" + wishId;
     }
+
+
+    @ResponseBody
+    @GetMapping("/statistics")
+    public ResponseEntity<WishStatisticsResponse> getStatistics() {
+
+        return ResponseEntity.ok(wishService.getStatistics());
+    }
 }
