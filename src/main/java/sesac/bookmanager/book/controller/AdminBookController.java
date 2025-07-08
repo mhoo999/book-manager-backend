@@ -1,9 +1,9 @@
 package sesac.bookmanager.book.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,9 +48,6 @@ public class AdminBookController {
             Model model,
             RedirectAttributes redirectAttributes)
     {
-        /// ////////////
-        MultipartFile coverFile = request.getCoverFile();
-
 
         // 카테고리 코드 형식 검증
         if (request.getCategory() == null || request.getCategory().length() != 6) {
@@ -160,4 +157,12 @@ public class AdminBookController {
 
         return "admin/books/list";
     }
+
+    // 총 도서 수
+    @GetMapping("/total/status")
+    @ResponseBody
+    public ResponseEntity<Integer> getTotalBookCount() {
+        return ResponseEntity.ok(bookService.getTotalBookCount());
+    }
+
 }

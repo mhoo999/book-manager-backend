@@ -2,6 +2,7 @@ package sesac.bookmanager.rent.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -114,6 +115,27 @@ public class AdminRentController {
         }
 
         return "redirect:/admin/v1/rents/" + rentId;
+    }
+
+    // 오늘의 대여현황
+    @GetMapping("/today/status")
+    @ResponseBody
+    public ResponseEntity<Integer> getTodayRentCount() {
+        return ResponseEntity.ok(rentService.getTodayRentCount());
+    }
+
+    // 총 대여중인 도서 권수
+    @GetMapping("/total/status")
+    @ResponseBody
+    public ResponseEntity<Integer> getTotalRentCount() {
+        return ResponseEntity.ok(rentService.getTotalRentCount());
+    }
+
+    // 미납 도서 권수
+    @GetMapping("/overdue/status")
+    @ResponseBody
+    public ResponseEntity<Integer> getOverdueRentCount() {
+        return ResponseEntity.ok(rentService.getOverdueRentCount());
     }
 
 }

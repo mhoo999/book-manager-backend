@@ -144,4 +144,20 @@ public class RentService {
         Rent savedRent = rentRepository.save(rent);
         return new RentIdResponseDto(savedRent.getId());
     }
+
+    public Integer getTodayRentCount() {
+        return rentRepository.countRentsByDate(LocalDate.now())
+                .orElse(0);
+    }
+
+    public Integer getTotalRentCount() {
+        return rentRepository.countActiveRents()
+                .orElse(0);
+    }
+
+    public Integer getOverdueRentCount() {
+        return rentRepository.countOverdueRents()
+                .orElse(0);
+    }
+
 }

@@ -211,4 +211,9 @@ public class BookService {
 
         return new BookIdResponseDto(book.getId());
     }
+
+    public Integer getTotalBookCount() {
+        return Math.toIntExact(bookRepository.count());
+    }
+
 }
