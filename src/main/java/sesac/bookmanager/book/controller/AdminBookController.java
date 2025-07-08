@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sesac.bookmanager.book.dto.response.BookDashboardResponseDto;
 import sesac.bookmanager.category.domain.Category;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
 import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
@@ -158,11 +158,11 @@ public class AdminBookController {
         return "admin/books/list";
     }
 
-    // 총 도서 수
-    @GetMapping("/total/status")
+    // 대시보드 출력 정보
+    @GetMapping("/status")
     @ResponseBody
-    public ResponseEntity<Integer> getTotalBookCount() {
-        return ResponseEntity.ok(bookService.getTotalBookCount());
+    public ResponseEntity<BookDashboardResponseDto> getDashboardInfo() {
+        return ResponseEntity.ok(bookService.getDashboardInfo());
     }
 
 }

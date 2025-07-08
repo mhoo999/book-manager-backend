@@ -15,6 +15,7 @@ import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
+import sesac.bookmanager.rent.dto.response.RentDashboardResponseDto;
 import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.enums.RentStatus;
@@ -160,4 +161,11 @@ public class RentService {
                 .orElse(0);
     }
 
+    public RentDashboardResponseDto getDashboardInfo() {
+        RentDashboardResponseDto dashboard = new RentDashboardResponseDto();
+        dashboard.setTodayRentCount(getTodayRentCount());
+        dashboard.setTotalRentCount(getTotalRentCount());
+        dashboard.setOverdueRentCount(getOverdueRentCount());
+        return dashboard;
+    }
 }

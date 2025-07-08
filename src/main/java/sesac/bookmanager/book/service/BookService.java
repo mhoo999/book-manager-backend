@@ -16,6 +16,7 @@ import sesac.bookmanager.book.domain.BookItem;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
 import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
 import sesac.bookmanager.book.dto.request.UpdateBookRequestDto;
+import sesac.bookmanager.book.dto.response.BookDashboardResponseDto;
 import sesac.bookmanager.book.dto.response.BookIdResponseDto;
 import sesac.bookmanager.book.dto.response.BookResponseDto;
 import sesac.bookmanager.book.dto.response.PageBookResponseDto;
@@ -216,4 +217,9 @@ public class BookService {
         return Math.toIntExact(bookRepository.count());
     }
 
+    public BookDashboardResponseDto getDashboardInfo() {
+        BookDashboardResponseDto dashboard = new BookDashboardResponseDto();
+        dashboard.setTotalBookCount(getTotalBookCount());
+        return dashboard;
+    }
 }

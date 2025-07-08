@@ -13,6 +13,7 @@ import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentMemoRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
+import sesac.bookmanager.rent.dto.response.RentDashboardResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomAdminDetails;
@@ -117,25 +118,11 @@ public class AdminRentController {
         return "redirect:/admin/v1/rents/" + rentId;
     }
 
-    // 오늘의 대여현황
-    @GetMapping("/today/status")
+    // 대시보드 출력 정보
+    @GetMapping("/status")
     @ResponseBody
-    public ResponseEntity<Integer> getTodayRentCount() {
-        return ResponseEntity.ok(rentService.getTodayRentCount());
-    }
-
-    // 총 대여중인 도서 권수
-    @GetMapping("/total/status")
-    @ResponseBody
-    public ResponseEntity<Integer> getTotalRentCount() {
-        return ResponseEntity.ok(rentService.getTotalRentCount());
-    }
-
-    // 미납 도서 권수
-    @GetMapping("/overdue/status")
-    @ResponseBody
-    public ResponseEntity<Integer> getOverdueRentCount() {
-        return ResponseEntity.ok(rentService.getOverdueRentCount());
+    public ResponseEntity<RentDashboardResponseDto> getDashboardInfo() {
+        return ResponseEntity.ok(rentService.getDashboardInfo());
     }
 
 }
