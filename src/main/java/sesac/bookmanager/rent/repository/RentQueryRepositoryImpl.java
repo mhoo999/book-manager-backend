@@ -33,6 +33,10 @@ public class RentQueryRepositoryImpl implements RentQueryRepository {
             builder.and(rent.id.eq(request.getRentCode()));
         }
 
+        if (request.getUserId() != null && request.getUserId() > 0) {
+            builder.and(rent.user.id.eq(request.getUserId()));
+        }
+
         if (StringUtils.hasText(request.getUsername())) {
             builder.and(rent.user.name.containsIgnoreCase(request.getUsername()));
         }
