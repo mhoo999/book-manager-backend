@@ -55,4 +55,13 @@ public class WishService {
 
         return WishResponse.from(targetWish);
     }
+
+    public WishStatisticsResponse getStatistics() {
+        WishStatisticsResponse response = new WishStatisticsResponse();
+
+        response.setTotal(wishRepository.findAll().size());
+        response.setTotalUnsolved(wishRepository.findByStatusBetween(WishStatus.EXAMINING, WishStatus.APPROVED).size());
+
+        return response;
+    }
 }
