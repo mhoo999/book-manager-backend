@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.admin.data.AdminInfoDto;
 
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin/admins")
 @RequiredArgsConstructor
@@ -35,8 +37,8 @@ public class AdminController {
 
     @GetMapping("/status")
     @ResponseBody
-    public ResponseEntity<ApiResponse<Long>> getAllAdminsCount(){
-        return ResponseEntity.ok(ApiResponse.success(adminService.getCount()));
+    public ResponseEntity<ApiResponse<Map<String,Long>>> getAllAdminsCount(){
+        return ResponseEntity.ok(ApiResponse.success(Map.of("adminCount",adminService.getCount())));
     }
 
     @PostMapping("/{adminId}")

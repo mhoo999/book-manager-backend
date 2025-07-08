@@ -70,9 +70,9 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📚 대여현황</h3>
         <ul class="text-sm space-y-1">
-          <li>오늘의 대여현황: 12건</li>
-          <li>총 대여중인 도서 권수: 128권</li>
-          <li>미납 도서 권수: 7권</li>
+          <li>오늘의 대여현황: <span>0</span>건</li>
+          <li>총 대여중인 도서 권수: <span>0</span>권</li>
+          <li>미납 도서 권수: <span>0</span>권</li>
         </ul>
       </div>
 
@@ -80,8 +80,8 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📖 희망도서</h3>
         <ul class="text-sm space-y-1">
-          <li>신청된 도서 권수: 23권</li>
-          <li>처리대기 건수: 5건</li>
+          <li>신청된 도서 권수: <span>0</span>권</li>
+          <li>처리대기 건수: <span>0</span>건</li>
         </ul>
       </div>
 
@@ -89,8 +89,8 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📗 도서관리</h3>
         <ul class="text-sm space-y-1">
-          <li>총 도서 수: 540권</li>
-          <li>신규 등록 요청: 3건</li>
+          <li>총 도서 수: <span>0</span>권</li>
+          <li>신규 등록 요청: <span>0</span>건</li>
         </ul>
       </div>
 
@@ -98,9 +98,9 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">👤 회원관리</h3>
         <ul class="text-sm space-y-1">
-          <li>오늘 가입 회원 수: 4명</li>
-          <li>전체 회원 수: 1,240명</li>
-          <li>탈퇴 회원 수: 37명</li>
+          <li>오늘 가입 회원 수: <span id="todayNewUserCount">0</span>명</li>
+          <li>전체 회원 수: <span id="totalUserCount">0</span>명</li>
+          <li>탈퇴 회원 수: <span id="totalWithdrawUserCount">0</span>명</li>
         </ul>
       </div>
 
@@ -108,8 +108,7 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">🔐 관리자</h3>
         <ul class="text-sm space-y-1">
-          <li>승인 대기 인원 수: 2명</li>
-          <li>등록된 관리자 수: 10명</li>
+          <li>등록된 관리자 수: <span id="adminCount">0</span>명</li>
         </ul>
       </div>
 
@@ -117,8 +116,8 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📬 게시판</h3>
         <ul class="text-sm space-y-1">
-          <li>도서문의: 14건</li>
-          <li>오류신고: 3건</li>
+          <li>도서문의: <span>0</span>건</li>
+          <li>오류신고: <span>0</span>건</li>
         </ul>
       </div>
     </div>
@@ -172,6 +171,25 @@
       });
     }
 
-  </script>  
+  </script>
+  <script>
+    // 페이지 로드 후 실행
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/admin/api/dashboard');
+        if (!response.ok) throw new Error('네트워크 오류');
+
+        const data = await response.json();
+
+        document.getElementById('todayRentCount').textContent = data.todayRentCount;
+        document.getElementById('totalRentCount').textContent = data.totalRentCount;
+        document.getElementById('overdueBookCount').textContent = data.overdueBookCount;
+
+        // 다른 요소들도 동일한 방식으로 갱신
+      } catch (error) {
+        console.error('대시보드 데이터 로드 실패:', error);
+      }
+    });
+  </script>
 </body>
 </html>
