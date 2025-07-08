@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <body>
     <header th:fragment="siteHeader" class="bg-white shadow">
       <div class="bg_lnb"></div>
@@ -30,7 +30,7 @@
               </ol>
             </li>
             <li>
-              <a href="#" class="hover:text-blue-600 transition-colors"
+              <a href="/admin/v1/books" class="hover:text-blue-600 transition-colors"
                 >도서관리</a
               >
               <ol class="lnb">
@@ -38,15 +38,7 @@
                 <li><a href="/admin/v1/books/register">도서등록</a></li>
               </ol>
             </li>
-            <li>
-              <a href="#" class="hover:text-blue-600 transition-colors"
-                >배너관리</a
-              >
-              <ol class="lnb">
-                <li><a href="#">추천도서</a></li>
-              </ol>
-            </li>
-            <li>
+              <li>
               <a href="/admin/user" class="hover:text-blue-600 transition-colors">회원관리</a>
               <ol class="lnb">
                 <li><a href="/admin/user">회원목록</a></li>
