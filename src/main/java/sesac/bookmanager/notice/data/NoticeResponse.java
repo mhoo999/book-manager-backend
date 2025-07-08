@@ -19,6 +19,10 @@ public class NoticeResponse {
     private Integer views;
     private Integer adminId;
 
+    public String getTypeLabel() {
+        return type.getLabel();
+    }
+
     public static NoticeResponse from(Notice notice) {
         return new NoticeResponse(
                 notice.getNoticeId(),
