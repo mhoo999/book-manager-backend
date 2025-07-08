@@ -80,7 +80,7 @@ public class QuestionAdminController {
     }
 
     @ResponseBody
-    @GetMapping("/statistics")
+    @GetMapping("/status")
     public ResponseEntity<QuestionStatisticsResponse> getStatistics() {
 
         QuestionStatisticsResponse response = questionService.getStatistics();
