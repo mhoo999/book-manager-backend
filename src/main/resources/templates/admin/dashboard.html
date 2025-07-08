@@ -70,18 +70,17 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📚 대여현황</h3>
         <ul class="text-sm space-y-1">
-          <li>오늘의 대여현황: <span>0</span>건</li>
-          <li>총 대여중인 도서 권수: <span>0</span>권</li>
-          <li>미납 도서 권수: <span>0</span>권</li>
+          <li>오늘의 대여현황: <span id="todayRentCount">0</span>건</li>
+          <li>총 대여중인 도서 권수: <span id="totalRentCount">0</span>권</li>
+          <li>미납 도서 권수: <span id="overdueRentCount">0</span>권</li>
         </ul>
       </div>
-
       <!-- 희망도서 -->
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📖 희망도서</h3>
         <ul class="text-sm space-y-1">
-          <li>신청된 도서 권수: <span>0</span>권</li>
-          <li>처리대기 건수: <span>0</span>건</li>
+          <li>신청된 도서 권수: <span id="totalWish">0</span>권</li>
+          <li>처리대기 건수: <span id="totalUnsolvedWish">0</span>건</li>
         </ul>
       </div>
 
@@ -89,8 +88,7 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📗 도서관리</h3>
         <ul class="text-sm space-y-1">
-          <li>총 도서 수: <span>0</span>권</li>
-          <li>신규 등록 요청: <span>0</span>건</li>
+          <li>총 도서 수: <span id="totalBookCount">0</span>권</li>
         </ul>
       </div>
 
@@ -116,13 +114,14 @@
       <div class="bg-white rounded shadow p-4">
         <h3 class="font-semibold text-lg mb-2">📬 게시판</h3>
         <ul class="text-sm space-y-1">
-          <li>도서문의: <span>0</span>건</li>
-          <li>오류신고: <span>0</span>건</li>
+          <li>총 도서문의: <span id="totalQuestions" >0</span>건</li>
+          <li>미해결된 도서문의: <span id="totalUnsolvedQuestions">0</span>건</li>
+          <li>총 오류신고: <span id="totalReports">0</span>건</li>
+          <li>미해결된 오류신고: <span id="totalUnsolvedReports">0</span>건</li>
         </ul>
       </div>
     </div>
   </main>
-
   <!-- 푸터 -->
   <footer class="bg-white border-t mt-12">
     <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
@@ -174,21 +173,41 @@
   </script>
   <script>
     // 페이지 로드 후 실행
+    const baseUrl = 'http://localhost:8080'
+    const apis = [baseUrl + '/admin/v1/rents/status',
+                  baseUrl + '/admin/wish/status',
+                  baseUrl + '/admin/v1/books/status',
+                  baseUrl + '/admin/user/status',
+                  baseUrl + '/admin/admins/status',
+                  baseUrl + '/admin/question/status']
+
     window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const response = await fetch('/admin/api/dashboard');
-        if (!response.ok) throw new Error('네트워크 오류');
+        const results = await Promise.all(
+                apis.map(async (url) => {
+                  const res = await fetch(url);
+                  if (!res.ok) throw new Error(`${url} 응답 오류`);
+                  const json = await res.json();
+                  console.log(json);
+                  return json.data;
+                })
+        );
+        // 결과 순회해서 키-값으로 DOM 갱신
+        results.forEach(data => {
+          Object.entries(data).forEach(([key, value]) => {
+            const el = document.getElementById(key);
+            if (el) {
+              el.textContent = value;
+            } else {
+              console.warn(`ID=${key}인 요소를 찾을 수 없음`);
+            }
+          });
+        });
 
-        const data = await response.json();
-
-        document.getElementById('todayRentCount').textContent = data.todayRentCount;
-        document.getElementById('totalRentCount').textContent = data.totalRentCount;
-        document.getElementById('overdueBookCount').textContent = data.overdueBookCount;
-
-        // 다른 요소들도 동일한 방식으로 갱신
       } catch (error) {
         console.error('대시보드 데이터 로드 실패:', error);
       }
+
     });
   </script>
 </body>
