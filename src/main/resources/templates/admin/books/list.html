@@ -76,16 +76,17 @@
       <div class="flex flex-1 items-center space-x-4">
         <div>
           <select id="searchType" name="searchType" class="border border-gray-300 rounded px-3 py-2">
-            <option value="title">도서명</option>
-            <option value="author">저자</option>
-            <option value="publisher">출판사</option>
-            <option value="isbn">ISBN</option>
+            <option value="title" th:selected="${searchCondition?.searchType == 'title'}">도서명</option>
+            <option value="author" th:selected="${searchCondition?.searchType == 'author'}">저자</option>
+            <option value="publisher" th:selected="${searchCondition?.searchType == 'publisher'}">출판사</option>
+            <option value="isbn" th:selected="${searchCondition?.searchType == 'isbn'}">ISBN</option>
           </select>
         </div>
         <div class="flex space-x-2">
-          <input type="text" name="keyword" placeholder="검색어를 입력하세요"
+          <input type="text" name="keyword" th:value="${searchCondition?.keyword}" placeholder="검색어를 입력하세요"
                  class="border border-gray-300 rounded px-3 py-2 w-64">
           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">검색</button>
+          <a th:href="@{/admin/v1/books}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">전체보기</a>
         </div>
       </div>
       <div class="mt-2 md:mt-0 md:ml-auto">
@@ -144,38 +145,86 @@
     </table>
   </div>
 
-  <!-- 페이지네이션 -->
-  <div class="mt-6 flex justify-center">
+  <!-- 개선된 페이지네이션 -->
+  <div class="flex justify-center mt-6">
     <nav class="inline-flex space-x-1">
-      <!-- 데이터가 있고 여러 페이지일 때 -->
       <span th:if="${books != null and books.totalPages != null and books.totalPages > 1}">
-        <!-- 이전 페이지 -->
-        <a th:if="${books.page != null and books.page > 0}"
-           th:href="@{/admin/v1/books(page=${books.page - 1})}"
-           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">이전</a>
+        <!-- 검색 조건이 있을 때와 없을 때 URL 분기 -->
+        <span th:with="hasSearch=${searchCondition != null and searchCondition.keyword != null and !#strings.isEmpty(searchCondition.keyword)}">
 
-        <!-- 페이지 번호들 (현재 페이지 기준 ±2 페이지만 표시) -->
-        <th:block th:each="pageNum : ${#numbers.sequence(T(java.lang.Math).max(0, books.page - 2), T(java.lang.Math).min(books.totalPages - 1, books.page + 2))}">
-          <a th:if="${pageNum == books.page}"
-             th:href="@{/admin/v1/books(page=${pageNum})}"
-             class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded"
-             th:text="${pageNum + 1}">1</a>
-          <a th:unless="${pageNum == books.page}"
-             th:href="@{/admin/v1/books(page=${pageNum})}"
-             class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded"
-             th:text="${pageNum + 1}">1</a>
-        </th:block>
+          <!-- 첫 페이지 (항상 표시, 첫 페이지일 때 비활성화) -->
+          <a th:if="${books.page != null and books.page > 0}"
+             th:href="${hasSearch} ? @{/admin/v1/books/search(page=0, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=0)}"
+             class="px-3 py-2 bg-white border rounded hover:bg-gray-100">처음</a>
+          <span th:unless="${books.page != null and books.page > 0}"
+                class="px-3 py-2 bg-gray-100 border rounded text-gray-400 cursor-not-allowed">처음</span>
 
-        <!-- 다음 페이지 -->
-        <a th:if="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
-           th:href="@{/admin/v1/books(page=${books.page + 1})}"
-           class="px-3 py-1 border border-gray-300 bg-white hover:bg-gray-100 rounded">다음</a>
+          <!-- 이전 페이지 (항상 표시, 첫 페이지일 때 비활성화) -->
+          <a th:if="${books.page != null and books.page > 0}"
+             th:href="${hasSearch} ? @{/admin/v1/books/search(page=${books.page - 1}, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=${books.page - 1})}"
+             class="px-3 py-2 bg-white border rounded hover:bg-gray-100">이전</a>
+          <span th:unless="${books.page != null and books.page > 0}"
+                class="px-3 py-2 bg-gray-100 border rounded text-gray-400 cursor-not-allowed">이전</span>
+
+          <!-- 페이지 번호들 (현재 페이지 기준 좌우 5개씩) -->
+          <span th:with="startPage=${T(java.lang.Math).max(0, (books.page ?: 0) - 5)},
+                         endPage=${T(java.lang.Math).min((books.totalPages ?: 1) - 1, (books.page ?: 0) + 5)}">
+
+            <!-- 시작 페이지가 0이 아니면 ... 표시 -->
+            <span th:if="${startPage > 0}">
+              <a th:href="${hasSearch} ? @{/admin/v1/books/search(page=0, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=0)}"
+                 class="px-3 py-2 bg-white border rounded hover:bg-gray-100">1</a>
+              <span th:if="${startPage > 1}" class="px-3 py-2">...</span>
+            </span>
+
+            <!-- 페이지 번호들 -->
+            <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+              <a th:if="${i == books.page}"
+                 th:text="${i + 1}"
+                 class="px-3 py-2 bg-blue-500 text-white rounded font-semibold">1</a>
+              <a th:unless="${i == books.page}"
+                 th:href="${hasSearch} ? @{/admin/v1/books/search(page=${i}, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=${i})}"
+                 th:text="${i + 1}"
+                 class="px-3 py-2 bg-white border rounded hover:bg-gray-100">1</a>
+            </span>
+
+            <!-- 마지막 페이지가 전체 페이지보다 작으면 ... 표시 -->
+            <span th:if="${endPage < (books.totalPages ?: 1) - 1}">
+              <span th:if="${endPage < (books.totalPages ?: 1) - 2}" class="px-3 py-2">...</span>
+              <a th:href="${hasSearch} ? @{/admin/v1/books/search(page=${(books.totalPages ?: 1) - 1}, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=${(books.totalPages ?: 1) - 1})}"
+                 th:text="${books.totalPages}"
+                 class="px-3 py-2 bg-white border rounded hover:bg-gray-100">마지막</a>
+            </span>
+          </span>
+
+          <!-- 다음 페이지 (항상 표시, 마지막 페이지일 때 비활성화) -->
+          <a th:if="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
+             th:href="${hasSearch} ? @{/admin/v1/books/search(page=${books.page + 1}, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=${books.page + 1})}"
+             class="px-3 py-2 bg-white border rounded hover:bg-gray-100">다음</a>
+          <span th:unless="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
+                class="px-3 py-2 bg-gray-100 border rounded text-gray-400 cursor-not-allowed">다음</span>
+
+          <!-- 마지막 페이지 (항상 표시, 마지막 페이지일 때 비활성화) -->
+          <a th:if="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
+             th:href="${hasSearch} ? @{/admin/v1/books/search(page=${books.totalPages - 1}, searchType=${searchCondition?.searchType}, keyword=${searchCondition?.keyword})} : @{/admin/v1/books(page=${books.totalPages - 1})}"
+             class="px-3 py-2 bg-white border rounded hover:bg-gray-100">마지막</a>
+          <span th:unless="${books.page != null and books.totalPages != null and books.page < books.totalPages - 1}"
+                class="px-3 py-2 bg-gray-100 border rounded text-gray-400 cursor-not-allowed">마지막</span>
+        </span>
       </span>
 
-      <!-- 데이터가 없거나 1페이지뿐일 때 기본 1 버튼 -->
+      <!-- 데이터가 없거나 1페이지뿐일 때 -->
       <a th:if="${books == null or books.totalPages == null or books.totalPages <= 1}"
-         href="#" class="px-3 py-1 border border-gray-300 bg-blue-500 text-white rounded">1</a>
+         href="#" class="px-3 py-2 bg-blue-500 text-white rounded font-semibold">1</a>
     </nav>
+  </div>
+
+  <!-- 페이지 정보 표시 -->
+  <div class="text-center mt-4 text-sm text-gray-500">
+    <span th:if="${books != null and books.totalPages != null and books.totalPages > 1}">
+      <span th:text="${books.page + 1}">1</span> / <span th:text="${books.totalPages}">10</span> 페이지
+      (총 <span th:text="${books.totalCount}">50</span>개)
+    </span>
   </div>
 </main>
 
