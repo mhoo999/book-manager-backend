@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import sesac.bookmanager.user.data.User;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -71,7 +70,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             CustomUserDetails customUserDetails = new CustomUserDetails(new User(userId, userEmail, userName));
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(
-                                customUserDetails, null, Collections.emptyList());
+                                customUserDetails, null, customUserDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
