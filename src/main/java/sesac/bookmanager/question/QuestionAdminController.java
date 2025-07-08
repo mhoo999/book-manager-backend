@@ -2,14 +2,13 @@ package sesac.bookmanager.question;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.question.data.*;
 import sesac.bookmanager.reply.data.ReplyCreateRequest;
 import sesac.bookmanager.reply.data.ReplyUpdateRequest;
-import sesac.bookmanager.security.CustomUserDetails;
 
 @Controller
 @RequiredArgsConstructor
@@ -81,10 +80,8 @@ public class QuestionAdminController {
 
     @ResponseBody
     @GetMapping("/status")
-    public ResponseEntity<QuestionStatisticsResponse> getStatistics() {
-
+    public ResponseEntity<ApiResponse<QuestionStatisticsResponse>> getStatistics() {
         QuestionStatisticsResponse response = questionService.getStatistics();
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

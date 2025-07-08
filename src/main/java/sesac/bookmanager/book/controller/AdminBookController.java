@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.book.dto.response.BookDashboardResponseDto;
 import sesac.bookmanager.category.domain.Category;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
@@ -161,8 +162,8 @@ public class AdminBookController {
     // 대시보드 출력 정보
     @GetMapping("/status")
     @ResponseBody
-    public ResponseEntity<BookDashboardResponseDto> getDashboardInfo() {
-        return ResponseEntity.ok(bookService.getDashboardInfo());
+    public ResponseEntity<ApiResponse<BookDashboardResponseDto>> getDashboardInfo() {
+        return ResponseEntity.ok(ApiResponse.success(bookService.getDashboardInfo()));
     }
 
 }
