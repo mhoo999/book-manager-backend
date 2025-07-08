@@ -16,7 +16,17 @@ public class NoticeUserController {
 
     @GetMapping
     public ResponseEntity<NoticePageResponse> getNotices(NoticeSearchRequest searchRequest) {
-        return ResponseEntity.ok(noticeService.searchNotice(searchRequest));
+        NoticePageResponse pageResponse = null;
+
+        if(searchRequest.getPage() < 1) {
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest());
+        } else {
+            pageResponse = noticeService.searchNotice(new NoticeSearchRequest("", searchRequest.getPage() - 1, 10));
+        }
+
+        pageResponse.setPage(searchRequest.getPage());
+
+        return ResponseEntity.ok(pageResponse);
     }
 
     @GetMapping("/{noticeId}")
