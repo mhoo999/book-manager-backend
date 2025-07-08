@@ -146,21 +146,25 @@ public class RentService {
         return new RentIdResponseDto(savedRent.getId());
     }
 
+    @Transactional(readOnly = true)
     public Integer getTodayRentCount() {
         return rentRepository.countRentsByDate(LocalDate.now())
                 .orElse(0);
     }
 
+    @Transactional(readOnly = true)
     public Integer getTotalRentCount() {
         return rentRepository.countActiveRents()
                 .orElse(0);
     }
 
+    @Transactional(readOnly = true)
     public Integer getOverdueRentCount() {
         return rentRepository.countOverdueRents()
                 .orElse(0);
     }
 
+    @Transactional(readOnly = true)
     public RentDashboardResponseDto getDashboardInfo() {
         RentDashboardResponseDto dashboard = new RentDashboardResponseDto();
         dashboard.setTodayRentCount(getTodayRentCount());
