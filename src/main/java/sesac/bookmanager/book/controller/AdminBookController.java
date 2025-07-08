@@ -1,15 +1,15 @@
 package sesac.bookmanager.book.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sesac.bookmanager.book.dto.response.BookDashboardResponseDto;
 import sesac.bookmanager.category.domain.Category;
 import sesac.bookmanager.book.dto.request.CreateBookRequestDto;
 import sesac.bookmanager.book.dto.request.SearchBookRequestDto;
@@ -48,9 +48,6 @@ public class AdminBookController {
             Model model,
             RedirectAttributes redirectAttributes)
     {
-        /// ////////////
-        MultipartFile coverFile = request.getCoverFile();
-
 
         // 카테고리 코드 형식 검증
         if (request.getCategory() == null || request.getCategory().length() != 6) {
@@ -160,4 +157,12 @@ public class AdminBookController {
 
         return "admin/books/list";
     }
+
+    // 대시보드 출력 정보
+    @GetMapping("/status")
+    @ResponseBody
+    public ResponseEntity<BookDashboardResponseDto> getDashboardInfo() {
+        return ResponseEntity.ok(bookService.getDashboardInfo());
+    }
+
 }

@@ -2,6 +2,7 @@ package sesac.bookmanager.rent.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentMemoRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
+import sesac.bookmanager.rent.dto.response.RentDashboardResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomAdminDetails;
@@ -114,6 +116,13 @@ public class AdminRentController {
         }
 
         return "redirect:/admin/v1/rents/" + rentId;
+    }
+
+    // 대시보드 출력 정보
+    @GetMapping("/status")
+    @ResponseBody
+    public ResponseEntity<RentDashboardResponseDto> getDashboardInfo() {
+        return ResponseEntity.ok(rentService.getDashboardInfo());
     }
 
 }
