@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WishStatisticsResponse {
-    private int total;
-    private int totalUnsolved;
+    private int totalWish;
+    private int totalUnsolvedWish;
 }

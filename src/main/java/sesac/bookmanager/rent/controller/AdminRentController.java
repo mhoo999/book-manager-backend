@@ -9,11 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentMemoRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
-import sesac.bookmanager.rent.dto.response.RentDashboardResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
 import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomAdminDetails;
@@ -121,8 +121,8 @@ public class AdminRentController {
     // 대시보드 출력 정보
     @GetMapping("/status")
     @ResponseBody
-    public ResponseEntity<RentDashboardResponseDto> getDashboardInfo() {
-        return ResponseEntity.ok(rentService.getDashboardInfo());
+    public ResponseEntity<ApiResponse<?>> getDashboardInfo() {
+        return ResponseEntity.ok(ApiResponse.success(rentService.getDashboardInfo()));
     }
 
 }
