@@ -91,4 +91,15 @@ public class QuestionService {
         questionRepository.deleteById(questionId);
     }
 
+
+    public QuestionStatisticsResponse getStatistics() {
+        QuestionStatisticsResponse response = new QuestionStatisticsResponse();
+
+        response.setTotalQuestions(questionRepository.findByQuestionType(true).size());
+        response.setTotalReports(questionRepository.findByQuestionType(false).size());
+        response.setTotalUnsolvedQuestions(questionRepository.findByQuestionTypeAndStatusIsLessThan(true, 2).size());
+        response.setTotalUnsolvedReports(questionRepository.findByQuestionTypeAndStatusIsLessThan(false, 2).size());
+
+        return response;
+    }
 }

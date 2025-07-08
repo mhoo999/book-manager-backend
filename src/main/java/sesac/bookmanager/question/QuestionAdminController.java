@@ -1,6 +1,7 @@
 package sesac.bookmanager.question;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,5 +77,14 @@ public class QuestionAdminController {
         questionService.deleteQuestion(questionId);
 
         return "redirect:/admin/question";
+    }
+
+    @ResponseBody
+    @GetMapping("/statistics")
+    public ResponseEntity<QuestionStatisticsResponse> getStatistics() {
+
+        QuestionStatisticsResponse response = questionService.getStatistics();
+
+        return ResponseEntity.ok(response);
     }
 }
