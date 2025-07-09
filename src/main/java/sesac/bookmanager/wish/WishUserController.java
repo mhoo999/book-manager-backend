@@ -3,10 +3,12 @@ package sesac.bookmanager.wish;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sesac.bookmanager.ApiResponse;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.wish.data.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,5 +33,10 @@ public class WishUserController {
     @GetMapping("/{wishId}")
     public ResponseEntity<WishResponse> getWishById(@PathVariable Integer wishId) {
         return ResponseEntity.ok(wishService.getWishById(wishId));
+    }
+
+    @GetMapping("/myWishes")
+    public ResponseEntity<ApiResponse<?>> getMyWishes(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(ApiResponse.success(Map.of("myWishesCount", wishService.getMyWishes(customUserDetails.getUser().getId()))));
     }
 }

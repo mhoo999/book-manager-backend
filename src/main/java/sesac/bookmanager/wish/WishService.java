@@ -64,4 +64,8 @@ public class WishService {
 
         return response;
     }
+
+    public int  getMyWishes(int id) {
+        return wishRepository.countByUserId(id);
+    }
 }
