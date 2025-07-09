@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sesac.bookmanager.security.CustomUserDetails;
@@ -33,7 +34,7 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public WishPageResponse getWishlist(WishSearchRequest search) {
-        Pageable pageable = PageRequest.of(search.getPage(), search.getSize());
+        Pageable pageable = PageRequest.of(search.getPage(), search.getSize(), Sort.by(Sort.Direction.DESC, "wishId"));
 
         Page<WishResponse> pagedWish = wishRepository.findAll(pageable)
                 .map(WishResponse::from);
@@ -67,5 +68,14 @@ public class WishService {
 
     public int  getMyWishes(int id) {
         return wishRepository.countByUserId(id);
+    }
+
+    public WishPageResponse getMyWishlist(WishSearchRequest search, CustomUserDetails customUserDetails) {
+        Pageable pageable = PageRequest.of(search.getPage(), search.getSize(), Sort.by(Sort.Direction.DESC, "wishId"));
+
+        Page<WishResponse> pagedWish = wishRepository.findByUser_Id(customUserDetails.getUser().getId(), pageable)
+                .map(WishResponse::from);
+
+        return WishPageResponse.from(pagedWish.getContent(), search, pagedWish.getTotalElements());
     }
 }

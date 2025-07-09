@@ -28,6 +28,8 @@ public class WishResponse {
     private String userName;
     private String userPhone;
 
+    public String getStatusLabel() { return status.getLabel(); }
+
     public static WishResponse from(Wish wish) {
         return new WishResponse(
                 wish.getWishId(),
