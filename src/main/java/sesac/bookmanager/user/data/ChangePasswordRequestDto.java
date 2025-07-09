@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ChangePasswordRequestDto {
     private String currentPassword;  // 기존 비밀번호
     private String newPassword;      // 새 비밀번호
+    private String confirmPassword;
 }
