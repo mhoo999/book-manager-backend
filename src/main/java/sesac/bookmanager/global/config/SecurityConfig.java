@@ -90,7 +90,7 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/","/home","/api/auth/**","/api/notice/**",
-                                "/api/question","/api/reply/**","/api/v1/books/**").permitAll()
+                                "/api/question/**","/api/reply/**","/api/v1/books/**").permitAll()
                         .anyRequest().authenticated() // 그 외는 인증 필요
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가
