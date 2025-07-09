@@ -30,16 +30,24 @@ public class UserService {
     }
 
 
+    @Transactional
     public void changePassword(int userId, ChangePasswordRequestDto requestBody) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
+        System.out.println(requestBody);
         if (!passwordEncoder.matches(requestBody.getCurrentPassword(), user.getPwd())) {
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
         }
+        if(!requestBody.getConfirmPassword().equals(requestBody.getNewPassword())){
+            throw new IllegalArgumentException("새 비밀번호를 확인해 주세요");
+        }
+
         user.setPwd(passwordEncoder.encode(requestBody.getNewPassword()));
+        userRepository.save(user);
     }
 
+    @Transactional
     public void softDeleteUser(int userId) {
         userRepository.softDeleteById(userId, LocalDateTime.now());
     }

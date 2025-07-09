@@ -1,11 +1,13 @@
 package sesac.bookmanager.user;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sesac.bookmanager.ApiResponse;
+import sesac.bookmanager.auth.AuthService;
 import sesac.bookmanager.security.CustomUserDetails;
 import sesac.bookmanager.user.data.ChangePasswordRequestDto;
 
@@ -14,6 +16,7 @@ import sesac.bookmanager.user.data.ChangePasswordRequestDto;
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
+    private final AuthService authService;
     /** 내 정보 가져오기 **/
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<Object>> getUserInfo(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -29,8 +32,15 @@ public class UserController {
     }
     /** 회원 탈퇴 **/
     @DeleteMapping("/withdraw")
-    public ResponseEntity<ApiResponse<Object>> deleteUser(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<ApiResponse<Object>> deleteUser(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                          HttpServletResponse response) {
         userService.softDeleteUser(customUserDetails.getUser().getId());
+        authService.logout(customUserDetails);
+        ResponseCookie expiredCookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true) //.secure(true)
+                .sameSite("Strict").path("/").maxAge(0)
+                .build();
+        response.addHeader("Set-Cookie", expiredCookie.toString());
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
