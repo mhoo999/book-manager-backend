@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate  # 개발 중엔 update, 배포시 validate 또는 none 추천
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -33,9 +33,6 @@ jwt:
 
 logging:
   level:
-    org.hibernate.SQL: INFO
-    org.hibernate.type.descriptor.sql.BasicBinder: INFO
-    org.apache.catalina: INFO
     org.apache.coyote: INFO
     org.apache.tomcat: INFO
     org.springframework.boot.web.embedded.tomcat: INFO
