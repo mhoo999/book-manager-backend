@@ -19,4 +19,10 @@ public interface RentRepository extends CrudRepository<Rent, Long>, RentQueryRep
 
     @Query("SELECT COUNT(r) FROM Rent r WHERE r.status = 'OVERDUE'")
     Optional<Integer> countOverdueRents();
+
+    @Query("SELECT COUNT(r) FROM Rent r WHERE r.user.id = :userId AND r.status = 'RENTED'")
+    int countActiveRentsByUserId(@Param("userId") int userId);
+
+    @Query("SELECT COUNT(r) FROM Rent r WHERE r.user.id = :userId AND r.status = 'OVERDUE'")
+    int countOverdueRentsByUserId(@Param("userId") int userId);
 }

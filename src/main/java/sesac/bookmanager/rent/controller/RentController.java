@@ -10,6 +10,7 @@ import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
 import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
 import sesac.bookmanager.rent.dto.response.RentResponseDto;
+import sesac.bookmanager.rent.dto.response.RentUserResponseDto;
 import sesac.bookmanager.rent.service.RentService;
 import sesac.bookmanager.security.CustomUserDetails;
 
@@ -37,6 +38,11 @@ public class RentController {
     @GetMapping("/{rentId}")
     public ResponseEntity<RentResponseDto> getRent(@PathVariable Long rentId) {
         return ResponseEntity.ok(rentService.getRent(rentId));
+    }
+
+    @GetMapping("/myRentals")
+    public ResponseEntity<RentUserResponseDto> getUserRents(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(rentService.getUserRents(customUserDetails));
     }
 
 }

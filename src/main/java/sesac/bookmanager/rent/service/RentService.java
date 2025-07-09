@@ -14,10 +14,7 @@ import sesac.bookmanager.rent.domain.Rent;
 import sesac.bookmanager.rent.dto.request.CreateRentRequestDto;
 import sesac.bookmanager.rent.dto.request.SearchRentRequestDto;
 import sesac.bookmanager.rent.dto.request.UpdateRentRequestDto;
-import sesac.bookmanager.rent.dto.response.PageRentResponseDto;
-import sesac.bookmanager.rent.dto.response.RentDashboardResponseDto;
-import sesac.bookmanager.rent.dto.response.RentIdResponseDto;
-import sesac.bookmanager.rent.dto.response.RentResponseDto;
+import sesac.bookmanager.rent.dto.response.*;
 import sesac.bookmanager.rent.enums.RentStatus;
 import sesac.bookmanager.rent.repository.RentRepository;
 import sesac.bookmanager.security.CustomAdminDetails;
@@ -179,5 +176,15 @@ public class RentService {
         request.setUserId(userId);
         Page<RentResponseDto> page = rentRepository.searchRents(request);
         return PageRentResponseDto.from(page.getContent(), request, page.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public RentUserResponseDto getUserRents(CustomUserDetails customUserDetails) {
+        int userId = customUserDetails.getUser().getId();
+
+        RentUserResponseDto user = new RentUserResponseDto();
+        user.setCheckedOutBooks(rentRepository.countActiveRentsByUserId(userId));
+        user.setOverdueBooks(rentRepository.countOverdueRentsByUserId(userId));
+        return user;
     }
 }
