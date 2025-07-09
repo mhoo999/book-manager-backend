@@ -40,7 +40,7 @@ public class RentController {
         return ResponseEntity.ok(rentService.getRent(rentId));
     }
 
-    @GetMapping("/user")
+    @GetMapping("/myRentals")
     public ResponseEntity<RentUserResponseDto> getUserRents(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         return ResponseEntity.ok(rentService.getUserRents(customUserDetails));
     }
