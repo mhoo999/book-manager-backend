@@ -26,8 +26,8 @@ public class WishUserController {
     }
 
     @GetMapping
-    public ResponseEntity<WishPageResponse> getWishlist(WishSearchRequest search) {
-        return ResponseEntity.ok(wishService.getWishlist(search));
+    public ResponseEntity<WishPageResponse> getMyWishlist(WishSearchRequest search, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        return ResponseEntity.ok(wishService.getMyWishlist(search, customUserDetails));
     }
 
     @GetMapping("/{wishId}")
