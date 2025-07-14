@@ -122,7 +122,7 @@ book-manager/
 
 - 본 프로젝트의 프론트엔드는 별도 저장소(bookmanager-frontend)에서 관리됩니다.
 - 주요 기술스택: React 19, Redux Toolkit, React Router v7, Styled-components, Axios 등
-- 폴더 구조, 실행 방법, 배포 방식 등은 [프론트엔드 README]([bookmanager-frontend/README.md](https://github.com/mhoo999/book-manager-frontend)) 참고
+- 폴더 구조, 실행 방법, 배포 방식 등은 [프론트엔드 README](https://github.com/mhoo999/book-manager-frontend) 참고
 - 프론트엔드 개발 서버: http://localhost:3000
 - API 연동 기본 주소: http://localhost:8080 (Spring Boot 백엔드)
 
