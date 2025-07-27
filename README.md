@@ -286,6 +286,7 @@ npm start
 
 이 프로젝트는 MIT 라이선스 하에 배포됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
+
 ---
 
 > **포트폴리오 프로젝트** - Spring Boot와 React를 활용한 풀스택 도서관 관리 시스템  
