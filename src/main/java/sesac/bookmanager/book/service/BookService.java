@@ -96,6 +96,7 @@ public class BookService {
             throw e;
         }
     }
+	
 
     /**
      * ISBN 기반으로 북 커버 파일 저장 (resources/static에 저장)
