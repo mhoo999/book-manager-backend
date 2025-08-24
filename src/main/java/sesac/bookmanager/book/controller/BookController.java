@@ -37,5 +37,4 @@ public class BookController {
         HomeBookResponseDto response = new HomeBookResponseDto(recommendedBooks, newBooks);
         return ResponseEntity.ok(response);
     }
-
 }
